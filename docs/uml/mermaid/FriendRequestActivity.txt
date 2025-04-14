@@ -1,0 +1,25 @@
+---
+config:
+  theme: redux
+  look: neo
+  layout: fixed
+---
+flowchart TD
+ subgraph subGraph0["Freund hinzufügen"]
+        B("Username suchen")
+        C[" "]
+        D("Profil ansehen")
+        E("Anfrage senden")
+        F[" "]
+  end
+    A["Start"] --> B
+    B --> C
+    C --> D & E
+    D --> F
+    F -- [anderes Profil suchen] --> B
+    F -- [gesuchtes Profil] --> E
+    E --> G["Ende"]
+    C@{ shape: diam}
+    F@{ shape: diam}
+    A@{ shape: sm-circ}
+    G@{ shape: sm-circ}

@@ -1,0 +1,33 @@
+---
+config:
+  theme: redux
+  look: neo
+  layout: fixed
+---
+flowchart TD
+ subgraph subGraph0["Listen-Rewarding"]
+        B("Liste abschließen")
+        C("Rewards einsammeln")
+        D[" "]
+        E("Character-Statistik leveln")
+        F[" "]
+        G("Perk kaufen")
+        H[" "]
+        I("Outfit kaufen")
+        K("Rewarding abschließen")
+  end
+    A["Start"] --> B
+    B --> C
+    C --> D
+    D --> F & E
+    F --> H & G
+    H --> K & I
+    E --> F
+    G --> H
+    I --> K
+    K --> L["Ende"]
+    D@{ shape: diam}
+    F@{ shape: diam}
+    H@{ shape: diam}
+    A@{ shape: sm-circ}
+    L@{ shape: sm-circ}

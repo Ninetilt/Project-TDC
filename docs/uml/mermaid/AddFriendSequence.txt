@@ -1,0 +1,34 @@
+sequenceDiagram
+        actor User
+        participant UI
+        participant ProfileRepository
+        participant Profile
+        participant AccountRepository
+        participant Account
+
+        activate UI
+        User->>UI: SearchUser(name)
+        UI->>ProfileRepository: GetProfilesByName(name)
+            activate ProfileRepository
+            ProfileRepository->>Profile: GetName()
+                activate Profile
+                Profile->>ProfileRepository: string name()
+                deactivate Profile
+            ProfileRepository->>UI: List<Profile> profiles()
+            deactivate  ProfileRepository
+        UI->>User: DisplayProfiles(profiles)
+        User->>UI: SendRequest(profile)
+        UI->>Profile: GetId()
+            activate Profile
+            Profile->>UI: in id()
+            deactivate Profile
+        UI->>AccountRepository: GetAccountById()
+            activate AccountRepository
+            AccountRepository->>UI: Account account()
+            deactivate AccountRepository
+        UI->>Account: SendRequest(currentUser to Profile)
+            activate Account
+            Account->>UI: 
+            deactivate Account
+        UI->>User: ConfirmSent()
+        deactivate UI

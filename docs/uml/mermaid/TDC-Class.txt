@@ -1,0 +1,68 @@
+---
+config:
+  layout: dagre
+---
+classDiagram
+direction TB
+    class Character {
+	    -Color : string
+	    -Face : Face
+	    -XP : long
+	    -Stats : CharacterStats
+    }
+    class CharacterStats {
+	    -Attack : long
+	    -Defense : long
+	    -Speed : long 
+    }
+    class ListItem {
+	    -ItemId : int 
+	    -Description : string
+	    -Eddort : int
+	    -IsDone : bool
+        +SetDescription(string newDescription)
+        +GetDescription() : string
+        +ToggleDone()
+        +IsDone() : bool
+        +AddFinishedMember(Profile member)
+        +GetFinishedMembers() : List<Profile>
+        +GetEffort() : int
+        +SetEffort(int newEffort)
+    }
+    class Face {
+	    -Image : string
+    }
+    class Account {
+	    -Email : string
+	    -Password : string 
+	    -Friends : List 
+	    -Requests : List 
+    }
+    class Profile {
+	    -UserId : int 
+	    -Username : string 
+	    -Description : string 
+	    -Character : Character
+    }
+    class ToDoList {
+	    -Items : List 
+	    -Name : string 
+	    -ListID : string 
+	    -UserID : long 
+	    +AddItem(ListItem item)
+        +RemoveItem(ListItem item)
+        +GetItems() : List<ListItem>
+        +AddMember(Profile member)
+        +RemoveMember(Profile member)
+    }
+    
+    Account --|> Profile
+    Account o-- ToDoList
+    ToDoList o-- Profile
+    ToDoList -- ListItem
+    Account -- Character
+    Character -- Face
+    Character -- CharacterStats
+    
+    
+    

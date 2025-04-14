@@ -1,0 +1,37 @@
+sequenceDiagram
+        actor User
+        participant UI
+        participant ToDoList
+        participant ListItem
+        participant Account
+        participant Character
+
+        activate UI
+        activate ToDoList
+        User->>UI: ClickFinishList()
+        UI->>ToDoList: FinishList()
+        ToDoList->>ListItem: GetEffort()
+            activate ListItem
+            ListItem->>ToDoList: int effort()
+            deactivate ListItem
+        ToDoList->>ToDoList: CalculatePoints(effort)
+        ToDoList->>ToDoList: CalculateXP(effort)
+        ToDoList->>Account: GetCharacter()
+            activate Account
+            Account->>ToDoList: Character character()
+            deactivate Account
+        ToDoList->>Character: AddPoints(points)
+            activate Character
+            Character->>ToDoList: 
+            deactivate Character
+        ToDoList->>Character: AddXP(xp)
+            activate Character
+            Character->>ToDoList: 
+            deactivate Character
+        ToDoList->>UI: 
+        UI->>User: DisplayRewards(xp, points)
+        deactivate ToDoList
+        deactivate UI
+
+
+        
