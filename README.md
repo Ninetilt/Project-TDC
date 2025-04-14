@@ -77,10 +77,11 @@ Unsere Vision ist es, eine **benutzerfreundliche und stabile** App zu entwickeln
 
 
 ## **Nichtfunktionale Anforderungen**  
-- **Performance:** Ladezeiten unter 1 Sekunde.  
+- **Performance:** Ladezeiten unter 1-2 Sekunden.  
 - **Usability:** Einfache Bedienung ohne lange Einarbeitungszeit.  
-- **Stabilität:** Weniger als 1% Abstürze pro 1000 Aktionen.  
-- **Responsiveness:** Optimierung für verschiedene Geräte und Bildschirmgrößen.  
+- **Stabilität/Zuverlässigkeit:** Weniger als 1% Abstürze pro 1000 Aktionen.  
+- **Sicherheit:** Sicheres Konto und Passwortzurücksetzung.
+- **Interoperabilität:** Verwendung von API-integration.
 
 
 
