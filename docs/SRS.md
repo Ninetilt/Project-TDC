@@ -78,17 +78,20 @@ Benutzer können sich ihre Freundesliste anzeigen lassen
 
 ### 3. Nichtfunktionale Anforderungen
 Dieser Abschnitt beschreibt die nicht-funktionalen Anforderungen für die To-Do-Competition-App. Es soll als Grundlage für die Entwicklung, das Testen und die Wartung des Systems dienen.
-#### 3.1 Ladezeiten/Performance
-Das Öffnen und Abhaken von Aufgaben in den Listen soll nur wenige Augenblicke benötigen, damit nach dem Erledigen einer Aufgabe die App nur kurz geöffnet werden muss.
+#### 3.1 Zuverlässigkeit
+Die App solte stabil laufen: Keine Serverausfälle bei 1000 Interaktionen, Ausfallzeit < 1%
 
-#### 3.2 Benutzerfreundlichkeit
-Die Benutzeroberfläche sollte intuitiv und einfach zu bedienen sein, sodass sich neuen Nutzern die grundlegende Funktionalität innerhalb weniger Minuten erschließt.
+#### 3.2 Leistungsfähigkeit
+Die App soll eine gute Performance besitzen. Z.B. das Erstellen einer Liste soll schnell erfolgen, sodass eine Liste innerhalb von 2 Sekunden nach dem Erstellen angezeigt wird.
 
-#### 3.3 Zuverlässigkeit
-Die App sollte stabil laufen und weniger als 1% Abstürze pro 1000 Benutzerinteraktionen aufweisen.
+#### 3.3 Benutzerfreundlichkeit
+Die Benutzeroberfläche sollte intuitiv und einfach zu bedienen sein. Ein Benutzer sollte sich z.B. problemlos registrieren (30 sec) und einloggen (10 sec) können.
 
-#### 3.4 Reaktionsfähigkeit: 
-Das User-Interface sollte sich an verschiedene Bildschirmgrößen (verschiedene Smartphone-Modelle, Tablets, etc.) anpassen.
+#### 3.4 Sicherheit
+Der Benutzer sollte ein sicheres Konto besitzen. Ein Benutzer sollte durch eine Email mit einem sicheren Link sein Passwort zurücksetzen können.
+
+#### 3.5 Interoperabilität
+API-Integration nutzen. Z.B sollen Freundesanfragen und -vebindungen zwischen Benutzern verwaltet werden können.
 
 
 ### 4. Technische Einschränkungen
