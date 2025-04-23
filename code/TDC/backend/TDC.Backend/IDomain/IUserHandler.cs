@@ -1,4 +1,4 @@
-﻿namespace TDC.Backend.IDataRepository
+﻿namespace TDC.Backend.IDomain
 {
     public interface IUserHandler
     {

@@ -1,6 +1,6 @@
 ﻿using TDC.Backend.IDomain.Models;
 
-namespace TDC.Backend.IDataRepository
+namespace TDC.Backend.IDomain
 {
     public interface IToDoListHandler
     {

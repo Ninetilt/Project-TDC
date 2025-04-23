@@ -44,6 +44,12 @@ namespace TDC.Backend.Controllers
             throw new NotImplementedException();
         }
 
+        [HttpPut("removeUserFromList/{listId}/{userId}")]
+        public async Task RemoveUserFromList([FromRoute] long listId, [FromRoute] long userId)
+        {
+            throw new NotImplementedException();
+        }
+
         [HttpGet("getListsForUser/{userId}")]
         public async Task<ToDoListDto> GetListsForUser([FromRoute] long userId)
         {
@@ -61,6 +67,12 @@ namespace TDC.Backend.Controllers
 
         [HttpPut("addItemToList/{listId}")]
         public async Task AddItemToList([FromRoute] long listId, [FromBody] StringHelper itemText, [FromBody] long itemEffort)
+        {
+            throw new NotImplementedException();
+        }
+
+        [HttpDelete("deleteItemFromList/{itemId}")]
+        public async Task DeleteItemFromList([FromRoute] long itemId)
         {
             throw new NotImplementedException();
         }
