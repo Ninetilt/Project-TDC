@@ -20,8 +20,8 @@ namespace TDC.Backend.Controllers
             public string Text { get; set; }
         }
 
-        [HttpPost("updateListTitle/{listId}/{userId}")]
-        public async Task UpdateToDoList([FromRoute] long listId, [FromRoute] long userId, [FromBody] StringHelper newTitle)
+        [HttpPost("updateListTitle/{listId}")]
+        public async Task UpdateToDoList([FromRoute] long listId, [FromBody] StringHelper newTitle)
         {
             throw new NotImplementedException();
         }
