@@ -84,8 +84,8 @@ namespace TDC.Backend.DataRepository
         {
             //NOTE: always has to be called when new item is added -> for each user who is part of the list
             var statusItems = GetAllStatusItems();
-            var listRepos = new ListRepository();
-            var members = listRepos.GetListMembers(listId);
+            var listMemberRepos = new ListMemberRepository();
+            var members = listMemberRepos.GetListMembers(listId);
             statusItems.AddRange(members.Select(member => new ToDoItemStatusDbo(itemId, member, false)));
             SaveAllStatusItems(statusItems);
         }
