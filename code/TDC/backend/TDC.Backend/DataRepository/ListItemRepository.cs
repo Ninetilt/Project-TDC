@@ -39,24 +39,24 @@ namespace TDC.Backend.DataRepository
         {
             UpdateItemEffortInFile(itemId, effort);
         }
-        public void SetItemStatus(long itemId, long userId, bool status)
+        public void SetItemStatus(long itemId, string userId, bool status)
         {
             UpdateItemStatusInFile(itemId, userId, status);
         }
 
-        public bool GetItemStatus(long itemId, long userId)
+        public bool GetItemStatus(long itemId, string userId)
         {
             return GetItemStatusFromFile(itemId, userId);
         }
 
-        public void AddItemStatusForNewMember(long listId, long userId)
+        public void AddItemStatusForNewMember(long listId, string userId)
         {
             AddItemStatusForNewMemberInFile(listId, userId);
         }
 
         #region privates
 
-        private void AddItemStatusForNewMemberInFile(long listId, long userId)
+        private void AddItemStatusForNewMemberInFile(long listId, string userId)
         {
             var items = GetItemsForList(listId);
             var existingStatusItems = GetAllStatusItems();
@@ -64,13 +64,13 @@ namespace TDC.Backend.DataRepository
             SaveAllStatusItems(existingStatusItems);
         }
 
-        private bool GetItemStatusFromFile(long itemId, long userId)
+        private bool GetItemStatusFromFile(long itemId, string userId)
         {
             var items = GetAllStatusItems();
             return (from item in items where item.ItemId == itemId && item.UserId == userId select item.IsDone).FirstOrDefault();
         }
 
-        private void UpdateItemStatusInFile(long itemId, long userId, bool status)
+        private void UpdateItemStatusInFile(long itemId, string userId, bool status)
         {
             var items = GetAllStatusItems();
             foreach (var item in items.Where(item => item.ItemId == itemId && item.UserId == userId))
@@ -113,7 +113,7 @@ namespace TDC.Backend.DataRepository
         private static ToDoItemStatusDbo ParseToStatusDbo(string line)
         {
             var elements = line.Split(';');
-            return new ToDoItemStatusDbo(long.Parse(elements[0]), long.Parse(elements[1]), bool.Parse(elements[2]));
+            return new ToDoItemStatusDbo(long.Parse(elements[0]), elements[1], bool.Parse(elements[2]));
         }
 
         private static string StatusDboToCsvString(ToDoItemStatusDbo dbo)

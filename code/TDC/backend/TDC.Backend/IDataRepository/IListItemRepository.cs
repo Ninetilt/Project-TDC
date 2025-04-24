@@ -9,7 +9,7 @@ namespace TDC.Backend.IDataRepository
         public void RemoveItemFromList(long itemId);
         public void UpdateItemDescription(long itemId, string description);
         public void UpdateItemEffort(long itemId, uint effort);
-        public void SetItemStatus(long itemId, long userId, bool status);
-        public bool GetItemStatus(long itemId, long userId);
+        public void SetItemStatus(long itemId, string userId, bool status);
+        public bool GetItemStatus(long itemId, string userId);
     }
 }

@@ -2,9 +2,9 @@
 {
     public interface IListMemberRepository
     {
-        public void AddListMember(long listId, long userId);
-        public void RemoveListMember(long listId, long userId);
-        public List<long> GetListMembers(long listId);
-        public List<long> GetListsForUser(long userId);
+        public void AddListMember(long listId, string userId);
+        public void RemoveListMember(long listId, string userId);
+        public List<string> GetListMembers(long listId);
+        public List<long> GetListsForUser(string userId);
     }
 }
