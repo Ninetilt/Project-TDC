@@ -6,9 +6,8 @@ namespace TDC.Backend.IDataRepository
     {
         public long CreateList(ToDoListDbo list);
         public ToDoListDbo? GetById(long listId, long userId);
-        public void UpdateListTitle(long listId, string title);
+        public void UpdateListTitle(long listId, string name);
         public void DeleteList(long listId);
         public void FinishList(long listId, long userId);
-        public long AddItemToList(long listId, string description, uint effort);
     }
 }
