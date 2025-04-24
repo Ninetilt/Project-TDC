@@ -16,6 +16,7 @@ namespace TDC.Backend.DataRepository
 
         public long CreateList(ToDoListDbo list)
         {
+            list.ListId = GetNewId(); // TO-DO: remove once sql is used
             AddListToFile(list);
             return list.ListId; //TO:DO: with database -> return new id that sql creates
         }
@@ -40,6 +41,14 @@ namespace TDC.Backend.DataRepository
         }
 
         #region privates
+
+        private long GetNewId()
+        {
+            //TO-DO: remove once sql is used 
+            var existingItems = GetAllLists();
+            var max = existingItems.Select(list => list.ListId).Prepend(-1).Max();
+            return max + 1;
+        }
 
         private void SetIsFinishedInFile(long listId, long userId)
         {
