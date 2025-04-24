@@ -15,9 +15,12 @@ namespace TDC.Backend.DataRepository
 
         public void AddListMember(long listId, long userId)
         {
+            //TO-DO: check rather in domain logic if user is member already
             if (IsMember(listId, userId)) { return; }
             AddMemberToFile(listId, userId);
-            //TO-DO: check in domain logic if user is member already
+            //TO-DO: move logic to domain or change logic to no status entry = status is false
+            AddItemStatusEntryForNewMember(listId, userId);
+            
         }
         public void RemoveListMember(long listId, long userId)
         {
@@ -34,6 +37,12 @@ namespace TDC.Backend.DataRepository
         }
 
         #region privates
+
+        private void AddItemStatusEntryForNewMember(long listId, long memberId)
+        {
+            var itemRepos = new ListItemRepository();
+            itemRepos.AddItemStatusForNewMember(listId, memberId);
+        }
 
         private List<long> GetUserListsFromFile(long userId)
         {
