@@ -41,13 +41,6 @@ namespace TDC.Backend.DataRepository
         }
 
         #region privates
-
-        private bool ListExistsInFile(long listId)
-        {
-            var lists = GetAllLists();
-            return lists.Any(list => list.ListId == listId);
-        }
-
         private long GetNewId()
         {
             //TO-DO: remove once sql is used 
