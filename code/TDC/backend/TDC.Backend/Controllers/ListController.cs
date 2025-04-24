@@ -9,8 +9,8 @@ namespace TDC.Backend.Controllers
     public class ListController : ControllerBase
     {
         #region To-Do-List
-        [HttpPut("createList/{userId}")]
-        public async Task<long> CreateToDoList([FromBody] ToDoListDto listDto)
+        [HttpPut("createList/{username}")]
+        public Task<long> CreateToDoList([FromRoute] string username, [FromBody] ToDoListDto listDto)
         {
             throw new NotImplementedException();
         }
@@ -21,43 +21,43 @@ namespace TDC.Backend.Controllers
         }
 
         [HttpPost("updateListTitle/{listId}")]
-        public async Task UpdateToDoList([FromRoute] long listId, [FromBody] StringHelper newTitle)
+        public Task UpdateToDoList([FromRoute] long listId, [FromBody] StringHelper newTitle)
         {
             throw new NotImplementedException();
         }
 
-        [HttpDelete("deleteList/{listId}/{userId}")]
-        public async Task DeleteToDoList([FromRoute] long listId, [FromRoute] long userId)
+        [HttpDelete("deleteList/{listId}")]
+        public Task DeleteToDoList([FromRoute] long listId)
         {
             throw new NotImplementedException();
         }
 
-        [HttpPost("finishList/{listId}/{userId}")]
-        public async Task FinishToDoList([FromRoute] long listId, [FromRoute] long userId)
+        [HttpPost("finishList/{listId}")]
+        public Task FinishToDoList([FromRoute] long listId, [FromRoute] long userId)
         {
             throw new NotImplementedException();
         }
 
-        [HttpPut("addUserToList/{listId}/{userId}")]
-        public async Task AddUserToList([FromRoute] long listId, [FromRoute] long userId)
+        [HttpPut("addUserToList/{listId}/{username}")]
+        public Task AddUserToList([FromRoute] long listId, [FromRoute] string username)
         {
             throw new NotImplementedException();
         }
 
-        [HttpPut("removeUserFromList/{listId}/{userId}")]
-        public async Task RemoveUserFromList([FromRoute] long listId, [FromRoute] long userId)
+        [HttpPut("removeUserFromList/{listId}/{username}")]
+        public Task RemoveUserFromList([FromRoute] long listId, [FromRoute] string username)
         {
             throw new NotImplementedException();
         }
 
-        [HttpGet("getListsForUser/{userId}")]
-        public async Task<ToDoListDto> GetListsForUser([FromRoute] long userId)
+        [HttpGet("getListsForUser/{username}")]
+        public Task<ToDoListDto> GetListsForUser([FromRoute] string username)
         {
             throw new NotImplementedException();
         }
 
-        [HttpGet("getListById/{listId}/{userId}")]
-        public async Task<ToDoListDto> GetListById([FromRoute] long listId, [FromRoute] long userId)
+        [HttpGet("getListById/{listId}/{username}")]
+        public Task<ToDoListDto> GetListById([FromRoute] long listId, [FromRoute] string username)
         {
             throw new NotImplementedException();
         }
@@ -66,37 +66,37 @@ namespace TDC.Backend.Controllers
         #region List-Items
 
         [HttpPut("addItemToList/{listId}")]
-        public async Task AddItemToList([FromRoute] long listId, [FromBody] StringHelper itemText, [FromBody] long itemEffort)
+        public Task AddItemToList([FromRoute] long listId, [FromBody] StringHelper itemText, [FromBody] long itemEffort)
         {
             throw new NotImplementedException();
         }
 
         [HttpDelete("deleteItemFromList/{itemId}")]
-        public async Task DeleteItemFromList([FromRoute] long itemId)
+        public Task DeleteItemFromList([FromRoute] long itemId)
         {
             throw new NotImplementedException();
         }
 
         [HttpPost("updateItemText/{itemId}")]
-        public async Task UpdateItemText([FromRoute] long itemId, [FromBody] StringHelper newText)
+        public Task UpdateItemText([FromRoute] long itemId, [FromBody] StringHelper newText)
         {
             throw new NotImplementedException();
         }
 
         [HttpPost("updateItemEffort/{itemId}")]
-        public async Task UpdateItemEffort([FromRoute] long itemId, [FromBody] long newEffort)
+        public Task UpdateItemEffort([FromRoute] long itemId, [FromBody] long newEffort)
         {
             throw new NotImplementedException();
         }
 
-        [HttpPost("setItemStatusDone/{itemId}/{userId}")]
-        public async Task SetItemStatusDone([FromRoute] long itemId, [FromRoute] long userId)
+        [HttpPost("setItemStatusDone/{itemId}/{username}")]
+        public Task SetItemStatusDone([FromRoute] long itemId, [FromRoute] string username)
         {
             throw new NotImplementedException();
         }
 
-        [HttpPost("setItemStatusNotDone/{itemId}/{userId}")]
-        public async Task SetItemStatusNotDone([FromRoute] long itemId, [FromRoute] long userId)
+        [HttpPost("setItemStatusNotDone/{itemId}/{username}")]
+        public Task SetItemStatusNotDone([FromRoute] long itemId, [FromRoute] string username)
         {
             throw new NotImplementedException();
         }
