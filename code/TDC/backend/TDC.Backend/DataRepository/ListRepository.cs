@@ -88,11 +88,11 @@ namespace TDC.Backend.DataRepository
             using var writer = new StreamWriter(filePath, false);
             foreach (var list in lists)
             {
-                writer.WriteLine(DboToCsvFile(list));
+                writer.WriteLine(ParseToCsvLine(list));
             }
         }
 
-        private static string DboToCsvFile(ToDoListDbo list)
+        private static string ParseToCsvLine(ToDoListDbo list)
         {
             return $"{list.ListId};{list.Name};{list.IsCollaborative};{list.IsFinished}";
         }

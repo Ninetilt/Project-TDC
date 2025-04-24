@@ -67,13 +67,13 @@ namespace TDC.Backend.DataRepository
         private bool GetItemStatusFromFile(long itemId, string userId)
         {
             var items = GetAllStatusItems();
-            return (from item in items where item.ItemId == itemId && item.UserId == userId select item.IsDone).FirstOrDefault();
+            return (from item in items where item.ItemId == itemId && item.UserId.Equals(userId) select item.IsDone).FirstOrDefault();
         }
 
         private void UpdateItemStatusInFile(long itemId, string userId, bool status)
         {
             var items = GetAllStatusItems();
-            foreach (var item in items.Where(item => item.ItemId == itemId && item.UserId == userId))
+            foreach (var item in items.Where(item => item.ItemId == itemId && item.UserId.Equals(userId)))
             {
                 item.IsDone = status;
             }
@@ -168,7 +168,7 @@ namespace TDC.Backend.DataRepository
             using var writer = new StreamWriter(filePath);
             foreach (var item in items)
             {
-                writer.WriteLine(HelperToCsvLine(item));
+                writer.WriteLine(ParseToCsvLine(item));
             }
         }
 
@@ -195,7 +195,7 @@ namespace TDC.Backend.DataRepository
             return new ListItemCsvHelper(long.Parse(elements[0]), long.Parse(elements[1]), elements[2], uint.Parse(elements[3]));
         }
 
-        private static string HelperToCsvLine(ListItemCsvHelper helper)
+        private static string ParseToCsvLine(ListItemCsvHelper helper)
         {
             return helper.ItemId + ";" + helper.ListId + ";" + helper.Description + ";" + helper.Effort;
         }
