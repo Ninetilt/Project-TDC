@@ -22,10 +22,23 @@ namespace TDC.Backend.DataRepository
             DeleteAccountFromFile(username);
         }
 
-        public void UpdateAccount(string oldUsername, AccountDbo newAccountData)
+        public void UpdateUsername(string username, string newUsername)
         {
-            UpdateAccountInFile(oldUsername, newAccountData);
+            UpdateUsernameInFile(username, newUsername);
         }
+        public void UpdateEmail(string username, string newEmail)
+        {
+            UpdateEmailInFile(username, newEmail);
+        }
+        public void UpdatePassword(string username, string newPassword)
+        {
+            UpdatePasswordInFile(username, newPassword);
+        }
+        public void UpdateDescription(string username, string newDescription)
+        {
+            UpdateDescriptionInFile(username, newDescription);
+        }
+
 
         public AccountDbo? GetAccountByUsername(string username)
         {
@@ -37,15 +50,42 @@ namespace TDC.Backend.DataRepository
         }
 
         #region privates
-        public void UpdateAccountInFile(string oldUsername, AccountDbo newAccountData)
+        public void UpdateUsernameInFile(string username, string newUsername)
         {
             var accounts = GetAllAccounts();
-            foreach (var account in accounts.Where(account => account.Username.Equals(oldUsername)))
+            foreach (var account in accounts.Where(account => account.Username.Equals(username)))
             {
-                account.Username = newAccountData.Username;
-                account.Password = newAccountData.Password;
-                account.Email = newAccountData.Email;
-                account.Description = newAccountData.Description;
+                account.Username = newUsername;
+            }
+            SaveAllAccounts(accounts);
+        }
+
+        public void UpdateEmailInFile(string username, string newEmail)
+        {
+            var accounts = GetAllAccounts();
+            foreach (var account in accounts.Where(account => account.Username.Equals(username)))
+            {
+                account.Email = newEmail;
+            }
+            SaveAllAccounts(accounts);
+        }
+
+        public void UpdatePasswordInFile(string username, string newPassword)
+        {
+            var accounts = GetAllAccounts();
+            foreach (var account in accounts.Where(account => account.Username.Equals(username)))
+            {
+                account.Password = newPassword;
+            }
+            SaveAllAccounts(accounts);
+        }
+
+        public void UpdateDescriptionInFile(string username, string newDescription)
+        {
+            var accounts = GetAllAccounts();
+            foreach (var account in accounts.Where(account => account.Username.Equals(username)))
+            {
+                account.Description = newDescription;
             }
             SaveAllAccounts(accounts);
         }
