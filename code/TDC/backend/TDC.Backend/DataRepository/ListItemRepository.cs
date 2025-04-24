@@ -24,6 +24,7 @@ namespace TDC.Backend.DataRepository
         {
             item.ItemId = GetNewId();
             AddItemToFile(new ListItemCsvHelper(item.ItemId, listId, item.Description, item.Effort));
+            AddDefaultItemStatus(item);
             return item.ItemId;
         }
         public void RemoveItemFromList(long itemId)
@@ -45,19 +46,34 @@ namespace TDC.Backend.DataRepository
 
         public bool GetItemStatus(long itemId, long userId)
         {
-            throw new NotImplementedException();
+            return GetItemStatusFromFile(itemId, userId);
         }
 
     #region privates
 
-        private void UpdateItemStatusInFile(long itemId, long userId, bool status)
+        private bool GetItemStatusFromFile(long itemId, long userId)
         {
-
+            var items = GetAllStatusItems();
+            return (from item in items where item.ItemId == itemId && item.UserId == userId select item.IsDone).FirstOrDefault();
         }
 
-        private void AddItemStatus()
+        private void UpdateItemStatusInFile(long itemId, long userId, bool status)
+        {
+            var items = GetAllStatusItems();
+            foreach (var item in items.Where(item => item.ItemId == itemId && item.UserId == userId))
+            {
+                item.IsDone = status;
+            }
+            SaveAllStatusItems(items);
+        }
+
+        private void AddDefaultItemStatus(ToDoListItemDbo item)
         {
             //NOTE: always has to be called when new item is added -> for each user who is part of the list
+            var statusItems = GetAllStatusItems();
+            var members = new List<long>(); //TO-DO: update as soon as member repository is implemented
+            statusItems.AddRange(members.Select(member => new ToDoItemStatusDbo(item.ItemId, member, false)));
+            SaveAllStatusItems(statusItems);
         }
 
         private void SaveAllStatusItems(List<ToDoItemStatusDbo> statusItems)
