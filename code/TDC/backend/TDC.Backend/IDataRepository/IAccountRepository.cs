@@ -6,8 +6,8 @@ namespace TDC.Backend.IDataRepository
     {
         public void AddAccount(AccountDbo account);
         public void DeleteAccount(string username);
-        public void UpdateAccount(AccountDbo account);
-        public AccountDbo GetAccountByUsername(string username);
-        public AccountDbo GetAccountByEmail(string email);
+        public void UpdateAccount(string oldUsername, AccountDbo newAccountData);
+        public AccountDbo? GetAccountByUsername(string username);
+        public AccountDbo? GetAccountByEmail(string email);
     }
 }

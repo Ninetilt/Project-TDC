@@ -48,14 +48,14 @@ namespace TDC.Backend.DataRepository
         private List<long> GetUserListsFromFile(string userId)
         {
             var members = GetAllMembers();
-            return (from member in members where member.UserId == userId select member.ListId).ToList();
+            return (from member in members where member.UserId.Equals(userId) select member.ListId).ToList();
         }
 
         private bool IsMember(long listId, string userId)
         {
             //can be removed with sql implementation
             var members = GetAllMembers();
-            return members.Any(member => member.ListId == listId && member.UserId == userId);
+            return members.Any(member => member.ListId == listId && member.UserId.Equals(userId));
         } 
 
         private void AddMemberToFile(long listId, string userId)
@@ -68,7 +68,7 @@ namespace TDC.Backend.DataRepository
         private void RemoveMemberFromFile(long listId, string userId)
         {
             var members = GetAllMembers();
-            var newMembers = members.Where(member => member.ListId != listId || member.UserId != userId).ToList();
+            var newMembers = members.Where(member => member.ListId != listId || !member.UserId.Equals(userId)).ToList();
             SaveAllMembers(newMembers);
         }
 
@@ -77,11 +77,11 @@ namespace TDC.Backend.DataRepository
             var writer = new StreamWriter(filePath);
             foreach (var member in members)
             {
-                writer.WriteLine(DboToCsvString(member));
+                writer.WriteLine(ParseToCsvLine(member));
             }
         }
 
-        private static string DboToCsvString(ListMemberDbo dbo)
+        private static string ParseToCsvLine(ListMemberDbo dbo)
         {
             return dbo.ListId + ";" + dbo.UserId;
         }
