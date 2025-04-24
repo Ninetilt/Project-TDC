@@ -9,5 +9,6 @@ namespace TDC.Backend.IDataRepository
         public void UpdateListTitle(long listId, string name);
         public void DeleteList(long listId);
         public void FinishList(long listId, long userId);
+        public List<long> GetListMembers(long listId);
     }
 }
