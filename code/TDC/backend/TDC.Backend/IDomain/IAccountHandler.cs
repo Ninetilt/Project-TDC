@@ -1,6 +1,6 @@
 ﻿namespace TDC.Backend.IDomain
 {
-    public interface IUserHandler
+    public interface IAccountHandler
     {
     }
 }
