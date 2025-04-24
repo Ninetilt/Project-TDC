@@ -28,7 +28,18 @@ namespace TDC.Backend.DataRepository
             return GetListMembersFromFile(listId);
         }
 
+        public List<long> GetListsForUser(long userId)
+        {
+            return GetUserListsFromFile(userId);
+        }
+
         #region privates
+
+        private List<long> GetUserListsFromFile(long userId)
+        {
+            var members = GetAllMembers();
+            return (from member in members where member.UserId == userId select member.ListId).ToList();
+        }
 
         private bool IsMember(long listId, long userId)
         {
