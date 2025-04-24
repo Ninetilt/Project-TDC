@@ -24,7 +24,7 @@ namespace TDC.Backend.DataRepository
         {
             item.ItemId = GetNewId();
             AddItemToFile(new ListItemCsvHelper(item.ItemId, listId, item.Description, item.Effort));
-            AddDefaultItemStatus(item);
+            AddDefaultItemStatus(item.ItemId, listId);
             return item.ItemId;
         }
         public void RemoveItemFromList(long itemId)
@@ -49,7 +49,20 @@ namespace TDC.Backend.DataRepository
             return GetItemStatusFromFile(itemId, userId);
         }
 
-    #region privates
+        public void AddItemStatusForNewMember(long listId, long userId)
+        {
+            AddItemStatusForNewMemberInFile(listId, userId);
+        }
+
+        #region privates
+
+        private void AddItemStatusForNewMemberInFile(long listId, long userId)
+        {
+            var items = GetItemsForList(listId);
+            var existingStatusItems = GetAllStatusItems();
+            existingStatusItems.AddRange(items.Select(item => new ToDoItemStatusDbo(item.ItemId, userId, false)));
+            SaveAllStatusItems(existingStatusItems);
+        }
 
         private bool GetItemStatusFromFile(long itemId, long userId)
         {
@@ -67,12 +80,13 @@ namespace TDC.Backend.DataRepository
             SaveAllStatusItems(items);
         }
 
-        private void AddDefaultItemStatus(ToDoListItemDbo item)
+        private void AddDefaultItemStatus(long itemId, long listId)
         {
             //NOTE: always has to be called when new item is added -> for each user who is part of the list
             var statusItems = GetAllStatusItems();
-            var members = new List<long>(); //TO-DO: update as soon as member repository is implemented
-            statusItems.AddRange(members.Select(member => new ToDoItemStatusDbo(item.ItemId, member, false)));
+            var listRepos = new ListRepository();
+            var members = listRepos.GetListMembers(listId);
+            statusItems.AddRange(members.Select(member => new ToDoItemStatusDbo(itemId, member, false)));
             SaveAllStatusItems(statusItems);
         }
 

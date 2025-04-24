@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using TDC.Backend.IDataRepository;
+﻿using TDC.Backend.IDataRepository;
 using TDC.Backend.IDataRepository.Models;
 
 namespace TDC.Backend.DataRepository
@@ -21,9 +20,9 @@ namespace TDC.Backend.DataRepository
             return list.ListId; //TO:DO: with database -> return new id that sql creates
         }
 
-        public ToDoListDbo? GetById(long listId, long userId)
+        public ToDoListDbo? GetById(long listId)
         {
-            return LoadListById(listId, userId);
+            return LoadListById(listId);
             //TO-DO: should not return nullable later, will throw sql exception in error case
         }
 
@@ -35,22 +34,18 @@ namespace TDC.Backend.DataRepository
         {
             DeleteListInFile(listId);
         }
-        public void FinishList(long listId, long userId)
-        {
-            SetIsFinishedInFile(listId, userId);
-        }
 
-        public List<long> GetListMembers(long listId)
+        public void FinishList(long listId)
         {
-            return GetListMembersFromFile(listId);
+            SetIsFinishedInFile(listId);
         }
 
         #region privates
 
-        private List<long> GetListMembersFromFile(long listId)
+        private bool ListExistsInFile(long listId)
         {
             var lists = GetAllLists();
-            return (from list in lists where list.ListId == listId select list.UserId).ToList();
+            return lists.Any(list => list.ListId == listId);
         }
 
         private long GetNewId()
@@ -61,10 +56,10 @@ namespace TDC.Backend.DataRepository
             return max + 1;
         }
 
-        private void SetIsFinishedInFile(long listId, long userId)
+        private void SetIsFinishedInFile(long listId)
         {
             var lists = GetAllLists();
-            foreach (var list in lists.Where(list => list.ListId == listId && list.UserId == userId))
+            foreach (var list in lists.Where(list => list.ListId == listId))
             {
                 list.IsFinished = true;
             }
@@ -106,12 +101,12 @@ namespace TDC.Backend.DataRepository
 
         private static string DboToCsvFile(ToDoListDbo list)
         {
-            return $"{list.ListId};{list.UserId};{list.Name};{list.IsCollaborative};{list.IsFinished}";
+            return $"{list.ListId};{list.Name};{list.IsCollaborative};{list.IsFinished}";
         }
 
-        private ToDoListDbo? LoadListById(long listId, long userId)
+        private ToDoListDbo? LoadListById(long listId)
         {
-            return GetAllLists().FirstOrDefault(list => list.ListId == listId && list.UserId == userId);
+            return GetAllLists().FirstOrDefault(list => list.ListId == listId);
         }
 
         private List<ToDoListDbo> GetAllLists()
@@ -129,10 +124,9 @@ namespace TDC.Backend.DataRepository
         {
             var elements = csvLine.Split(';');
             return new ToDoListDbo(long.Parse(elements[0]),
-                                   long.Parse(elements[1]),
-                                   elements[2],
-                                   bool.Parse(elements[3]),
-                                   bool.Parse(elements[4]));
+                                   elements[1],
+                                   bool.Parse(elements[2]),
+                                   bool.Parse(elements[3]));
         }
         #endregion
     }
