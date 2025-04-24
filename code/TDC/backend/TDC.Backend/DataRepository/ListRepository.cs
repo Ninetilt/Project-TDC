@@ -40,7 +40,18 @@ namespace TDC.Backend.DataRepository
             SetIsFinishedInFile(listId, userId);
         }
 
+        public List<long> GetListMembers(long listId)
+        {
+            return GetListMembersFromFile(listId);
+        }
+
         #region privates
+
+        private List<long> GetListMembersFromFile(long listId)
+        {
+            var lists = GetAllLists();
+            return (from list in lists where list.ListId == listId select list.UserId).ToList();
+        }
 
         private long GetNewId()
         {
