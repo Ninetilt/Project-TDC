@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <Folder Include="Domain\" />
-    <Folder Include="DataRepository\" />
   </ItemGroup>
 
 </Project>
