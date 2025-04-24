@@ -3,7 +3,7 @@ name: TDC_Build_pipeline
 on:
   push:
     branches:
-      - '*'
+      - "*"
     paths-ignore:
       - '**/*.md' # Optional: Ignoriere Änderungen an README-Dateien
   pull_request:
@@ -31,7 +31,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('code/TDC/TDC/packages.lock.json') }}
+          key: ${{ runner.os }}-nuget-${{ hashFiles('code/TDC/mobile/TDC/packages.lock.json') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
 
@@ -62,11 +62,11 @@ jobs:
 
       # Dependencies wiederherstellen
       - name: Restore dependencies
-        run: dotnet restore code/TDC/TDC/TDC.csproj
+        run: dotnet restore code/TDC/mobile/TDC/TDC.csproj
 
       # Windows-Version erstellen
       - name: Build and Publish Windows App
-        run: dotnet publish code/TDC/TDC/TDC.csproj -c Release -f net8.0-windows10.0.19041.0 -o ./output/windows
+        run: dotnet publish code/TDC/mobile/TDC/TDC.csproj -c Release -f net8.0-windows10.0.19041.0 -o ./output/windows
 
   buildAndroid:
     runs-on: windows-2022
@@ -81,7 +81,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('code/TDC/TDC.sln') }}
+          key: ${{ runner.os }}-nuget-${{ hashFiles('code/TDC/mobile/TDC/TDC.csproj') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
 
@@ -108,13 +108,13 @@ jobs:
 
       # Dependencies wiederherstellen
       - name: Restore nuget packages
-        run: dotnet restore code/TDC/TDC.sln
+        run: dotnet restore code/TDC/mobile/TDC/TDC.csproj
 
       #Android publishen
       - name : Build Android App
         shell: bash
-        run: dotnet publish code/TDC/TDC/TDC.csproj -c:Release -f:net8.0-android -o:output/android --no-restore
+        run: dotnet publish code/TDC/mobile/TDC/TDC.csproj -c:Release -f:net8.0-android -o:output/android --no-restore
 
       #Tests ausführen
       - name: Run tests
-        run: dotnet test --no-build --configuration Release ./code/TDC/TDC.sln
+        run: dotnet test --no-build --configuration Release ./code/TDC/mobile/TDC/TDC.csproj
