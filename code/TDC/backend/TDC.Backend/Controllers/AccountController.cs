@@ -19,6 +19,11 @@ namespace TDC.Backend.Controllers
             public string Username { get; set; }
             public string Password { get; set; }
         }
+
+        public class StringHelper
+        {
+            public string Text { get; set; }
+        }
         #endregion
 
         [HttpPut("registerUser")]
@@ -27,25 +32,43 @@ namespace TDC.Backend.Controllers
             throw new NotImplementedException();
         }
 
-        [HttpPost("updateUserData/{userId}")]
-        public Task UpdateUserData([FromRoute] long userId, [FromBody] AccountSavingDto accountData)
+        [HttpPost("updateUsername/{username}/{newUsername}")]
+        public Task<bool> UpdateUsername([FromRoute] string username, [FromRoute] string newUsername)
+        {
+            throw new NotImplementedException();
+        }
+
+        [HttpPost("updateUserDescription/{username}")]
+        public Task<bool> UpdateUsername([FromRoute] string username, [FromBody] StringHelper description)
+        {
+            throw new NotImplementedException();
+        }
+
+        [HttpPost("updateEmail/{username}")]
+        public Task<bool> UpdateEmail([FromRoute] string username, [FromBody] StringHelper email)
+        {
+            throw new NotImplementedException();
+        }
+
+        [HttpPost("updatePassword/{username}")]
+        public Task<bool> UpdatePassword([FromRoute] string username, [FromBody] StringHelper password)
         {
             throw new NotImplementedException();
         }
 
         [HttpPost("logInWithMail")]
-        public Task<long> LoginWithMail([FromBody] MailLoginHelper loginData)
+        public Task<bool> LoginWithMail([FromBody] MailLoginHelper loginData)
         {
             throw new NotImplementedException();
         }
 
         [HttpPost("logInWithUsername")]
-        public Task<long> LoginWithUsername([FromBody] UsernameLoginHelper loginData)
+        public Task<bool> LoginWithUsername([FromBody] UsernameLoginHelper loginData)
         {
             throw new NotImplementedException();
         }
 
-        [HttpGet("getAccountByUsername/{username}")]
+        [HttpGet("getAccountData/{username}")]
         public Task<AccountLoadingDto> GetAccountById([FromRoute] string username)
         {
             throw new NotImplementedException();
@@ -54,37 +77,37 @@ namespace TDC.Backend.Controllers
         #region Friend Management
 
         [HttpGet("getFriendsForUser/{username}")]
-        public Task<List<long>> GetFriendsForUser([FromRoute] string username)
+        public Task<List<string>> GetFriendsForUser([FromRoute] string username)
         {
             throw new NotImplementedException();
         }
 
         [HttpGet("getFriendRequestsForUser/{username}")]
-        public Task<List<long>> GetFriendRequestsForUser([FromRoute] string username)
+        public Task<List<string>> GetFriendRequestsForUser([FromRoute] string username)
         {
             throw new NotImplementedException();
         }
 
-        [HttpPost("acceptFriendRequest/{senderName}/{requestName}")]
-        public Task AcceptFriendRequest([FromRoute] string senderName, [FromRoute] string requestName)
+        [HttpPost("acceptFriendRequest/{username}/{requestName}")]
+        public Task<bool> AcceptFriendRequest([FromRoute] string username, [FromRoute] string requestName)
         {
             throw new NotImplementedException();
         }
 
-        [HttpPost("declineFriendRequest/{senderName}/{requestName}")]
-        public Task DeclineFriendRequest([FromRoute] string senderName, [FromRoute] string requestName)
+        [HttpPost("denyFriendRequest/{username}/{requestName}")]
+        public Task<bool> DenyFriendRequest([FromRoute] string senderName, [FromRoute] string requestName)
         {
             throw new NotImplementedException();
         }
 
         [HttpPut("sendFriendRequest/{senderName}/{receiverName}")]
-        public Task SendFriendRequest([FromRoute] string senderName, [FromRoute] long receiverName)
+        public Task<bool> SendFriendRequest([FromRoute] string senderName, [FromRoute] long receiverName)
         {
             throw new NotImplementedException();
         }
 
         [HttpPut("cancelFriendRequest/{senderName}/{receiverName}")]
-        public Task CancelFriendRequest([FromRoute] string senderName, [FromRoute] long receiverName)
+        public Task<bool> CancelFriendRequest([FromRoute] string senderName, [FromRoute] long receiverName)
         {
             throw new NotImplementedException();
         }

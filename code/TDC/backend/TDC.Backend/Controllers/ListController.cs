@@ -13,6 +13,12 @@ namespace TDC.Backend.Controllers
         {
             public string Text { get; set; }
         }
+
+        public class ItemStatusHelper
+        {
+            public string UpdateForUser { get; set; }
+            public bool IsDone { get; set; }
+        }
         #endregion
 
         #region To-Do-List
@@ -58,11 +64,6 @@ namespace TDC.Backend.Controllers
             throw new NotImplementedException();
         }
 
-        [HttpGet("getListById/{listId}/{username}")]
-        public Task<ToDoListDto> GetListById([FromRoute] long listId, [FromRoute] string username)
-        {
-            throw new NotImplementedException();
-        }
         #endregion
 
         #region List-Items
@@ -73,14 +74,14 @@ namespace TDC.Backend.Controllers
             throw new NotImplementedException();
         }
 
-        [HttpDelete("deleteItemFromList/{itemId}")]
-        public Task DeleteItemFromList([FromRoute] long itemId)
+        [HttpDelete("deleteItem/{itemId}")]
+        public Task DeleteItem([FromRoute] long itemId)
         {
             throw new NotImplementedException();
         }
 
-        [HttpPost("updateItemText/{itemId}")]
-        public Task UpdateItemText([FromRoute] long itemId, [FromBody] StringHelper newText)
+        [HttpPost("updateItemDescription/{itemId}")]
+        public Task UpdateItemDescription([FromRoute] long itemId, [FromBody] StringHelper newText)
         {
             throw new NotImplementedException();
         }
@@ -91,14 +92,8 @@ namespace TDC.Backend.Controllers
             throw new NotImplementedException();
         }
 
-        [HttpPost("setItemStatusDone/{itemId}/{username}")]
-        public Task SetItemStatusDone([FromRoute] long itemId, [FromRoute] string username)
-        {
-            throw new NotImplementedException();
-        }
-
-        [HttpPost("setItemStatusNotDone/{itemId}/{username}")]
-        public Task SetItemStatusNotDone([FromRoute] long itemId, [FromRoute] string username)
+        [HttpPost("setItemStatus/{itemId}")]
+        public Task SetItemStatusDone([FromRoute] long itemId, [FromBody] ItemStatusHelper)
         {
             throw new NotImplementedException();
         }
