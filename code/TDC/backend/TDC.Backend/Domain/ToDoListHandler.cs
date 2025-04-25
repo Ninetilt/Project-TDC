@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using TDC.Backend.IDataRepository;
+﻿using TDC.Backend.IDataRepository;
 using TDC.Backend.IDataRepository.Models;
 using TDC.Backend.IDomain;
 using TDC.Backend.IDomain.Models;
@@ -115,22 +114,22 @@ namespace TDC.Backend.Domain
 
         public void UpdateItemDescription(long itemId, string description)
         {
-            throw new NotImplementedException();
+            _listItemRepository.UpdateItemDescription(itemId, description);
         }
 
         public void UpdateItemEffort(long itemId, uint effort)
         {
-            throw new NotImplementedException();
+            _listItemRepository.UpdateItemEffort(itemId, effort);
         }
 
         public void UpdateListTitle(long listId, string newTitle)
         {
-            throw new NotImplementedException();
+            _listRepository.UpdateListTitle(listId, newTitle);
         }
 
         public void SetItemStatus(long itemId, string updateForUser, bool isDone)
         {
-            throw new NotImplementedException();
+            _listItemRepository.SetItemStatus(itemId, updateForUser, isDone);
         }
 
         #region privates
