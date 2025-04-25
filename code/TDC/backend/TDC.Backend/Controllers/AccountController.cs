@@ -7,6 +7,20 @@ namespace TDC.Backend.Controllers
     [ApiController]
     public class AccountController: ControllerBase
     {
+        #region helper classes
+        public class MailLoginHelper
+        {
+            public string Email { get; set; }
+            public string Password { get; set; }
+        }
+
+        public class UsernameLoginHelper
+        {
+            public string Username { get; set; }
+            public string Password { get; set; }
+        }
+        #endregion
+
         [HttpPut("registerUser")]
         public Task<long> RegisterUser([FromBody] AccountSavingDto accountData)
         {
@@ -19,19 +33,14 @@ namespace TDC.Backend.Controllers
             throw new NotImplementedException();
         }
 
-        public class StringHelper
-        {
-            public string Text { get; set; }
-        }
-
         [HttpPost("logInWithMail")]
-        public Task<long> LoginWithMail([FromBody] StringHelper email, [FromBody] StringHelper password)
+        public Task<long> LoginWithMail([FromBody] MailLoginHelper loginData)
         {
             throw new NotImplementedException();
         }
 
         [HttpPost("logInWithUsername")]
-        public Task<long> LoginWithUsername([FromBody] StringHelper username, [FromBody] StringHelper password)
+        public Task<long> LoginWithUsername([FromBody] UsernameLoginHelper loginData)
         {
             throw new NotImplementedException();
         }

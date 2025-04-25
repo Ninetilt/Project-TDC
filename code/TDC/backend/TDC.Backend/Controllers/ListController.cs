@@ -8,16 +8,18 @@ namespace TDC.Backend.Controllers
 
     public class ListController : ControllerBase
     {
+        #region helper classes
+        public class StringHelper
+        {
+            public string Text { get; set; }
+        }
+        #endregion
+
         #region To-Do-List
         [HttpPut("createList/{username}")]
         public Task<long> CreateToDoList([FromRoute] string username, [FromBody] ToDoListDto listDto)
         {
             throw new NotImplementedException();
-        }
-
-        public class StringHelper
-        {
-            public string Text { get; set; }
         }
 
         [HttpPost("updateListTitle/{listId}")]
@@ -51,7 +53,7 @@ namespace TDC.Backend.Controllers
         }
 
         [HttpGet("getListsForUser/{username}")]
-        public Task<ToDoListDto> GetListsForUser([FromRoute] string username)
+        public Task<List<ToDoListDto>> GetListsForUser([FromRoute] string username)
         {
             throw new NotImplementedException();
         }
@@ -66,7 +68,7 @@ namespace TDC.Backend.Controllers
         #region List-Items
 
         [HttpPut("addItemToList/{listId}")]
-        public Task AddItemToList([FromRoute] long listId, [FromBody] StringHelper itemText, [FromBody] long itemEffort)
+        public Task<long> AddItemToList([FromRoute] long listId, [FromBody] ToDoListItemSavingDto itemData)
         {
             throw new NotImplementedException();
         }
