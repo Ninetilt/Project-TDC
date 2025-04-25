@@ -11,5 +11,7 @@ namespace TDC.Backend.IDataRepository
         public void UpdateItemEffort(long itemId, uint effort);
         public void SetItemStatus(long itemId, string userId, bool status);
         public bool GetItemStatus(long itemId, string userId);
+        public void DeleteItemStatus(long itemId, string username);
+        public long GetListIdFromItem(long itemId);
     }
 }

@@ -13,20 +13,26 @@ namespace TDC.Backend.DataRepository
             filePath = Path.Combine(projectPath, "Data/list-members.csv");
         }
 
-        public void AddListMember(long listId, string userId)
+        public void AddListMember(long listId, string userId, bool isCreator)
         {
             //TO-DO: check rather in domain logic if user is member already
             if (IsMember(listId, userId)) { return; }
-            AddMemberToFile(listId, userId);
-            //TO-DO: move logic to domain or change logic to no status entry = status is false
-            AddItemStatusEntryForNewMember(listId, userId);
-
-            
+            AddMemberToFile(listId, userId, isCreator);
         }
         public void RemoveListMember(long listId, string userId)
         {
             RemoveMemberFromFile(listId, userId);
         }
+
+        public bool UserIsCreator(long listId, string username)
+        {
+            var members = GetAllMembers();
+            foreach (var member in members) {
+                if(member.UserId.Equals(username) && member.ListId == listId && member.IsCreator) { return true; }
+            }
+            return false;
+        }
+
         public List<string> GetListMembers(long listId)
         {
             return GetListMembersFromFile(listId);
@@ -38,12 +44,6 @@ namespace TDC.Backend.DataRepository
         }
 
         #region privates
-
-        private void AddItemStatusEntryForNewMember(long listId, string memberId)
-        {
-            var itemRepos = new ListItemRepository();
-            itemRepos.AddItemStatusForNewMember(listId, memberId);
-        }
 
         private List<long> GetUserListsFromFile(string userId)
         {
@@ -58,10 +58,10 @@ namespace TDC.Backend.DataRepository
             return members.Any(member => member.ListId == listId && member.UserId.Equals(userId));
         } 
 
-        private void AddMemberToFile(long listId, string userId)
+        private void AddMemberToFile(long listId, string userId, bool isCreator)
         {
             var members = GetAllMembers();
-            members.Add(new ListMemberDbo(listId, userId));
+            members.Add(new ListMemberDbo(listId, userId, isCreator));
             SaveAllMembers(members);
         }
 
@@ -83,7 +83,7 @@ namespace TDC.Backend.DataRepository
 
         private static string ParseToCsvLine(ListMemberDbo dbo)
         {
-            return dbo.ListId + ";" + dbo.UserId;
+            return dbo.ListId + ";" + dbo.UserId + ";" + dbo.IsCreator;
         }
 
         private List<string> GetListMembersFromFile(long listId)
@@ -106,7 +106,7 @@ namespace TDC.Backend.DataRepository
         private static ListMemberDbo ParseToDbo(string line)
         {
             var elements = line.Split(";");
-            return new ListMemberDbo(long.Parse(elements[0]), elements[1]);
+            return new ListMemberDbo(long.Parse(elements[0]), elements[1], bool.Parse(elements[2]));
         }
         #endregion
     }

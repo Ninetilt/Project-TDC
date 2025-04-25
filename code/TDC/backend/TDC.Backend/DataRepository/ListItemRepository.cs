@@ -1,5 +1,6 @@
 ﻿using TDC.Backend.IDataRepository;
 using TDC.Backend.IDataRepository.Models;
+using System.Linq;
 
 namespace TDC.Backend.DataRepository
 {
@@ -24,21 +25,24 @@ namespace TDC.Backend.DataRepository
         {
             item.ItemId = GetNewId();
             AddItemToFile(new ListItemCsvHelper(item.ItemId, listId, item.Description, item.Effort));
-            AddDefaultItemStatus(item.ItemId, listId);
             return item.ItemId;
         }
+
         public void RemoveItemFromList(long itemId)
         {
             RemoveItemFromFile(itemId);
         }
+
         public void UpdateItemDescription(long itemId, string description)
         {
             UpdateItemDescriptionInFile(itemId, description);
         }
+
         public void UpdateItemEffort(long itemId, uint effort)
         {
             UpdateItemEffortInFile(itemId, effort);
         }
+
         public void SetItemStatus(long itemId, string userId, bool status)
         {
             UpdateItemStatusInFile(itemId, userId, status);
@@ -49,24 +53,42 @@ namespace TDC.Backend.DataRepository
             return GetItemStatusFromFile(itemId, userId);
         }
 
-        public void AddItemStatusForNewMember(long listId, string userId)
+        public void DeleteItemStatus(long itemId, string username)
         {
-            AddItemStatusForNewMemberInFile(listId, userId);
+            DeleteItemStatusEntryFromFile(itemId, username);
+        }
+
+        public long GetListIdFromItem(long itemId)
+        {
+            var items = GetAllItemHelpersFromFile();
+            foreach (var item in from item in items
+                                 where item.ItemId == itemId
+                                 select item)
+            {
+                return item.ListId;
+            }
+
+            return -1;
         }
 
         #region privates
-
-        private void AddItemStatusForNewMemberInFile(long listId, string userId)
+        private void DeleteItemStatusEntryFromFile(long itemId, string userId)
         {
-            var items = GetItemsForList(listId);
-            var existingStatusItems = GetAllStatusItems();
-            existingStatusItems.AddRange(items.Select(item => new ToDoItemStatusDbo(item.ItemId, userId, false)));
-            SaveAllStatusItems(existingStatusItems);
+            var statusItems = GetAllStatusItems();
+            var newStatusItems = new List<ToDoItemStatusDbo>();
+            foreach (var item in statusItems) {
+                if (item.ItemId != itemId || !item.UserId.Equals(userId)) {
+                    newStatusItems.Add(item);
+                }
+            }
+            SaveAllStatusItems(newStatusItems);
         }
 
         private bool GetItemStatusFromFile(long itemId, string userId)
         {
             var items = GetAllStatusItems();
+
+            // no entry = status is false
             return (from item in items where item.ItemId == itemId && item.UserId.Equals(userId) select item.IsDone).FirstOrDefault();
         }
 
@@ -78,16 +100,6 @@ namespace TDC.Backend.DataRepository
                 item.IsDone = status;
             }
             SaveAllStatusItems(items);
-        }
-
-        private void AddDefaultItemStatus(long itemId, long listId)
-        {
-            //NOTE: always has to be called when new item is added -> for each user who is part of the list
-            var statusItems = GetAllStatusItems();
-            var listMemberRepos = new ListMemberRepository();
-            var members = listMemberRepos.GetListMembers(listId);
-            statusItems.AddRange(members.Select(member => new ToDoItemStatusDbo(itemId, member, false)));
-            SaveAllStatusItems(statusItems);
         }
 
         private void SaveAllStatusItems(List<ToDoItemStatusDbo> statusItems)
