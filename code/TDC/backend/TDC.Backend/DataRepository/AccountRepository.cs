@@ -13,7 +13,7 @@ namespace TDC.Backend.DataRepository
             filePath = Path.Combine(projectPath, "Data/accounts.csv");
         }
 
-        public void AddAccount(AccountDbo account)
+        public void CreateAccount(AccountDbo account)
         {
             AddAccountToFile(account);
         }

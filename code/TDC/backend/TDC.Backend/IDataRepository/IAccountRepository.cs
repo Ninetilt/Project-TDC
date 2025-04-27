@@ -4,7 +4,7 @@ namespace TDC.Backend.IDataRepository
 {
     public interface IAccountRepository
     {
-        public void AddAccount(AccountDbo account);
+        public void CreateAccount(AccountDbo account);
         public void DeleteAccount(string username);
         public void UpdateUsername(string username, string newUsername);
         public void UpdateEmail(string username, string newEmail);

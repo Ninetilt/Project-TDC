@@ -93,7 +93,7 @@ namespace TDC.Backend.Controllers
         }
 
         [HttpPost("setItemStatus/{itemId}")]
-        public Task SetItemStatusDone([FromRoute] long itemId, [FromBody] ItemStatusHelper)
+        public Task SetItemStatusDone([FromRoute] long itemId, [FromBody] ItemStatusHelper itemStatus)
         {
             throw new NotImplementedException();
         }

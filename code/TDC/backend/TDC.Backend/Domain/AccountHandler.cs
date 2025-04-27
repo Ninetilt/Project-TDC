@@ -1,28 +1,38 @@
-﻿using TDC.Backend.IDomain;
+﻿using TDC.Backend.IDataRepository;
+using TDC.Backend.IDataRepository.Models;
+using TDC.Backend.IDomain;
 using TDC.Backend.IDomain.Models;
 
 namespace TDC.Backend.Domain
 {
     public class AccountHandler : IAccountHandler
     {
-        public bool AcceptFriendRequest(string username, string requestName)
+        internal readonly IAccountRepository _accountRepository;
+
+        public AccountHandler(IAccountRepository accountRepository)
+        {
+            _accountRepository = accountRepository;
+        }
+
+        public Task AcceptFriendRequest(string username, string requestName)
         {
             throw new NotImplementedException();
         }
 
-        public bool CancelFriendRequest(string sender, string receiver)
+        public Task CancelFriendRequest(string sender, string receiver)
         {
             throw new NotImplementedException();
         }
 
-        public bool DenyFriendRequest(string username, string requestName)
+        public Task DenyFriendRequest(string username, string requestName)
         {
             throw new NotImplementedException();
         }
 
-        public AccountLoadingDto GetAccountData(string username)
+        public AccountLoadingDto GetAccountByUsername(string username)
         {
-            throw new NotImplementedException();
+            var accountDbo = _accountRepository.GetAccountByUsername(username)!;
+            return new AccountLoadingDto(accountDbo.Username, accountDbo.Email, accountDbo.Description);
         }
 
         public List<string> GetFriendsForUser(string username)
@@ -37,42 +47,73 @@ namespace TDC.Backend.Domain
 
         public bool LoginWithMail(string email, string password)
         {
-            throw new NotImplementedException();
+            var accountDbo = _accountRepository.GetAccountByEmail(email)!;
+            if (accountDbo.Password.Equals(password)) {
+                return true;
+            }
+            return false;
         }
 
         public bool LoginWithUsername(string username, string password)
         {
-            throw new NotImplementedException();
+            var accountDbo = _accountRepository.GetAccountByUsername(username)!;
+            if (accountDbo.Password.Equals(password))
+            {
+                return true;
+            }
+            return false;
         }
 
-        public void RegisterUser(AccountSavingDto accountData)
+        public bool RegisterUser(AccountSavingDto accountData)
+        {
+            if(UsernameAlreadyExists(accountData.Username)) { return false; }
+            if(EmailAlreadyExists(accountData.Email)) { return false; }
+            _accountRepository.CreateAccount(new AccountDbo(accountData.Username, accountData.Email, accountData.Password, accountData.Description));
+            return true;
+        }
+
+        public Task SendFriendRequest(string sender, string receiver)
         {
             throw new NotImplementedException();
         }
 
-        public bool SendFriendRequest(string sender, string receiver)
+        public Task UpdateEmail(string username, string email)
         {
-            throw new NotImplementedException();
-        }
-
-        public bool UpdateEmail(string username, string email)
-        {
-            throw new NotImplementedException();
+            _accountRepository.UpdateEmail(username, email);
+            return Task.CompletedTask;
         }
 
         public bool UpdatePassword(string username, string password)
         {
-            throw new NotImplementedException();
+            _accountRepository.UpdatePassword(username, password);
+            //TO-DO: catch possible errors and return false if update failed -> check error case of existing password and sql exception
+            return true;
         }
 
-        public bool UpdateUserDescription(string username, string description)
+        public Task UpdateUserDescription(string username, string description)
         {
-            throw new NotImplementedException();
+            _accountRepository.UpdateDescription(username, description);
+            return Task.CompletedTask;
         }
 
-        public bool UpdateUsername(string oldUsername, string newUsername)
+        public Task UpdateUsername(string oldUsername, string newUsername)
         {
-            throw new NotImplementedException();
+            _accountRepository.UpdateUsername(oldUsername, newUsername);
+            return Task.CompletedTask;
         }
+
+        #region privates
+        private bool UsernameAlreadyExists(string username)
+        {
+            var account = _accountRepository.GetAccountByUsername(username);
+            return account != null;
+        }
+
+        private bool EmailAlreadyExists(string email)
+        {
+            var account = _accountRepository.GetAccountByEmail(email);
+            return account != null;
+        }
+        #endregion
     }
 }

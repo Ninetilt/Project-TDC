@@ -21,38 +21,40 @@ namespace TDC.Backend.Domain
             _listMemberRepository = listMemberRepository;
         }
 
-        public long CreateList(string creator, ToDoListDto newList)
+        public Task CreateList(string creator, ToDoListDto newList)
         {
             var listDbo = new ToDoListDbo(newList.ListId, newList.Name, newList.IsCollaborative, false);
             var listId = _listRepository.CreateList(listDbo);
             _listMemberRepository.AddListMember(listId, creator, true);
-            return listId;
+            return Task.CompletedTask;
         }
 
-        public void AddUserToList(long listId, string username)
+        public Task AddUserToList(long listId, string username)
         {
             _listMemberRepository.AddListMember(listId, username, false);
+            return Task.CompletedTask;
         }
 
-        public void RemoveUserFromList(long listId, string username)
+        public Task RemoveUserFromList(long listId, string username)
         {
             if (_listMemberRepository.UserIsCreator(listId, username)) {
-                return;
+                return Task.CompletedTask;
             }
             _listMemberRepository.RemoveListMember(listId, username);
+            return Task.CompletedTask;
         }
 
-        public bool SendListInvitation(long listId, string fromUser, string ForUser)
+        public Task SendListInvitation(long listId, string fromUser, string ForUser)
         {
             throw new NotImplementedException();
         }
 
-        public void DeclineListInvitation(long listId, string decliningUser)
+        public Task DeclineListInvitation(long listId, string decliningUser)
         {
             throw new NotImplementedException();
         }
 
-        public void AcceptListInvitation(long listId, string newUser)
+        public Task AcceptListInvitation(long listId, string newUser)
         {
             throw new NotImplementedException();
         }
@@ -62,16 +64,18 @@ namespace TDC.Backend.Domain
             throw new NotImplementedException();
         }
 
-        public void DeleteList(long listId, string sender)
+        public Task DeleteList(long listId, string sender)
         {
-            if(!_listMemberRepository.UserIsCreator(listId, sender)) { return; }
+            if(!_listMemberRepository.UserIsCreator(listId, sender)) { return Task.CompletedTask; }
             _listRepository.DeleteList(listId);
+            return Task.CompletedTask;
         }
 
-        public void FinishList(long listId, string sender)
+        public Task FinishList(long listId, string sender)
         {
-            if(!_listMemberRepository.UserIsCreator(listId, sender)) { return; }
+            if(!_listMemberRepository.UserIsCreator(listId, sender)) { return Task.CompletedTask; }
             _listRepository.FinishList(listId);
+            return Task.CompletedTask;
         }
 
         public List<ToDoListDto> GetListsForUser(string username)
@@ -97,12 +101,13 @@ namespace TDC.Backend.Domain
             return listDtos;
         }
 
-        public long AddItemToList(long listId, string itemDescription, uint itemEffort)
+        public Task AddItemToList(long listId, string itemDescription, uint itemEffort)
         {
-            return _listItemRepository.AddItemToList(listId, new ToDoListItemDbo(0, itemDescription, itemEffort));
+            _listItemRepository.AddItemToList(listId, new ToDoListItemDbo(0, itemDescription, itemEffort));
+            return Task.CompletedTask;
         }
 
-        public void DeleteItem(long itemId)
+        public Task DeleteItem(long itemId)
         {
             _listItemRepository.RemoveItemFromList(itemId);
             var listId = _listItemRepository.GetListIdFromItem(itemId);
@@ -110,26 +115,31 @@ namespace TDC.Backend.Domain
             foreach (var member in listMembers) {
                 _listItemRepository.DeleteItemStatus(itemId, member);
             }
+            return Task.CompletedTask;
         }
 
-        public void UpdateItemDescription(long itemId, string description)
+        public Task UpdateItemDescription(long itemId, string description)
         {
             _listItemRepository.UpdateItemDescription(itemId, description);
+            return Task.CompletedTask;
         }
 
-        public void UpdateItemEffort(long itemId, uint effort)
+        public Task UpdateItemEffort(long itemId, uint effort)
         {
             _listItemRepository.UpdateItemEffort(itemId, effort);
+            return Task.CompletedTask;
         }
 
-        public void UpdateListTitle(long listId, string newTitle)
+        public Task UpdateListTitle(long listId, string newTitle)
         {
             _listRepository.UpdateListTitle(listId, newTitle);
+            return Task.CompletedTask;
         }
 
-        public void SetItemStatus(long itemId, string updateForUser, bool isDone)
+        public Task SetItemStatus(long itemId, string updateForUser, bool isDone)
         {
             _listItemRepository.SetItemStatus(itemId, updateForUser, isDone);
+            return Task.CompletedTask;
         }
 
         #region privates

@@ -1,10 +1,8 @@
 ﻿namespace TDC.Backend.IDomain.Models;
 
-public class AccountLoadingDto
+public class AccountLoadingDto(string username, string email, string description)
 {
-    public string Username { get; set; }
-    public string Email { get; set; }
-    public string Description { get; set; }
-    public List<string> Friends { get; set; }
-    public List<string> Requests { get; set; }
+    public string Username { get; set; } = username;
+    public string Email { get; set; } = email;
+    public string Description { get; set; } = description;
 }
