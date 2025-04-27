@@ -47,6 +47,8 @@ namespace TDC.Backend.Domain
 
         public bool LoginWithMail(string email, string password)
         {
+            if (!_accountRepository.AccountWithEmailExists(email)) { return false; }
+
             var accountDbo = _accountRepository.GetAccountByEmail(email)!;
             if (accountDbo.Password.Equals(password)) {
                 return true;
@@ -56,6 +58,8 @@ namespace TDC.Backend.Domain
 
         public bool LoginWithUsername(string username, string password)
         {
+            if (!_accountRepository.AccountExists(username)) { return false; }
+
             var accountDbo = _accountRepository.GetAccountByUsername(username)!;
             if (accountDbo.Password.Equals(password))
             {
@@ -88,6 +92,7 @@ namespace TDC.Backend.Domain
         {
             _accountRepository.UpdatePassword(username, password);
             //TO-DO: catch possible errors and return false if update failed -> check error case of existing password and sql exception
+            // existing password could also be checked in FE -> discuss
             return true;
         }
 
@@ -97,17 +102,17 @@ namespace TDC.Backend.Domain
             return Task.CompletedTask;
         }
 
-        public Task UpdateUsername(string oldUsername, string newUsername)
+        public bool UpdateUsername(string oldUsername, string newUsername)
         {
+            if (UsernameAlreadyExists(newUsername)) { return false; }
             _accountRepository.UpdateUsername(oldUsername, newUsername);
-            return Task.CompletedTask;
+            return true;
         }
 
         #region privates
         private bool UsernameAlreadyExists(string username)
         {
-            var account = _accountRepository.GetAccountByUsername(username);
-            return account != null;
+            return _accountRepository.AccountExists(username);
         }
 
         private bool EmailAlreadyExists(string email)

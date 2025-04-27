@@ -39,9 +39,9 @@ namespace TDC.Backend.Controllers
         }
 
         [HttpPost("updateUsername/{username}/{newUsername}")]
-        public async Task UpdateUsername([FromRoute] string username, [FromRoute] string newUsername)
+        public bool UpdateUsername([FromRoute] string username, [FromRoute] string newUsername)
         {
-            await _accountHandler.UpdateUsername(username, newUsername);
+            return _accountHandler.UpdateUsername(username, newUsername);
         }
 
         [HttpPost("updateUserDescription/{username}")]

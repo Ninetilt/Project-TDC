@@ -31,15 +31,15 @@ namespace TDC.Backend.Domain
 
         public Task AddUserToList(long listId, string username)
         {
+            if (UserIsListMember(listId, username)) { return Task.CompletedTask; }
             _listMemberRepository.AddListMember(listId, username, false);
             return Task.CompletedTask;
         }
 
         public Task RemoveUserFromList(long listId, string username)
         {
-            if (_listMemberRepository.UserIsCreator(listId, username)) {
-                return Task.CompletedTask;
-            }
+            if(!UserIsListMember(listId,username)) { return Task.CompletedTask; }
+            if (_listMemberRepository.UserIsCreator(listId, username)) { return Task.CompletedTask; }
             _listMemberRepository.RemoveListMember(listId, username);
             return Task.CompletedTask;
         }
@@ -75,6 +75,7 @@ namespace TDC.Backend.Domain
         {
             if(!_listMemberRepository.UserIsCreator(listId, sender)) { return Task.CompletedTask; }
             if (!ListCanBeFinished(listId)) { return Task.CompletedTask; }
+
             // TO-DO: add logic to grant every member rewards
             _listRepository.FinishList(listId);
             return Task.CompletedTask;
@@ -148,38 +149,27 @@ namespace TDC.Backend.Domain
         private ToDoListItemLoadingDto ParseItemDboToDto(ToDoListItemDbo dbo, string currentUser, List<string> listMembers)
         {
             var isDone = _listItemRepository.GetItemStatus(dbo.ItemId, currentUser);
-            var finishedMembers = new List<string>();
-            foreach (var member in listMembers) {
-                if ((_listItemRepository.GetItemStatus(dbo.ItemId, member) == true) && !member.Equals(currentUser)) {
-                    finishedMembers.Add(member);
-                }
-            }
+            var finishedMembers = listMembers
+                .Where(member => _listItemRepository.GetItemStatus(dbo.ItemId, member) && !member.Equals(currentUser))
+                .ToList();
             return new ToDoListItemLoadingDto(dbo.ItemId, dbo.Description, isDone, finishedMembers, dbo.Effort);
         }
 
         private bool ListCanBeFinished(long listId)
         {
             var listItems = _listItemRepository.GetItemsForList(listId);
-            foreach (var listItem in listItems) {
-                if (AnyoneHasFinished(listId, listItem.ItemId)) {
-                    return true;
-                }
-            }
-            return false;
+            return listItems.All(listItem => AnyoneHasFinished(listId, listItem.ItemId));
         }
 
         private bool AnyoneHasFinished(long listId, long itemId)
         {
             var listMembers = _listMemberRepository.GetListMembers(listId);
-            foreach (var member in listMembers)
-            {
-                if(_listItemRepository.GetItemStatus(itemId, member))
-                {
-                    return true;
-                }
-                
-            }
-            return false;
+            return listMembers.Any(member => _listItemRepository.GetItemStatus(itemId, member) == true);
+        }
+
+        private bool UserIsListMember(long listId, string username) {
+            var members = _listMemberRepository.GetListMembers(listId);
+            return members.Any(member => member.Equals(username));
         }
         #endregion
     }

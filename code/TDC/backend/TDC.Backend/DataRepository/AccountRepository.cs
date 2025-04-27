@@ -39,6 +39,17 @@ namespace TDC.Backend.DataRepository
             UpdateDescriptionInFile(username, newDescription);
         }
 
+        public bool AccountExists(string username)
+        {
+            var accounts = GetAllAccounts();
+            return accounts.Any(acc => acc.Username.Equals(username));
+        }
+
+        public bool AccountWithEmailExists(string email)
+        {
+            var accounts = GetAllAccounts();
+            return accounts.Any(accounts => accounts.Email.Equals(email));
+        }
 
         public AccountDbo? GetAccountByUsername(string username)
         {
