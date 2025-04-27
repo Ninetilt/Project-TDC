@@ -12,8 +12,14 @@ namespace TDC.Backend.DataRepository
 
         public ListItemRepository()
         {
-            filePath = Path.Combine(projectPath, "Data/items.csv");
-            statusFilePath = Path.Combine(projectPath, "Data/item-status.csv");
+            var directoryPath = Path.Combine(projectPath, "TestData");
+            if (!Directory.Exists(directoryPath)) { Directory.CreateDirectory(directoryPath); }
+
+            filePath = Path.Combine(directoryPath, "items.csv");
+            if (!File.Exists(filePath)) { File.WriteAllText(filePath, string.Empty); }
+
+            statusFilePath = Path.Combine(directoryPath, "item-status.csv");
+            if (!File.Exists(filePath)) { File.WriteAllText(filePath, string.Empty); }
         }
 
         public List<ToDoListItemDbo> GetItemsForList(long listId)

@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
+using TDC.Backend.Helpers;
 using TDC.Backend.IDomain;
 using TDC.Backend.IDomain.Models;
 
@@ -13,25 +15,6 @@ namespace TDC.Backend.Controllers
             _accountHandler = accountHandler;
         }
 
-        #region helper classes
-        public class MailLoginHelper
-        {
-            public string Email { get; set; }
-            public string Password { get; set; }
-        }
-
-        public class UsernameLoginHelper
-        {
-            public string Username { get; set; }
-            public string Password { get; set; }
-        }
-
-        public class StringHelper
-        {
-            public string Text { get; set; }
-        }
-        #endregion
-
         [HttpPut("registerUser")]
         public bool RegisterUser([FromBody] AccountSavingDto accountData)
         {
@@ -45,21 +28,21 @@ namespace TDC.Backend.Controllers
         }
 
         [HttpPost("updateUserDescription/{username}")]
-        public async Task UpdateUserDescription([FromRoute] string username, [FromBody] StringHelper description)
+        public async Task UpdateUserDescription([FromRoute] string username, [FromBody] DescriptionHelper description)
         {
-            await _accountHandler.UpdateUserDescription(username, description.Text);
+            await _accountHandler.UpdateUserDescription(username, description.Description);
         }
 
         [HttpPost("updateEmail/{username}")]
-        public bool UpdateEmail([FromRoute] string username, [FromBody] StringHelper email)
+        public bool UpdateEmail([FromRoute] string username, [FromBody] MailHelper email)
         {
-            return _accountHandler.UpdateEmail(username, email.Text);
+            return _accountHandler.UpdateEmail(username, email.Email);
         }
 
         [HttpPost("updatePassword/{username}")]
-        public bool UpdatePassword([FromRoute] string username, [FromBody] StringHelper password)
+        public bool UpdatePassword([FromRoute] string username, [FromBody] PasswordHelper password)
         {
-            return _accountHandler.UpdatePassword(username, password.Text);
+            return _accountHandler.UpdatePassword(username, password.Password);
         }
 
         [HttpPost("logInWithMail")]

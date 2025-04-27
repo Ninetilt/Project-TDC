@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
+using TDC.Backend.Helpers;
 using TDC.Backend.IDomain;
 using TDC.Backend.IDomain.Models;
 
@@ -14,19 +16,6 @@ namespace TDC.Backend.Controllers
             _listHandler = listHandler;
         }
 
-        #region helper classes
-        public class StringHelper
-        {
-            public string Text { get; set; }
-        }
-
-        public class ItemStatusHelper
-        {
-            public string UpdateForUser { get; set; }
-            public bool IsDone { get; set; }
-        }
-        #endregion
-
         #region To-Do-List
         [HttpPut("createList/{username}")]
         public async Task CreateToDoList([FromRoute] string username, [FromBody] ToDoListDto listDto)
@@ -35,21 +24,21 @@ namespace TDC.Backend.Controllers
         }
 
         [HttpPost("updateListTitle/{listId}")]
-        public async Task UpdateToDoListTitle([FromRoute] long listId, [FromBody] StringHelper newTitle)
+        public async Task UpdateToDoListTitle([FromRoute] long listId, [FromBody] ListTitleHelper newTitle)
         {
-            await _listHandler.UpdateListTitle(listId, newTitle.Text);
+            await _listHandler.UpdateListTitle(listId, newTitle.ListTitle);
         }
 
         [HttpDelete("deleteList/{listId}")]
-        public async Task DeleteToDoList([FromRoute] long listId, [FromBody] StringHelper sender)
+        public async Task DeleteToDoList([FromRoute] long listId, [FromBody] UsernameHelper sender)
         {
-            await _listHandler.DeleteList(listId, sender.Text);
+            await _listHandler.DeleteList(listId, sender.Username);
         }
 
         [HttpPost("finishList/{listId}")]
-        public async Task FinishToDoList([FromRoute] long listId, [FromRoute] StringHelper sender)
+        public async Task FinishToDoList([FromRoute] long listId, [FromRoute] UsernameHelper sender)
         {
-            await _listHandler.FinishList(listId, sender.Text);
+            await _listHandler.FinishList(listId, sender.Username);
         }
 
         [HttpPut("addUserToList/{listId}/{username}")]
@@ -85,9 +74,9 @@ namespace TDC.Backend.Controllers
         }
 
         [HttpPost("updateItemDescription/{itemId}")]
-        public async Task UpdateItemDescription([FromRoute] long itemId, [FromBody] StringHelper newText)
+        public async Task UpdateItemDescription([FromRoute] long itemId, [FromBody] DescriptionHelper description)
         {
-            await _listHandler.UpdateItemDescription(itemId, newText.Text);
+            await _listHandler.UpdateItemDescription(itemId, description.Description);
         }
 
         [HttpPost("updateItemEffort/{itemId}/{newEffort}")]

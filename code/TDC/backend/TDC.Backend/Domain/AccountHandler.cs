@@ -83,7 +83,7 @@ namespace TDC.Backend.Domain
 
         public bool UpdateEmail(string username, string email)
         {
-            if(EmailAlreadyExists(username)) { return false; }
+            if(EmailAlreadyExists(email)) { return false; }
             _accountRepository.UpdateEmail(username, email);
             return true;
         }

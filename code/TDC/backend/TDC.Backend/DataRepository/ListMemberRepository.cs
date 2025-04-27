@@ -10,7 +10,11 @@ namespace TDC.Backend.DataRepository
 
         public ListMemberRepository()
         {
-            filePath = Path.Combine(projectPath, "Data/list-members.csv");
+            var directoryPath = Path.Combine(projectPath, "TestData");
+            if (!Directory.Exists(directoryPath)) { Directory.CreateDirectory(directoryPath); }
+
+            filePath = Path.Combine(directoryPath, "list-members.csv");
+            if (!File.Exists(filePath)) { File.WriteAllText(filePath, string.Empty); }
         }
 
         public void AddListMember(long listId, string userId, bool isCreator)

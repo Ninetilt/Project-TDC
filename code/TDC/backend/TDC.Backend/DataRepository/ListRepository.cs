@@ -10,7 +10,11 @@ namespace TDC.Backend.DataRepository
 
         public ListRepository()
         {
-            filePath = Path.Combine(projectPath, "Data/lists.csv");
+            var directoryPath = Path.Combine(projectPath, "TestData");
+            if (!Directory.Exists(directoryPath)) { Directory.CreateDirectory(directoryPath); }
+
+            filePath = Path.Combine(directoryPath, "lists.csv");
+            if (!File.Exists(filePath)) { File.WriteAllText(filePath, string.Empty); }
         }
 
         public long CreateList(ToDoListDbo list)

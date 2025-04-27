@@ -10,7 +10,11 @@ namespace TDC.Backend.DataRepository
 
         public AccountRepository()
         {
-            filePath = Path.Combine(projectPath, "Data/accounts.csv");
+            var directoryPath = Path.Combine(projectPath, "TestData");
+            if (!Directory.Exists(directoryPath)) { Directory.CreateDirectory(directoryPath); }
+
+            filePath = Path.Combine(directoryPath, "accounts.csv");
+            if (!File.Exists(filePath)) { File.WriteAllText(filePath, string.Empty); }
         }
 
         public void CreateAccount(AccountDbo account)
@@ -55,6 +59,7 @@ namespace TDC.Backend.DataRepository
         {
             return GetAccountByUsernameFromFile(username);
         }
+
         public AccountDbo? GetAccountByEmail(string email)
         {
             return GetAccountByEmailFromFile(email);
