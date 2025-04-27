@@ -127,6 +127,7 @@ namespace TDC.Backend.DataRepository
             {
                 writer.WriteLine(ParseToCsvLine(account));
             }
+            writer.Close();
         }
 
         private static string ParseToCsvLine(AccountDbo account)
@@ -154,6 +155,7 @@ namespace TDC.Backend.DataRepository
             {
                 accounts.Add(ParseToDbo(line));
             }
+            reader.Close();
             return accounts;
         }
 

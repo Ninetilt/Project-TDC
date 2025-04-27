@@ -17,10 +17,10 @@ namespace TDC.Backend.Controllers
         }
 
         #region To-Do-List
-        [HttpPut("createList/{username}")]
-        public async Task CreateToDoList([FromRoute] string username, [FromBody] ToDoListDto listDto)
+        [HttpPut("createList/{sender}")]
+        public async Task CreateToDoList([FromRoute] string sender, [FromBody] ToDoListDto listDto)
         {
-           await _listHandler.CreateList(username, listDto);
+           await _listHandler.CreateList(sender, listDto);
         }
 
         [HttpPost("updateListTitle/{listId}")]
@@ -36,7 +36,7 @@ namespace TDC.Backend.Controllers
         }
 
         [HttpPost("finishList/{listId}")]
-        public async Task FinishToDoList([FromRoute] long listId, [FromRoute] UsernameHelper sender)
+        public async Task FinishToDoList([FromRoute] long listId, [FromBody] UsernameHelper sender)
         {
             await _listHandler.FinishList(listId, sender.Username);
         }

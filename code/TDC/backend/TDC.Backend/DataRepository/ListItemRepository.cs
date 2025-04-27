@@ -19,7 +19,7 @@ namespace TDC.Backend.DataRepository
             if (!File.Exists(filePath)) { File.WriteAllText(filePath, string.Empty); }
 
             statusFilePath = Path.Combine(directoryPath, "item-status.csv");
-            if (!File.Exists(filePath)) { File.WriteAllText(filePath, string.Empty); }
+            if (!File.Exists(statusFilePath)) { File.WriteAllText(statusFilePath, string.Empty); }
         }
 
         public List<ToDoListItemDbo> GetItemsForList(long listId)
@@ -101,11 +101,21 @@ namespace TDC.Backend.DataRepository
         private void UpdateItemStatusInFile(long itemId, string userId, bool status)
         {
             var items = GetAllStatusItems();
-            foreach (var item in items.Where(item => item.ItemId == itemId && item.UserId.Equals(userId)))
+            if (status == true)
             {
-                item.IsDone = status;
+                items.Add(new ToDoItemStatusDbo(itemId, userId, true));
+                SaveAllStatusItems(items);
             }
-            SaveAllStatusItems(items);
+            else
+            {
+                var newItems = new List<ToDoItemStatusDbo>();
+                foreach (var item in items) {
+                    if (item.ItemId != itemId || !item.UserId.Equals(userId)) {
+                        newItems.Add(item);
+                    }
+                }
+                SaveAllStatusItems(newItems);
+            }
         }
 
         private void SaveAllStatusItems(List<ToDoItemStatusDbo> statusItems)
@@ -115,6 +125,7 @@ namespace TDC.Backend.DataRepository
             {
                 writer.WriteLine(StatusDboToCsvString(item));
             }
+            writer.Close();
         }
 
         private List<ToDoItemStatusDbo> GetAllStatusItems()
@@ -125,6 +136,7 @@ namespace TDC.Backend.DataRepository
             {
                 ret.Add(ParseToStatusDbo(line));
             }
+            reader.Close();
             return ret;
         }
 
@@ -188,6 +200,7 @@ namespace TDC.Backend.DataRepository
             {
                 writer.WriteLine(ParseToCsvLine(item));
             }
+            writer.Close();
         }
 
         private List<ToDoListItemDbo> GetItemsForListFromFile(long listId)
@@ -204,6 +217,7 @@ namespace TDC.Backend.DataRepository
             {
                 ret.Add(ParseToHelper(line));
             }
+            reader.Close();
             return ret;
         }
 

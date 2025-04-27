@@ -81,6 +81,7 @@ namespace TDC.Backend.DataRepository
             {
                 writer.WriteLine(ParseToCsvLine(member));
             }
+            writer.Close();
         }
 
         private static string ParseToCsvLine(ListMemberDbo dbo)
@@ -102,6 +103,7 @@ namespace TDC.Backend.DataRepository
             {
                 ret.Add(ParseToDbo(line));
             }
+            reader.Close();
             return ret;
         }
 

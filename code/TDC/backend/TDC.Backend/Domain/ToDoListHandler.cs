@@ -32,6 +32,7 @@ namespace TDC.Backend.Domain
         public Task AddUserToList(long listId, string username)
         {
             if (UserIsListMember(listId, username)) { return Task.CompletedTask; }
+            if(!ListIsCollaborative(listId)) { return Task.CompletedTask; }
             _listMemberRepository.AddListMember(listId, username, false);
             return Task.CompletedTask;
         }
@@ -87,7 +88,8 @@ namespace TDC.Backend.Domain
             var listDbos = new List<ToDoListDbo>();
 
             foreach (var listId in listIds) {
-                listDbos.Add(_listRepository.GetById(listId)!);
+                var list = _listRepository.GetById(listId);
+                if(list != null) { listDbos.Add(list); } //TO-DO: check can be removed as soon as sql with foreign keys is used
             }
 
             var listDtos = new List<ToDoListDto>();
@@ -170,6 +172,11 @@ namespace TDC.Backend.Domain
         private bool UserIsListMember(long listId, string username) {
             var members = _listMemberRepository.GetListMembers(listId);
             return members.Any(member => member.Equals(username));
+        }
+
+        private bool ListIsCollaborative(long listId) {
+            var list = _listRepository.GetById(listId)!;
+            return list.IsCollaborative;
         }
         #endregion
     }

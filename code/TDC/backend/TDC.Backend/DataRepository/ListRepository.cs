@@ -94,6 +94,7 @@ namespace TDC.Backend.DataRepository
             {
                 writer.WriteLine(ParseToCsvLine(list));
             }
+            writer.Close();
         }
 
         private static string ParseToCsvLine(ToDoListDbo list)
@@ -114,6 +115,7 @@ namespace TDC.Backend.DataRepository
             {
                 ret.Add(ParseToDbo(line));
             }
+            reader.Close();
             return ret;
         }
 
