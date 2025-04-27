@@ -74,6 +74,8 @@ namespace TDC.Backend.Domain
         public Task FinishList(long listId, string sender)
         {
             if(!_listMemberRepository.UserIsCreator(listId, sender)) { return Task.CompletedTask; }
+            if (!ListCanBeFinished(listId)) { return Task.CompletedTask; }
+            // TO-DO: add logic to grant every member rewards
             _listRepository.FinishList(listId);
             return Task.CompletedTask;
         }
@@ -153,6 +155,31 @@ namespace TDC.Backend.Domain
                 }
             }
             return new ToDoListItemLoadingDto(dbo.ItemId, dbo.Description, isDone, finishedMembers, dbo.Effort);
+        }
+
+        private bool ListCanBeFinished(long listId)
+        {
+            var listItems = _listItemRepository.GetItemsForList(listId);
+            foreach (var listItem in listItems) {
+                if (AnyoneHasFinished(listId, listItem.ItemId)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool AnyoneHasFinished(long listId, long itemId)
+        {
+            var listMembers = _listMemberRepository.GetListMembers(listId);
+            foreach (var member in listMembers)
+            {
+                if(_listItemRepository.GetItemStatus(itemId, member))
+                {
+                    return true;
+                }
+                
+            }
+            return false;
         }
         #endregion
     }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TDC.Backend.IDomain;
 using TDC.Backend.IDomain.Models;
 
 namespace TDC.Backend.Controllers
@@ -7,6 +8,11 @@ namespace TDC.Backend.Controllers
     [ApiController]
     public class AccountController: ControllerBase
     {
+        internal readonly IAccountHandler _accountHandler;
+        public AccountController(IAccountHandler accountHandler) {
+            _accountHandler = accountHandler;
+        }
+
         #region helper classes
         public class MailLoginHelper
         {
@@ -27,51 +33,51 @@ namespace TDC.Backend.Controllers
         #endregion
 
         [HttpPut("registerUser")]
-        public Task<long> RegisterUser([FromBody] AccountSavingDto accountData)
+        public bool RegisterUser([FromBody] AccountSavingDto accountData)
         {
-            throw new NotImplementedException();
+            return _accountHandler.RegisterUser(accountData);
         }
 
         [HttpPost("updateUsername/{username}/{newUsername}")]
-        public Task<bool> UpdateUsername([FromRoute] string username, [FromRoute] string newUsername)
+        public async Task UpdateUsername([FromRoute] string username, [FromRoute] string newUsername)
         {
-            throw new NotImplementedException();
+            await _accountHandler.UpdateUsername(username, newUsername);
         }
 
         [HttpPost("updateUserDescription/{username}")]
-        public Task<bool> UpdateUsername([FromRoute] string username, [FromBody] StringHelper description)
+        public async Task UpdateUserDescription([FromRoute] string username, [FromBody] StringHelper description)
         {
-            throw new NotImplementedException();
+            await _accountHandler.UpdateUserDescription(username, description.Text);
         }
 
         [HttpPost("updateEmail/{username}")]
-        public Task<bool> UpdateEmail([FromRoute] string username, [FromBody] StringHelper email)
+        public bool UpdateEmail([FromRoute] string username, [FromBody] StringHelper email)
         {
-            throw new NotImplementedException();
+            return _accountHandler.UpdateEmail(username, email.Text);
         }
 
         [HttpPost("updatePassword/{username}")]
-        public Task<bool> UpdatePassword([FromRoute] string username, [FromBody] StringHelper password)
+        public bool UpdatePassword([FromRoute] string username, [FromBody] StringHelper password)
         {
-            throw new NotImplementedException();
+            return _accountHandler.UpdatePassword(username, password.Text);
         }
 
         [HttpPost("logInWithMail")]
-        public Task<bool> LoginWithMail([FromBody] MailLoginHelper loginData)
+        public bool LoginWithMail([FromBody] MailLoginHelper loginData)
         {
-            throw new NotImplementedException();
+            return _accountHandler.LoginWithMail(loginData.Email, loginData.Password);
         }
 
         [HttpPost("logInWithUsername")]
-        public Task<bool> LoginWithUsername([FromBody] UsernameLoginHelper loginData)
+        public bool LoginWithUsername([FromBody] UsernameLoginHelper loginData)
         {
-            throw new NotImplementedException();
+            return _accountHandler.LoginWithUsername(loginData.Username, loginData.Password);
         }
 
         [HttpGet("getAccountData/{username}")]
-        public Task<AccountLoadingDto> GetAccountById([FromRoute] string username)
+        public AccountLoadingDto GetAccountByUsername([FromRoute] string username)
         {
-            throw new NotImplementedException();
+            return _accountHandler.GetAccountByUsername(username);
         }
 
         #region Friend Management

@@ -15,8 +15,6 @@ namespace TDC.Backend.DataRepository
 
         public void AddListMember(long listId, string userId, bool isCreator)
         {
-            //TO-DO: check rather in domain logic if user is member already
-            if (IsMember(listId, userId)) { return; }
             AddMemberToFile(listId, userId, isCreator);
         }
         public void RemoveListMember(long listId, string userId)
@@ -51,7 +49,7 @@ namespace TDC.Backend.DataRepository
             return (from member in members where member.UserId.Equals(userId) select member.ListId).ToList();
         }
 
-        private bool IsMember(long listId, string userId)
+        public bool UserIsMember(long listId, string userId)
         {
             //can be removed with sql implementation
             var members = GetAllMembers();

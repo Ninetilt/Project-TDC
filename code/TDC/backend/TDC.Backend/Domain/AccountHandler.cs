@@ -77,10 +77,11 @@ namespace TDC.Backend.Domain
             throw new NotImplementedException();
         }
 
-        public Task UpdateEmail(string username, string email)
+        public bool UpdateEmail(string username, string email)
         {
+            if(EmailAlreadyExists(username)) { return false; }
             _accountRepository.UpdateEmail(username, email);
-            return Task.CompletedTask;
+            return true;
         }
 
         public bool UpdatePassword(string username, string password)

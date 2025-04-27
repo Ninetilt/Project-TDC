@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TDC.Backend.IDomain;
 using TDC.Backend.IDomain.Models;
 
 namespace TDC.Backend.Controllers
@@ -8,6 +9,11 @@ namespace TDC.Backend.Controllers
 
     public class ListController : ControllerBase
     {
+        internal readonly IToDoListHandler _listHandler;
+        public ListController(IToDoListHandler listHandler) {
+            _listHandler = listHandler;
+        }
+
         #region helper classes
         public class StringHelper
         {
@@ -23,79 +29,77 @@ namespace TDC.Backend.Controllers
 
         #region To-Do-List
         [HttpPut("createList/{username}")]
-        public Task<long> CreateToDoList([FromRoute] string username, [FromBody] ToDoListDto listDto)
+        public async Task CreateToDoList([FromRoute] string username, [FromBody] ToDoListDto listDto)
         {
-            throw new NotImplementedException();
+           await _listHandler.CreateList(username, listDto);
         }
 
         [HttpPost("updateListTitle/{listId}")]
-        public Task UpdateToDoList([FromRoute] long listId, [FromBody] StringHelper newTitle)
+        public async Task UpdateToDoListTitle([FromRoute] long listId, [FromBody] StringHelper newTitle)
         {
-            throw new NotImplementedException();
+            await _listHandler.UpdateListTitle(listId, newTitle.Text);
         }
 
         [HttpDelete("deleteList/{listId}")]
-        public Task DeleteToDoList([FromRoute] long listId)
+        public async Task DeleteToDoList([FromRoute] long listId, [FromBody] StringHelper sender)
         {
-            throw new NotImplementedException();
+            await _listHandler.DeleteList(listId, sender.Text);
         }
 
         [HttpPost("finishList/{listId}")]
-        public Task FinishToDoList([FromRoute] long listId, [FromRoute] long userId)
+        public async Task FinishToDoList([FromRoute] long listId, [FromRoute] StringHelper sender)
         {
-            throw new NotImplementedException();
+            await _listHandler.FinishList(listId, sender.Text);
         }
 
         [HttpPut("addUserToList/{listId}/{username}")]
-        public Task AddUserToList([FromRoute] long listId, [FromRoute] string username)
+        public async Task AddUserToList([FromRoute] long listId, [FromRoute] string username)
         {
-            throw new NotImplementedException();
+            await _listHandler.AddUserToList(listId, username);
         }
 
         [HttpPut("removeUserFromList/{listId}/{username}")]
-        public Task RemoveUserFromList([FromRoute] long listId, [FromRoute] string username)
+        public async Task RemoveUserFromList([FromRoute] long listId, [FromRoute] string username)
         {
-            throw new NotImplementedException();
+            await _listHandler.RemoveUserFromList(listId, username);
         }
 
         [HttpGet("getListsForUser/{username}")]
-        public Task<List<ToDoListDto>> GetListsForUser([FromRoute] string username)
+        public List<ToDoListDto> GetListsForUser([FromRoute] string username)
         {
-            throw new NotImplementedException();
+            return _listHandler.GetListsForUser(username);
         }
-
         #endregion
 
         #region List-Items
-
         [HttpPut("addItemToList/{listId}")]
-        public Task<long> AddItemToList([FromRoute] long listId, [FromBody] ToDoListItemSavingDto itemData)
+        public async Task AddItemToList([FromRoute] long listId, [FromBody] ToDoListItemSavingDto itemData)
         {
-            throw new NotImplementedException();
+            await _listHandler.AddItemToList(listId, itemData.Description, itemData.Effort);
         }
 
         [HttpDelete("deleteItem/{itemId}")]
-        public Task DeleteItem([FromRoute] long itemId)
+        public async Task DeleteItem([FromRoute] long itemId)
         {
-            throw new NotImplementedException();
+            await _listHandler.DeleteItem(itemId);
         }
 
         [HttpPost("updateItemDescription/{itemId}")]
-        public Task UpdateItemDescription([FromRoute] long itemId, [FromBody] StringHelper newText)
+        public async Task UpdateItemDescription([FromRoute] long itemId, [FromBody] StringHelper newText)
         {
-            throw new NotImplementedException();
+            await _listHandler.UpdateItemDescription(itemId, newText.Text);
         }
 
-        [HttpPost("updateItemEffort/{itemId}")]
-        public Task UpdateItemEffort([FromRoute] long itemId, [FromBody] long newEffort)
+        [HttpPost("updateItemEffort/{itemId}/{newEffort}")]
+        public async Task UpdateItemEffort([FromRoute] long itemId, [FromRoute] uint newEffort)
         {
-            throw new NotImplementedException();
+            await _listHandler.UpdateItemEffort(itemId, newEffort);
         }
 
         [HttpPost("setItemStatus/{itemId}")]
-        public Task SetItemStatusDone([FromRoute] long itemId, [FromBody] ItemStatusHelper itemStatus)
+        public async Task SetItemStatusDone([FromRoute] long itemId, [FromBody] ItemStatusHelper itemStatus)
         {
-            throw new NotImplementedException();
+            await _listHandler.SetItemStatus(itemId, itemStatus.UpdateForUser, itemStatus.IsDone);
         }
         #endregion
     }
