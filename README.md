@@ -140,6 +140,9 @@ git push
 4. Wähle den Branch, den du in den ausgewählten Basisbranch mergen möchtest (meist dein `feature/TDC-X` branch auf welchem du gearbeitet hast
 5. Erstelle den Pull Request und warte auf ein Review
 
+
+Hinweis:  feature -> dev :: squash-merge
+          dev -> main :: rebase-merge
 ---
 
 

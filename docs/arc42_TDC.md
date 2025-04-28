@@ -140,8 +140,14 @@ Die Freundesliste wird über eine RESTful API verwaltet. Ein Freund kann hinzuge
 ---
 
 ## 11. Risiken und technische Schulden
-*(tdb)*
 
+| Risiko-ID       | Beschreibung | Wahrscheinlichkeit (1 - 3) | Schadenshöhe (1 - 3) | Risiko-Score | Minimierungs-Strategie | Indikatoren | Notfallplan | Status | Verantwortlicher | Datum der letzten Aktualisierung |
+|------------------|--------------|-----------------------------|------------------------|---------------|--------------------------|--------------|--------------|--------|-------------------|-------------------------------|
+| R-T001 | MAUI-Framework funktioniert nicht stabil auf allen Plattformen | 2 | 3 | 6 | Vorab-Tests auf Zielplattformen (Android, Windows) | Plattformabhängige Bugs | UI fallback, ggf. Native ersetzen | Offen | Dev-Team | 2025-04-22 |
+| R-T002 | Fehlerhafte Multiplayer-Synchronisation | 1 | 2 | 2 | Implementierung von Transaktionen/Locks | Fehlende/Fehlerhafte Task-Sync | Temporäre Deaktivierung von gemeinsamen Listen | Offen | Backend Dev | 2025-04-22 |
+| R-T003 | UI-Design-Umsetzung mit .NET-MAUI wird schwierig | 2 | 2 | 4 | UI vereinfachen | Fehlerhafte Anzeige | Verinfachtes Basis-UI | Offen | UI-Dev | 2025-04-22 |
+| R-T004 | Keine automatisierten Tests vorhanden | 2 | 2 | 4 | Einführung von Unit/UI Tests in CI | Häufige Bugs nach Änderungen | Manuelles Testen + Hotfix-Plan | Offen | Dev Team | 2025-04-22 |
+| R-O001 | Anforderungen ändern sich spät im Projekt | 2 | 2 | 4 | Dokumentation, klare Kommunikation | Widersprüchliche/Fehlende Tickets | Repriorisierung | Offen | Product Owner | 2025-04-22 |
 ---
 
 ## 12. Glossar

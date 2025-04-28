@@ -54,3 +54,4 @@ public class Program
         services.AddTransient<IAccountHandler, AccountHandler>();
     }
 }
+
