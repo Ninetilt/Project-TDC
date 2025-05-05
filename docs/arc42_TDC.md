@@ -95,12 +95,12 @@ Project TDC ist eine To-Do-App mit spielerischem Wettbewerbselement. Nutzer samm
 ---
 
 ## 7. Verteilungssicht
-*(tdb)*
+*(tbd)*
 
 ---
 
 ## 8. Querschnittliche Konzepte
-*(tdb)*
+*(tbd)*
 
 ---
 
@@ -151,4 +151,9 @@ Die Freundesliste wird über eine RESTful API verwaltet. Ein Freund kann hinzuge
 ---
 
 ## 12. Glossar
-*(tdb)*
+
+List = To-Do-Liste
+List Item = Task auf einer To-Do-Liste
+List Member = Teilnehmer an einer To-Do-Liste
+TDC = "To-Do-Competition" 
+XP = Erfahrungspunkte
