@@ -151,9 +151,12 @@ Die Freundesliste wird über eine RESTful API verwaltet. Ein Freund kann hinzuge
 ---
 
 ## 12. Glossar
+| Begriff    | Beschreibung |
+|-----------------|--------------|
+|List | To-Do-Liste  | 
+|List Item | Task auf einer To-Do-Liste  |
+|List Member |Teilnehmer an einer To-Do-Liste  |
+|TDC | "To-Do-Competition"  |
+|XP | Erfahrungspunkte |
 
-List = To-Do-Liste
-List Item = Task auf einer To-Do-Liste
-List Member = Teilnehmer an einer To-Do-Liste
-TDC = "To-Do-Competition" 
-XP = Erfahrungspunkte
+
