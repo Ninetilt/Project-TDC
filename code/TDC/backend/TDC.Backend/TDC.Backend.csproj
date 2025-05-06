@@ -21,14 +21,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Database\migrations\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Database\migrations\V1_0_1__AddAccountTables.sql">
+    <None Update="Database\migrations\V1_0_0__AddAccountTables.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Database\migrations\V1_1_1__AddListTables.sql">
+    <None Update="Database\migrations\V1_1_0__AddListTables.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
