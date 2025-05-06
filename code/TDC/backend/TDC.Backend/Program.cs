@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using TDC.Backend.Database;
 using TDC.Backend.DataRepository;
 using TDC.Backend.Domain;
 using TDC.Backend.IDataRepository;
@@ -13,6 +15,8 @@ public class Program
     private static void StartUp(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        builder.Services.AddDbContext<TdcDbContext>(options =>
+                                                        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
         RunServiceSetup(builder.Services);
         BuildApp(builder);
     }
@@ -28,6 +32,10 @@ public class Program
 
         app.UseHttpsRedirection();
         app.MapControllers();
+
+        var connectionString = builder.Configuration.GetConnectionString("Sql")!;
+        MigrationService.UseEvolveMigration(connectionString);
+
         app.Run();
     }
 
