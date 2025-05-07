@@ -10,8 +10,8 @@ namespace TDC.Backend.IDataRepository
         public void UpdateEmail(string username, string newEmail);
         public void UpdatePassword(string username, string newPassword);
         public void UpdateDescription(string username, string newDescription);
-        public AccountDbo? GetAccountByUsername(string username);
-        public AccountDbo? GetAccountByEmail(string email);
+        public AccountDbo GetAccountByUsername(string username);
+        public AccountDbo GetAccountByEmail(string email);
         public string? GetPasswordForAccount(string username);
     }
 }

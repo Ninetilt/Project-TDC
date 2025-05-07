@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using Dapper;
 using TDC.Backend.DataRepository.Helper;
 
@@ -200,6 +196,26 @@ namespace DataRepository
             var sql = $"SELECT * FROM {this.TableName} WHERE Id = @Id";
 
             var parameters = new { Id = id };
+
+            return this.Query<T>(sql, parameters)
+                       .FirstOrDefault();
+        }
+
+        protected T GetByUsername<T>(string username)
+        {
+            var sql = $"SELECT * FROM {this.TableName} WHERE Username = @username";
+
+            var parameters = new { username = username };
+
+            return this.Query<T>(sql, parameters)
+                       .FirstOrDefault();
+        }
+
+        protected T GetByEmail<T>(string email)
+        {
+            var sql = $"SELECT * FROM {this.TableName} WHERE Email = @email";
+
+            var parameters = new { email = email };
 
             return this.Query<T>(sql, parameters)
                        .FirstOrDefault();
