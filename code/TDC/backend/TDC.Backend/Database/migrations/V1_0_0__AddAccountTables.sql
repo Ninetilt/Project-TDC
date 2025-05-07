@@ -1,7 +1,7 @@
 CREATE TABLE[dbo].[Account]([Username][nvarchar](16) NOT NULL,
                             [Email][nvarchar](100) NOT NULL UNIQUE,
                             [Password][nvarchar](200) NOT NULL,
-                            [Description][nvarchar](MAX) NULL,
+                            [Description][nvarchar](MAX) NOT NULL DEFAULT(''),
                             CONSTRAINT[PK_Account] PRIMARY KEY CLUSTERED([Username] ASC)
 );
 GO

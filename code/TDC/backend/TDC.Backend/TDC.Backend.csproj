@@ -27,6 +27,12 @@
     <None Update="Database\migrations\V1_1_0__AddListTables.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Database\migrations\V1_1_1__AddListItemTables.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Database\migrations\V1_2_0__AddCharacterTables.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
