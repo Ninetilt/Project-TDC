@@ -17,7 +17,7 @@ namespace TDC.Backend.DataRepository
             {
                 name = list.Name,
                 isCollaborative = list.IsCollaborative,
-                descriptisFinishedion = list.IsCollaborative
+                isFinished = list.IsFinished
             };
 
             return this.Insert<ToDoListDbo>(sql, parameter);
