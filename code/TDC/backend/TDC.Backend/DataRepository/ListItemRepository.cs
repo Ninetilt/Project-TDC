@@ -11,7 +11,7 @@ namespace TDC.Backend.DataRepository
     {
         public List<ToDoListItemDbo> GetItemsForList(long listId)
         {
-            var sql = $"SELECT * FROM {this.TableName} "
+            var sql = $"SELECT * FROM dbo.{this.TableName} "
                       + $"WHERE ListId = @listId";
             var parameters = new
             {
@@ -97,7 +97,7 @@ namespace TDC.Backend.DataRepository
 
         public bool GetItemStatus(long itemId, string userId)
         {
-            var sql = $"SELECT * FROM {this.TableName} " +
+            var sql = $"SELECT * FROM dbo.ItemStatus " +
                       $"WHERE itemId = @itemId AND Username = @username";
 
             var parameters = new
