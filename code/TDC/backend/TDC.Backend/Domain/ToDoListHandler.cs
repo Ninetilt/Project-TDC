@@ -96,7 +96,7 @@ namespace TDC.Backend.Domain
         public Task AddItemToList(long listId, string itemDescription, uint itemEffort)
         {
             if(!ListExists(listId)) {return Task.CompletedTask;}
-            _listItemRepository.AddItemToList(listId, new ToDoListItemDbo(0, itemDescription, itemEffort));
+            _listItemRepository.AddItemToList(new ToDoListItemDbo(0, listId, itemDescription, itemEffort));
             return Task.CompletedTask;
         }
 
@@ -104,12 +104,8 @@ namespace TDC.Backend.Domain
         {
             _listItemRepository.DeleteItem(itemId);
 
-            //TO-DO: can be removed when sql with foreign keys is implemented
             var listId = _listItemRepository.GetListIdFromItem(itemId);
             var listMembers = _listMemberRepository.GetListMembers(listId);
-            foreach (var member in listMembers) {
-                _listItemRepository.DeleteItemStatus(itemId, member);
-            }
             return Task.CompletedTask;
         }
 

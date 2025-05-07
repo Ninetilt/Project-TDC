@@ -25,7 +25,7 @@ namespace TDC.Backend.Test.DomainTests.ListHandlerTests
         public void AddItemToList_ListDoesNotExist_DoesNotCallRepository()
         {
             _target.AddItemToList(1, "", 1);
-            _target._listItemRepository.DidNotReceive().AddItemToList(Arg.Any<long>(), Arg.Any<ToDoListItemDbo>());
+            _target._listItemRepository.DidNotReceive().AddItemToList(Arg.Any<ToDoListItemDbo>());
 
         }
 
@@ -34,8 +34,9 @@ namespace TDC.Backend.Test.DomainTests.ListHandlerTests
         {
             _target._listRepository.GetById(1).Returns(new ToDoListDbo(1, "", true, false));
             _target.AddItemToList(1, "test-item", 2);
-            _target._listItemRepository.Received().AddItemToList(1, Arg.Is<ToDoListItemDbo>(dbo =>
+            _target._listItemRepository.Received().AddItemToList(Arg.Is<ToDoListItemDbo>(dbo =>
                                                                                             dbo.ItemId == 0 &&
+                                                                                            dbo.ListId == 1 &&
                                                                                             dbo.Description == "test-item" &&
                                                                                             dbo.Effort == 2 
                                                                                        ));
