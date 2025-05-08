@@ -179,7 +179,7 @@ jobs:
 
       # Backend-Tests ausführen 
       - name: Run backend tests
-        run: dotnet test code/TDC/TDC-Backend.Test/TDC.Backend.Test.csproj --configuration Release --logger "trx;LogFileName=./output/backend-test-results/backend-unit-tests.trx"
+        run: dotnet test code/TDC/TDC-Backend.Test/TDC.Backend.Test.csproj --configuration Release --logger "trx;LogFileName=code/TDC/TDC-Backend.Test/output/backend-test-results/backend-unit-tests.trx"
 
       # Upload der Backend-Testergebnisse
       - name: Upload Backend Unit Test Results
