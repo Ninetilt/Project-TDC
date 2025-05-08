@@ -6,7 +6,7 @@ using TDC.Backend.IDataRepository.Models;
 
 namespace TDC.Backend.Test.RepositoryTests
 {
-    internal class AccountRepositoryTests
+    public class AccountRepositoryTests
     {
         private AccountRepository _target;
 

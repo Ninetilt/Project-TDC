@@ -1,5 +1,6 @@
 ﻿using DataRepository;
 using System.Collections.Generic;
+using Microsoft.IdentityModel.Tokens;
 using TDC.Backend.DataRepository.Helper;
 using TDC.Backend.IDataRepository;
 using TDC.Backend.IDataRepository.Models;
@@ -18,7 +19,7 @@ namespace TDC.Backend.DataRepository
             {
                 listId = listId,
                 username = userId,
-                description = isCreator
+                isCreator = isCreator
             };
 
             this.Insert<ListMemberDbo>(sql, parameter);
@@ -48,7 +49,8 @@ namespace TDC.Backend.DataRepository
                 username = username
             };
 
-            return this.Query<ListMemberDbo>(sql, parameters).First().IsCreator;
+            var result = this.Query<ListMemberDbo>(sql, parameters);
+            return !result.IsNullOrEmpty() && result.First().IsCreator;
         }
 
         public List<string> GetListMembers(long listId)
