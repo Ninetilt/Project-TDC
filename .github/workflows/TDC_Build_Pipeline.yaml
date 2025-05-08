@@ -187,7 +187,14 @@ jobs:
         with:
           name: Backend Unit Tests
           reporter: junit
-          test_results: code/TDC/TDC-Backend.Test/output/backend-test-results/backend-unit-tests.xml
+          path: code/TDC/TDC-Backend.Test/output/backend-test-results/backend-unit-tests.xml
+          path-replace-backslashes: false
+          list-suites: all
+          list-tests: all
+          max-annotations: 10
+          fail-on-error: true
+          fail-on-empty: true
+          only-summary: false
       
       # Build-Artefakte hochladen
       - name: Upload Backend Artifact
