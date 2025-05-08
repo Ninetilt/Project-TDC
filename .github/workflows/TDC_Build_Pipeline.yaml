@@ -179,14 +179,15 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: backend-unit-test-results
-          path: ./output/backend-test-results/backend-unit-tests.xml
+          path: code/TDC/TDC-Backend.Test/output/backend-test-results/backend-unit-tests.xml
       
       # Tests im GitHub Actions UI anzeigen
       - name: Report backend unit test results to GitHub Actions
         uses: dorny/test-reporter@v1
         with:
+          name: Backend Unit Tests
           reporter: junit
-          test_results: ./output/backend-test-results/backend-unit-tests.xml
+          test_results: code/TDC/TDC-Backend.Test/output/backend-test-results/backend-unit-tests.xml
       
       # Build-Artefakte hochladen
       - name: Upload Backend Artifact
