@@ -84,11 +84,11 @@ namespace TDC.Backend.Domain
 
             var listDtoList = new List<ToDoListLoadingDto>();
             foreach (var listDbo in listDboList) {
-                var itemDboList = _listItemRepository.GetItemsForList(listDbo.ListId);
-                var listMembers = _listMemberRepository.GetListMembers(listDbo.ListId);
+                var itemDboList = _listItemRepository.GetItemsForList(listDbo.Id);
+                var listMembers = _listMemberRepository.GetListMembers(listDbo.Id);
                 var itemDtoList = itemDboList.Select(itemDbo => ParseItemDboToDto(itemDbo, username, listMembers)).ToList();
 
-                listDtoList.Add(new ToDoListLoadingDto(listDbo.ListId, listDbo.Name, itemDtoList, listMembers, listDbo.IsCollaborative));
+                listDtoList.Add(new ToDoListLoadingDto(listDbo.Id, listDbo.Name, itemDtoList, listMembers, listDbo.IsCollaborative));
             }
             return listDtoList;
         }
@@ -136,17 +136,17 @@ namespace TDC.Backend.Domain
         #region privates
         private ToDoListItemLoadingDto ParseItemDboToDto(ToDoListItemDbo dbo, string currentUser, List<string> listMembers)
         {
-            var isDone = _listItemRepository.GetItemStatus(dbo.ItemId, currentUser);
+            var isDone = _listItemRepository.GetItemStatus(dbo.Id, currentUser);
             var finishedMembers = listMembers
-                .Where(member => _listItemRepository.GetItemStatus(dbo.ItemId, member) && !member.Equals(currentUser))
+                .Where(member => _listItemRepository.GetItemStatus(dbo.Id, member) && !member.Equals(currentUser))
                 .ToList();
-            return new ToDoListItemLoadingDto(dbo.ItemId, dbo.Description, isDone, finishedMembers, dbo.Effort);
+            return new ToDoListItemLoadingDto(dbo.Id, dbo.Description, isDone, finishedMembers, dbo.Effort);
         }
 
         private bool ListCanBeFinished(long listId)
         {
             var listItems = _listItemRepository.GetItemsForList(listId);
-            return listItems.All(listItem => AnyoneHasFinished(listId, listItem.ItemId));
+            return listItems.All(listItem => AnyoneHasFinished(listId, listItem.Id));
         }
 
         private bool AnyoneHasFinished(long listId, long itemId)

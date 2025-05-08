@@ -2,16 +2,16 @@
 
 public class ToDoListDbo
 {
-    public long ListId { get; set; }
+    public long Id { get; set; }
     public string Name { get; set; }
     public bool IsCollaborative { get; set; }
     public bool IsFinished { get; set; }
 
     public ToDoListDbo() { }
 
-    public ToDoListDbo(long listId, string name, bool isCollaborative, bool isFinished)
+    public ToDoListDbo(long id, string name, bool isCollaborative, bool isFinished)
     {
-        ListId = listId;
+        Id = id;
         Name = name;
         IsCollaborative = isCollaborative;
         IsFinished = isFinished;

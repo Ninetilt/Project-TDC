@@ -35,7 +35,7 @@ namespace TDC.Backend.Test.DomainTests.ListHandlerTests
             _target._listRepository.GetById(1).Returns(new ToDoListDbo(1, "", true, false));
             _target.AddItemToList(1, "test-item", 2);
             _target._listItemRepository.Received().AddItemToList(Arg.Is<ToDoListItemDbo>(dbo =>
-                                                                                            dbo.ItemId == 0 &&
+                                                                                            dbo.Id == 0 &&
                                                                                             dbo.ListId == 1 &&
                                                                                             dbo.Description == "test-item" &&
                                                                                             dbo.Effort == 2 

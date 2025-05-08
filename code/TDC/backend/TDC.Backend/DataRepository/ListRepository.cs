@@ -23,7 +23,7 @@ namespace TDC.Backend.DataRepository
             return this.Insert<ToDoListDbo>(sql, parameter);
         }
 
-        public ToDoListDbo? GetById(long listId)
+        public ToDoListDbo GetById(long listId)
         {
             return this.GetById<ToDoListDbo>(listId);
         }

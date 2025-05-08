@@ -16,7 +16,7 @@ namespace TDC.Backend.DataRepository
                       + $"  @listId, @username, @isCreator);";
             var parameter = new
             {
-                sessionId = listId,
+                listId = listId,
                 username = userId,
                 description = isCreator
             };
