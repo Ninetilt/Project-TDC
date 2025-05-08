@@ -78,7 +78,7 @@ namespace TDC.Backend.Domain
         {
             if (!AccountWithUsernameExists(username)) { return false;}
 
-            var oldPassword = _accountRepository.GetPasswordForAccount(username);
+            var oldPassword = _accountRepository.GetAccountByUsername(username).Password;
             if(oldPassword!.Equals(password)) { return false; }
             
             _accountRepository.UpdatePassword(username, password);

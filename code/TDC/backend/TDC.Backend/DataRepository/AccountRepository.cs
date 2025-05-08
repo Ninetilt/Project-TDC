@@ -107,10 +107,5 @@ namespace TDC.Backend.DataRepository
         {
             return this.GetByEmail<AccountDbo>(email);
         }
-
-        public string? GetPasswordForAccount(string username)
-        {
-            return GetByUsername<AccountDbo>(username).Password;
-        }
     }
 }

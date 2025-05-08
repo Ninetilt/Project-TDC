@@ -32,8 +32,7 @@ namespace TDC.Backend.Test.DomainTests.AccountHandlerTests
         [Test]
         public void UpdatePassword_PasswordIsOldPassword_DoesNotCallRepositoryAndReturnsFalse()
         {
-            _target._accountRepository.GetAccountByUsername("test-user").Returns(new AccountDbo("test-user", "", "", ""));
-            _target._accountRepository.GetPasswordForAccount("test-user").Returns("new-password");
+            _target._accountRepository.GetAccountByUsername("test-user").Returns(new AccountDbo("test-user", "", "new-password", ""));
 
             var actual = _target.UpdatePassword("test-user", "new-password");
 
@@ -44,8 +43,7 @@ namespace TDC.Backend.Test.DomainTests.AccountHandlerTests
         [Test]
         public void UpdatePassword_UserExistsAndPasswordIsNew_CallRepositoryAndReturnsTrue()
         {
-            _target._accountRepository.GetAccountByUsername("test-user").Returns(new AccountDbo("test-user", "", "", ""));
-            _target._accountRepository.GetPasswordForAccount("test-user").Returns("other-password");
+            _target._accountRepository.GetAccountByUsername("test-user").Returns(new AccountDbo("test-user", "", "other-password", ""));
 
             var actual = _target.UpdatePassword("test-user", "new-password");
 
