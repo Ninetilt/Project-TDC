@@ -44,8 +44,8 @@ namespace TDC.Backend.Test.DomainTests.ListHandlerTests
             _target._listMemberRepository.GetListMembers(2).Returns(["test-user"]);
 
             _target._listMemberRepository.GetListsForUser("test-user").Returns([1, 2]);
-            var item1 = new ToDoListItemDbo(1, "item1", 1);
-            var item2 = new ToDoListItemDbo(2, "item2", 2);
+            var item1 = new ToDoListItemDbo(1, 1, "item1", 1);
+            var item2 = new ToDoListItemDbo(2, 2,"item2", 2);
             _target._listItemRepository.GetItemsForList(1).Returns([item1]);
             _target._listItemRepository.GetItemsForList(2).Returns([item2]);
             _target._listItemRepository.GetItemStatus(1, "test-user").Returns(true);

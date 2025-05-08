@@ -1,9 +1,4 @@
 ﻿using NSubstitute;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TDC.Backend.Domain;
 using TDC.Backend.IDataRepository;
 
@@ -27,7 +22,6 @@ namespace TDC.Backend.Test.DomainTests.ListHandlerTests
 
         [Test]
         public void DeleteItem_CallsRepository() {
-            //TO-DO: remove mocks with sql implementation
             _target._listItemRepository.GetListIdFromItem(1).Returns(1);
             _target._listMemberRepository.GetListMembers(1).Returns([]);
             _target.DeleteItem(1);

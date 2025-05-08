@@ -38,7 +38,7 @@ namespace TDC.Backend.Test.DomainTests.ListHandlerTests
             _target.CreateList("test-user", listDto);
 
             _target._listRepository.Received().CreateList(Arg.Is<ToDoListDbo>(dbo =>
-                                                                                 dbo.ListId == 0 &&
+                                                                                 dbo.Id == 0 &&
                                                                                  dbo.Name == listDto.Name &&
                                                                                  dbo.IsCollaborative == listDto.IsCollaborative &&
                                                                                  dbo.IsFinished == false

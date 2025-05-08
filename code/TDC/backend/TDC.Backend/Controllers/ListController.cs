@@ -77,7 +77,7 @@ namespace TDC.Backend.Controllers
         }
 
         [HttpPost("updateItemEffort/{itemId}/{newEffort}")]
-        public async Task UpdateItemEffort([FromRoute] long itemId, [FromRoute] uint newEffort)
+        public async Task UpdateItemEffort([FromRoute] long itemId, [FromRoute] int newEffort)
         {
             await _listHandler.UpdateItemEffort(itemId, newEffort);
         }

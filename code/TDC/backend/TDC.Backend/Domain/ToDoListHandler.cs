@@ -84,19 +84,19 @@ namespace TDC.Backend.Domain
 
             var listDtoList = new List<ToDoListLoadingDto>();
             foreach (var listDbo in listDboList) {
-                var itemDboList = _listItemRepository.GetItemsForList(listDbo.ListId);
-                var listMembers = _listMemberRepository.GetListMembers(listDbo.ListId);
+                var itemDboList = _listItemRepository.GetItemsForList(listDbo.Id);
+                var listMembers = _listMemberRepository.GetListMembers(listDbo.Id);
                 var itemDtoList = itemDboList.Select(itemDbo => ParseItemDboToDto(itemDbo, username, listMembers)).ToList();
 
-                listDtoList.Add(new ToDoListLoadingDto(listDbo.ListId, listDbo.Name, itemDtoList, listMembers, listDbo.IsCollaborative));
+                listDtoList.Add(new ToDoListLoadingDto(listDbo.Id, listDbo.Name, itemDtoList, listMembers, listDbo.IsCollaborative));
             }
             return listDtoList;
         }
 
-        public Task AddItemToList(long listId, string itemDescription, uint itemEffort)
+        public Task AddItemToList(long listId, string itemDescription, int itemEffort)
         {
             if(!ListExists(listId)) {return Task.CompletedTask;}
-            _listItemRepository.AddItemToList(listId, new ToDoListItemDbo(0, itemDescription, itemEffort));
+            _listItemRepository.AddItemToList(new ToDoListItemDbo(0, listId, itemDescription, itemEffort));
             return Task.CompletedTask;
         }
 
@@ -104,12 +104,8 @@ namespace TDC.Backend.Domain
         {
             _listItemRepository.DeleteItem(itemId);
 
-            //TO-DO: can be removed when sql with foreign keys is implemented
             var listId = _listItemRepository.GetListIdFromItem(itemId);
             var listMembers = _listMemberRepository.GetListMembers(listId);
-            foreach (var member in listMembers) {
-                _listItemRepository.DeleteItemStatus(itemId, member);
-            }
             return Task.CompletedTask;
         }
 
@@ -119,7 +115,7 @@ namespace TDC.Backend.Domain
             return Task.CompletedTask;
         }
 
-        public Task UpdateItemEffort(long itemId, uint effort)
+        public Task UpdateItemEffort(long itemId, int effort)
         {
             _listItemRepository.UpdateItemEffort(itemId, effort);
             return Task.CompletedTask;
@@ -140,17 +136,17 @@ namespace TDC.Backend.Domain
         #region privates
         private ToDoListItemLoadingDto ParseItemDboToDto(ToDoListItemDbo dbo, string currentUser, List<string> listMembers)
         {
-            var isDone = _listItemRepository.GetItemStatus(dbo.ItemId, currentUser);
+            var isDone = _listItemRepository.GetItemStatus(dbo.Id, currentUser);
             var finishedMembers = listMembers
-                .Where(member => _listItemRepository.GetItemStatus(dbo.ItemId, member) && !member.Equals(currentUser))
+                .Where(member => _listItemRepository.GetItemStatus(dbo.Id, member) && !member.Equals(currentUser))
                 .ToList();
-            return new ToDoListItemLoadingDto(dbo.ItemId, dbo.Description, isDone, finishedMembers, dbo.Effort);
+            return new ToDoListItemLoadingDto(dbo.Id, dbo.Description, isDone, finishedMembers, dbo.Effort);
         }
 
         private bool ListCanBeFinished(long listId)
         {
             var listItems = _listItemRepository.GetItemsForList(listId);
-            return listItems.All(listItem => AnyoneHasFinished(listId, listItem.ItemId));
+            return listItems.All(listItem => AnyoneHasFinished(listId, listItem.Id));
         }
 
         private bool AnyoneHasFinished(long listId, long itemId)
