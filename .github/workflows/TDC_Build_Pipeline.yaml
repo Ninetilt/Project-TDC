@@ -15,7 +15,7 @@ on:
   workflow_dispatch:
 
 env:
-  DOTNETVERSION: 8.0.x
+  DOTNETVERSION: 9.0.x
 
 jobs:
   buildWindows:
@@ -52,7 +52,7 @@ jobs:
         shell: bash
         run: |
           dotnet workload install maui \
-            --source https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet8/nuget/v3/index.json \
+            --source https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet9/nuget/v3/index.json \
             --source https://api.nuget.org/v3/index.json
           dotnet workload list
 
@@ -66,7 +66,7 @@ jobs:
 
       # Windows-Version erstellen
       - name: Build and Publish Windows App
-        run: dotnet publish code/TDC/mobile/TDC/TDC.csproj -c Release -f net8.0-windows10.0.19041.0 -o ./output/windows
+        run: dotnet publish code/TDC/mobile/TDC/TDC.csproj -c Release -f net9.0-windows10.0.19041.0 -o ./output/windows
 
       # Artefakte hochladen
       - name: Upload Windows Artifact
@@ -109,7 +109,7 @@ jobs:
         shell: bash
         run: |
           dotnet workload install maui android wasm-tools \
-            --source https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet8/nuget/v3/index.json \
+            --source https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet9/nuget/v3/index.json \
             --source https://api.nuget.org/v3/index.json
           dotnet workload list
 
@@ -120,7 +120,7 @@ jobs:
       # Android publishen
       - name : Build Android App
         shell: bash
-        run: dotnet publish code/TDC/mobile/TDC/TDC.csproj -c:Release -f:net8.0-android -o:output/android --no-restore
+        run: dotnet publish code/TDC/mobile/TDC/TDC.csproj -c:Release -f:net9.0-android -o:output/android --no-restore
 
       # Tests ausführen
       - name: Run tests
