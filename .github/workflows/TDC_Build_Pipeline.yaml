@@ -5,13 +5,13 @@ on:
     branches:
       - "*"
     paths-ignore:
-      - '**/*.md' # Optional: Ignoriere Änderungen an README-Dateien
+      - '**/*.md' # Ignoriere Änderungen an README-Dateien
   pull_request:
     branches:
       - main
       - dev
     paths-ignore:
-      - '**/*.md' # Optional: Ignoriere Änderungen an README-Dateien
+      - '**/*.md' 
   workflow_dispatch:
 
 env:
@@ -39,9 +39,9 @@ jobs:
       - name: Setup .NET SDK ${{env.DOTNETVERSION}}
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version:  '${{env.DOTNETVERSION }}'
+          dotnet-version:  '${{env.DOTNETVERSION}}'
 
-      #Version überprüfen
+      # Version überprüfen
       - name: List installed .NET info
         shell: pwsh
         run: dotnet --info
@@ -68,7 +68,14 @@ jobs:
       - name: Build and Publish Windows App
         run: dotnet publish code/TDC/mobile/TDC/TDC.csproj -c Release -f net8.0-windows10.0.19041.0 -o ./output/windows
 
-  buildAndroid:
+      # Artefakte hochladen
+      - name: Upload Windows Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-artifact
+          path: ./output/windows
+
+  buildAndroid:  
     runs-on: windows-2022
 
     steps:
@@ -91,7 +98,7 @@ jobs:
         with:
           dotnet-version:  '${{env.DOTNETVERSION }}'
 
-      #Version überprüfen
+      # Version überprüfen
       - name: List installed .NET info
         shell: pwsh
         run: dotnet --info
@@ -110,11 +117,66 @@ jobs:
       - name: Restore nuget packages
         run: dotnet restore code/TDC/mobile/TDC/TDC.csproj
 
-      #Android publishen
+      # Android publishen
       - name : Build Android App
         shell: bash
         run: dotnet publish code/TDC/mobile/TDC/TDC.csproj -c:Release -f:net8.0-android -o:output/android --no-restore
 
-      #Tests ausführen
+      # Tests ausführen
       - name: Run tests
         run: dotnet test --no-build --configuration Release ./code/TDC/mobile/TDC/TDC.csproj
+
+      # Build-Artefakte hochladen
+      - name: Upload Android Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-artifact
+          path: ./output/android
+
+
+  buildBackend:
+    runs-on: windows-2022
+
+    steps:
+      # Repo auschecken
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Cache NuGet packages
+      - name: Cache NuGet packages for Backend
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('code/TDC/backend/TDC.Backend/TDC.Backend.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      # .NET SDK installieren
+      - name: Setup .NET SDK ${{ env.DOTNETVERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '${{ env.DOTNETVERSION }}'
+
+      # Version überprüfen
+      - name: List installed .NET info
+        shell: pwsh
+        run: dotnet --info
+
+      # Dependencies wiederherstellen
+      - name: Restore Backend dependencies
+        run: dotnet restore code/TDC/backend/TDC.Backend/TDC.Backend.csproj
+
+      # Backend bauen
+      - name: Build backend project
+        run: dotnet publish code/TDC/backend/TDC.Backend/TDC.Backend.csproj -c Release -o ./output/backend --no-restore
+
+      # Backend-Tests ausführen 
+      - name: Run backend tests
+        run: dotnet test code/TDC/TDC-Backend.Test/TDC.Backend.Test.csproj --configuration Release --no-build
+
+      # Artefakte hochladen
+      - name: Upload Backend Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-artifact
+          path: ./output/backend
