@@ -170,35 +170,21 @@ jobs:
       - name: Build backend project
         run: dotnet publish code/TDC/backend/TDC.Backend/TDC.Backend.csproj -c Release -o ./output/backend --no-restore
 
-      # Backend-Tests ausführen 
-      - name: Run backend tests
-        run: dotnet test code/TDC/TDC-Backend.Test/TDC.Backend.Test.csproj --configuration Release --logger "junit;LogFilePath=./output/backend-test-results/backend-unit-tests.xml"
-
-      # Upload der Backend-Testergebnisse
-      - name: Upload Backend Unit Test Results
-        uses: actions/upload-artifact@v4
-        with:
-          name: backend-unit-test-results
-          path: code/TDC/TDC-Backend.Test/output/backend-test-results/backend-unit-tests.xml
-      
-      # Tests im GitHub Actions UI anzeigen
-      - name: Report backend unit test results to GitHub Actions
-        uses: dorny/test-reporter@v1
-        with:
-          name: Backend Unit Tests
-          reporter: junit
-          path: code/TDC/TDC-Backend.Test/output/backend-test-results/backend-unit-tests.xml
-          path-replace-backslashes: false
-          list-suites: all
-          list-tests: all
-          max-annotations: 10
-          fail-on-error: true
-          fail-on-empty: true
-          only-summary: false
-      
       # Build-Artefakte hochladen
       - name: Upload Backend Artifact
         uses: actions/upload-artifact@v4
         with:
           name: backend-artifact
           path: ./output/backend
+
+      # Backend-Tests ausführen 
+      - name: Run backend tests
+        run: dotnet test code/TDC/TDC-Backend.Test/TDC.Backend.Test.csproj --configuration Release --logger "trx;LogFileName=./output/backend-test-results/backend-unit-tests.trx"
+
+      # Upload der Backend-Testergebnisse
+      - name: Upload Backend Unit Test Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-unit-test-results
+          path: code/TDC/TDC-Backend.Test/output/backend-test-results/backend-unit-tests.trx
+      
