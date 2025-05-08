@@ -93,7 +93,7 @@ namespace TDC.Backend.Domain
             return listDtoList;
         }
 
-        public Task AddItemToList(long listId, string itemDescription, uint itemEffort)
+        public Task AddItemToList(long listId, string itemDescription, int itemEffort)
         {
             if(!ListExists(listId)) {return Task.CompletedTask;}
             _listItemRepository.AddItemToList(new ToDoListItemDbo(0, listId, itemDescription, itemEffort));
@@ -115,7 +115,7 @@ namespace TDC.Backend.Domain
             return Task.CompletedTask;
         }
 
-        public Task UpdateItemEffort(long itemId, uint effort)
+        public Task UpdateItemEffort(long itemId, int effort)
         {
             _listItemRepository.UpdateItemEffort(itemId, effort);
             return Task.CompletedTask;

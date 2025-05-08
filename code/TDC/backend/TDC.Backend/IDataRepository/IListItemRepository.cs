@@ -8,7 +8,7 @@ namespace TDC.Backend.IDataRepository
         public long AddItemToList(ToDoListItemDbo item);
         public void DeleteItem(long itemId);
         public void UpdateItemDescription(long itemId, string description);
-        public void UpdateItemEffort(long itemId, uint effort);
+        public void UpdateItemEffort(long itemId, int effort);
         public void SetItemStatus(long itemId, string userId, bool status);
         public bool GetItemStatus(long itemId, string userId);
         public long GetListIdFromItem(long itemId);

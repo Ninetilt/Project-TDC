@@ -1,9 +1,7 @@
 ﻿using TDC.Backend.IDataRepository;
 using TDC.Backend.IDataRepository.Models;
-using System.Linq;
 using DataRepository;
 using TDC.Backend.DataRepository.Helper;
-using System.Collections.Generic;
 
 namespace TDC.Backend.DataRepository
 {
@@ -65,7 +63,7 @@ namespace TDC.Backend.DataRepository
             this.Execute<ToDoListItemDbo>(sql, parameter);
         }
 
-        public void UpdateItemEffort(long itemId, uint effort)
+        public void UpdateItemEffort(long itemId, int effort)
         {
             var sql = $"UPDATE dbo.{this.TableName} "
                       + $"SET Effort = @effort "
@@ -82,14 +80,17 @@ namespace TDC.Backend.DataRepository
 
         public void SetItemStatus(long itemId, string userId, bool status)
         {
-            const string sql = $"UPDATE dbo.ItemStatus "
-                               + $"SET IsDone = @status "
-                               + $"WHERE Id = @itemId AND Username=@username;";
+            const string sql = 
+                $"IF EXISTS (SELECT 1 FROM dbo.ItemStatus WHERE ItemId = @itemId AND Username = @username)"
+                + $"UPDATE dbo.ItemStatus SET IsDone = @status WHERE ItemId = @itemId AND Username = @username;"
+                + $"ELSE "
+                + $"INSERT INTO dbo.ItemStatus (ItemId, Username, IsDone) VALUES (@itemId, @username, @status);";
 
             var parameter = new
             {
                 itemId = itemId,
-                username = userId
+                username = userId,
+                status = status
             };
 
             this.Execute<ToDoItemStatusDbo>(sql, parameter);
@@ -97,8 +98,8 @@ namespace TDC.Backend.DataRepository
 
         public bool GetItemStatus(long itemId, string userId)
         {
-            var sql = $"SELECT * FROM dbo.ItemStatus " +
-                      $"WHERE itemId = @itemId AND Username = @username";
+            const string sql = $"SELECT * FROM dbo.ItemStatus " +
+                               $"WHERE itemId = @itemId AND Username = @username";
 
             var parameters = new
             {
