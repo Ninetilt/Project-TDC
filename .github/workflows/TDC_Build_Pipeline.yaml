@@ -135,8 +135,21 @@ jobs:
 
 
   buildBackend:
-    runs-on: windows-2022
+    runs-on: ubuntu-latest 
 
+    services:
+     sqlserver:
+      image: mcr.microsoft.com/mssql/server:2022-latest
+      env:
+        SA_PASSWORD: ${{ secrets.SQL_SERVER_PASSWORD }}
+        ACCEPT_EULA: "Y"  
+      ports:
+        - 1433:1433
+      options: >-
+        --health-cmd "exit 0"
+        --health-interval 10s
+        --health-timeout 5s
+        --health-retries 5
     steps:
       # Repo auschecken
       - name: Checkout repository
@@ -176,6 +189,15 @@ jobs:
         with:
           name: backend-artifact
           path: ./output/backend
+
+      # Warten auf SQl-Server
+      - name: Wait for SQL Server port
+        run: |
+           for i in {1..30}; do
+             nc -z localhost 1433 && echo "SQL Server is up!" && break
+             echo "Waiting for SQL Server..."
+             sleep 2
+           done
 
       # Backend-Tests ausführen 
       - name: Run backend tests
