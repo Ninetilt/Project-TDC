@@ -11,7 +11,7 @@ on:
       - main
       - dev
     paths-ignore:
-      - '**/*.md' 
+      - '**/*.md'
   workflow_dispatch:
 
 env:
@@ -22,11 +22,9 @@ jobs:
     runs-on: windows-2022
 
     steps:
-      # Repo auschecken
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Cache NuGet packages
       - name: Cache NuGet packages
         uses: actions/cache@v4
         with:
@@ -34,56 +32,46 @@ jobs:
           key: ${{ runner.os }}-nuget-${{ hashFiles('code/TDC/mobile/TDC/packages.lock.json') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
-
-      # .NET SDK installieren
-      - name: Setup .NET SDK ${{env.DOTNETVERSION}}
+      - name: Setup .NET SDK ${{ env.DOTNETVERSION }}
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version:  '${{env.DOTNETVERSION}}'
+          dotnet-version: '${{ env.DOTNETVERSION }}'
 
-      # Version überprüfen
       - name: List installed .NET info
         shell: pwsh
         run: dotnet --info
 
-      # MAUI workloads installieren
+      - name: Update .NET Workloads
+        run: dotnet workload update
+
       - name: Install .NET MAUI Workloads
-        if: runner.os == 'Windows'
         shell: bash
         run: |
           dotnet workload install maui \
+            --skip-manifest-update \
+            --from-rollback-file \
             --source https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet9/nuget/v3/index.json \
             --source https://api.nuget.org/v3/index.json
           dotnet workload list
-
-      # Workloads aktualisieren
-      - name: Update Workloads
-        run: dotnet workload update
-
-      # Dependencies wiederherstellen
       - name: Restore dependencies
         run: dotnet restore code/TDC/mobile/TDC/TDC.csproj
 
-      # Windows-Version erstellen
       - name: Build and Publish Windows App
         run: dotnet publish code/TDC/mobile/TDC/TDC.csproj -c Release -f net9.0-windows10.0.19041.0 -o ./output/windows
 
-      # Artefakte hochladen
       - name: Upload Windows Artifact
         uses: actions/upload-artifact@v4
         with:
           name: windows-artifact
           path: ./output/windows
 
-  buildAndroid:  
+  buildAndroid:
     runs-on: windows-2022
 
     steps:
-      # Repo auschecken
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Cache NuGet packages
       - name: Cache NuGet packages
         uses: actions/cache@v4
         with:
@@ -91,71 +79,63 @@ jobs:
           key: ${{ runner.os }}-nuget-${{ hashFiles('code/TDC/mobile/TDC/TDC.csproj') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
-
-      # .NET SDK installieren
-      - name: Setup .NET SDK ${{env.DOTNETVERSION}}
+      - name: Setup .NET SDK ${{ env.DOTNETVERSION }}
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version:  '${{env.DOTNETVERSION }}'
+          dotnet-version: '${{ env.DOTNETVERSION }}'
 
-      # Version überprüfen
       - name: List installed .NET info
         shell: pwsh
         run: dotnet --info
 
-      # MAUI workloads installieren
-      - name: Install .NET MAUI Workloads
-        if: runner.os == 'Windows'
+      - name: Update .NET Workloads
+        run: dotnet workload update
+
+      - name: Install .NET MAUI & Android Workloads
         shell: bash
         run: |
           dotnet workload install maui android wasm-tools \
+            --skip-manifest-update \
+            --from-rollback-file \
             --source https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet9/nuget/v3/index.json \
             --source https://api.nuget.org/v3/index.json
           dotnet workload list
-
-      # Dependencies wiederherstellen
       - name: Restore nuget packages
         run: dotnet restore code/TDC/mobile/TDC/TDC.csproj
 
-      # Android publishen
-      - name : Build Android App
+      - name: Build Android App
         shell: bash
-        run: dotnet publish code/TDC/mobile/TDC/TDC.csproj -c:Release -f:net9.0-android -o:output/android --no-restore
+        run: dotnet publish code/TDC/mobile/TDC/TDC.csproj -c Release -f net9.0-android -o ./output/android --no-restore
 
-      # Tests ausführen
       - name: Run tests
-        run: dotnet test --no-build --configuration Release ./code/TDC/mobile/TDC/TDC.csproj
+        run: dotnet test --no-build --configuration Release code/TDC/mobile/TDC/TDC.csproj
 
-      # Build-Artefakte hochladen
       - name: Upload Android Artifact
         uses: actions/upload-artifact@v4
         with:
           name: android-artifact
           path: ./output/android
 
-
   buildBackend:
-    runs-on: ubuntu-latest 
+    runs-on: ubuntu-latest
 
     services:
-     sqlserver:
-      image: mcr.microsoft.com/mssql/server:2022-latest
-      env:
-        SA_PASSWORD: ${{ secrets.SQL_SERVER_PASSWORD }}
-        ACCEPT_EULA: "Y"  
-      ports:
-        - 1433:1433
-      options: >-
-        --health-cmd "exit 0"
-        --health-interval 10s
-        --health-timeout 5s
-        --health-retries 5
+      sqlserver:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          SA_PASSWORD: ${{ secrets.SQL_SERVER_PASSWORD }}
+          ACCEPT_EULA: 'Y'
+        ports:
+          - 1433:1433
+        options: >-
+          --health-cmd "exit 0"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
-      # Repo auschecken
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Cache NuGet packages
       - name: Cache NuGet packages for Backend
         uses: actions/cache@v4
         with:
@@ -163,23 +143,18 @@ jobs:
           key: ${{ runner.os }}-nuget-${{ hashFiles('code/TDC/backend/TDC.Backend/TDC.Backend.csproj') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
-
-      # .NET SDK installieren
       - name: Setup .NET SDK ${{ env.DOTNETVERSION }}
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '${{ env.DOTNETVERSION }}'
 
-      # Version überprüfen
       - name: List installed .NET info
         shell: pwsh
         run: dotnet --info
 
-      # Dependencies wiederherstellen
       - name: Restore Backend dependencies
         run: dotnet restore code/TDC/backend/TDC.Backend/TDC.Backend.csproj
 
-      # Warten auf SQL Server Container (
       - name: Wait for SQL Server to be ready
         run: |
           for i in {1..30}; do
@@ -187,8 +162,6 @@ jobs:
             echo "Waiting for SQL Server..."
             sleep 2
           done
-
-      # sqlcmd installieren
       - name: Install sqlcmd
         run: |
           curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
@@ -196,31 +169,28 @@ jobs:
           sudo apt-get update
           sudo ACCEPT_EULA=Y apt-get install -y mssql-tools unixodbc-dev
           echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> $GITHUB_ENV
-
-      # Datenbank 'TDC.Test' erstellen
       - name: Create TDC.Test database
+        env:
+          SA_PASSWORD: ${{ secrets.SQL_SERVER_PASSWORD }}
         run: |
-          /opt/mssql-tools/bin/sqlcmd -S sqlserver,1433 -U sa -P ${{ secrets.SQL_SERVER_PASSWORD }} -Q "IF DB_ID('TDC.Test') IS NULL CREATE DATABASE [TDC.Test];"
-
-      # Backend bauen
+          /opt/mssql-tools/bin/sqlcmd -S localhost,1433 -U sa -P "$SA_PASSWORD" -Q "IF DB_ID('TDC.Test') IS NULL CREATE DATABASE [TDC.Test];"
       - name: Build backend project
         run: dotnet publish code/TDC/backend/TDC.Backend/TDC.Backend.csproj -c Release -o ./output/backend --no-restore
 
-      # Build-Artefakte hochladen
       - name: Upload Backend Artifact
         uses: actions/upload-artifact@v4
         with:
           name: backend-artifact
           path: ./output/backend
 
-      # Backend-Tests ausführen 
       - name: Run backend tests
-        run: dotnet test code/TDC/TDC-Backend.Test/TDC.Backend.Test.csproj --configuration Release --logger "junit;LogFilePath=./output/backend-test-results/backend-unit-tests.xml"
-
-      # Upload der Backend-Testergebnisse
+        run: |
+          mkdir -p ./output/backend-test-results
+          dotnet test code/TDC/TDC-Backend.Test/TDC.Backend.Test.csproj \
+            --configuration Release \
+            --logger "junit;LogFilePath=./output/backend-test-results/backend-unit-tests.xml"
       - name: Upload Backend Unit Test Results
         uses: actions/upload-artifact@v4
         with:
           name: backend-unit-test-results
-          path: code/TDC/TDC-Backend.Test/output/backend-test-results/backend-unit-tests.xml
-      
+          path: ./output/backend-test-results/backend-unit-tests.xml
