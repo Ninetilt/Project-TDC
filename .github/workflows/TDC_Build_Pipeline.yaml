@@ -179,6 +179,20 @@ jobs:
       - name: Restore Backend dependencies
         run: dotnet restore code/TDC/backend/TDC.Backend/TDC.Backend.csproj
 
+      # Warten auf SQL Server Container (
+      - name: Wait for SQL Server to be ready
+        run: |
+          for i in {1..30}; do
+            nc -z sqlserver 1433 && echo "SQL Server is up!" && break
+            echo "Waiting for SQL Server..."
+            sleep 2
+          done
+
+     # Datenbank 'TDC.Test' erstellen
+      - name: Create TDC.Test database
+        run: |
+          /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P ${{ secrets.SQL_SERVER_PASSWORD }} -Q "IF DB_ID('TDC.Test') IS NULL CREATE DATABASE [TDC.Test];"
+
       # Backend bauen
       - name: Build backend project
         run: dotnet publish code/TDC/backend/TDC.Backend/TDC.Backend.csproj -c Release -o ./output/backend --no-restore
@@ -189,15 +203,6 @@ jobs:
         with:
           name: backend-artifact
           path: ./output/backend
-
-      # Warten auf SQl-Server
-      - name: Wait for SQL Server port
-        run: |
-           for i in {1..30}; do
-             nc -z localhost 1433 && echo "SQL Server is up!" && break
-             echo "Waiting for SQL Server..."
-             sleep 2
-           done
 
       # Backend-Tests ausführen 
       - name: Run backend tests
