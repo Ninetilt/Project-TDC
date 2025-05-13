@@ -22,9 +22,11 @@ jobs:
     runs-on: windows-2022
 
     steps:
+      # Repo auschecken
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # Cache NuGet packages
       - name: Cache NuGet packages
         uses: actions/cache@v4
         with:
@@ -32,46 +34,49 @@ jobs:
           key: ${{ runner.os }}-nuget-${{ hashFiles('code/TDC/mobile/TDC/packages.lock.json') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
-      - name: Setup .NET SDK ${{ env.DOTNETVERSION }}
+
+      # .NET SDK installieren
+      - name: Setup .NET SDK ${{env.DOTNETVERSION}}
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '${{ env.DOTNETVERSION }}'
+          dotnet-version:  '${{env.DOTNETVERSION }}'
 
+      #Version überprüfen
       - name: List installed .NET info
         shell: pwsh
         run: dotnet --info
 
-      - name: Update .NET Workloads
-        run: dotnet workload update
-
+      # MAUI workloads installieren
       - name: Install .NET MAUI Workloads
+        if: runner.os == 'Windows'
         shell: bash
         run: |
           dotnet workload install maui \
-            --skip-manifest-update \
-            --from-rollback-file \
-            --source https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet9/nuget/v3/index.json \
+            --source https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet8/nuget/v3/index.json \
             --source https://api.nuget.org/v3/index.json
           dotnet workload list
+
+      # Workloads aktualisieren
+      - name: Update Workloads
+        run: dotnet workload update
+
+      # Dependencies wiederherstellen
       - name: Restore dependencies
         run: dotnet restore code/TDC/mobile/TDC/TDC.csproj
 
+      # Windows-Version erstellen
       - name: Build and Publish Windows App
-        run: dotnet publish code/TDC/mobile/TDC/TDC.csproj -c Release -f net9.0-windows10.0.19041.0 -o ./output/windows
-
-      - name: Upload Windows Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: windows-artifact
-          path: ./output/windows
+        run: dotnet publish code/TDC/mobile/TDC/TDC.csproj -c Release -f net8.0-windows10.0.19041.0 -o ./output/windows
 
   buildAndroid:
     runs-on: windows-2022
 
     steps:
+      # Repo auschecken
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # Cache NuGet packages
       - name: Cache NuGet packages
         uses: actions/cache@v4
         with:
@@ -79,42 +84,40 @@ jobs:
           key: ${{ runner.os }}-nuget-${{ hashFiles('code/TDC/mobile/TDC/TDC.csproj') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
-      - name: Setup .NET SDK ${{ env.DOTNETVERSION }}
+
+      # .NET SDK installieren
+      - name: Setup .NET SDK ${{env.DOTNETVERSION}}
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '${{ env.DOTNETVERSION }}'
+          dotnet-version:  '${{env.DOTNETVERSION }}'
 
+      #Version überprüfen
       - name: List installed .NET info
         shell: pwsh
         run: dotnet --info
 
-      - name: Update .NET Workloads
-        run: dotnet workload update
-
-      - name: Install .NET MAUI & Android Workloads
+      # MAUI workloads installieren
+      - name: Install .NET MAUI Workloads
+        if: runner.os == 'Windows'
         shell: bash
         run: |
           dotnet workload install maui android wasm-tools \
-            --skip-manifest-update \
-            --from-rollback-file \
-            --source https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet9/nuget/v3/index.json \
+            --source https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet8/nuget/v3/index.json \
             --source https://api.nuget.org/v3/index.json
           dotnet workload list
+
+      # Dependencies wiederherstellen
       - name: Restore nuget packages
         run: dotnet restore code/TDC/mobile/TDC/TDC.csproj
 
-      - name: Build Android App
+      #Android publishen
+      - name : Build Android App
         shell: bash
-        run: dotnet publish code/TDC/mobile/TDC/TDC.csproj -c Release -f net9.0-android -o ./output/android --no-restore
+        run: dotnet publish code/TDC/mobile/TDC/TDC.csproj -c:Release -f:net8.0-android -o:output/android --no-restore
 
+      #Tests ausführen
       - name: Run tests
-        run: dotnet test --no-build --configuration Release code/TDC/mobile/TDC/TDC.csproj
-
-      - name: Upload Android Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: android-artifact
-          path: ./output/android
+        run: dotnet test --no-build --configuration Release ./code/TDC/mobile/TDC/TDC.csproj
 
   buildBackend:
     runs-on: ubuntu-latest
