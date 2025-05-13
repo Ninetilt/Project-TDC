@@ -190,8 +190,9 @@ jobs:
         run: |
           mkdir -p ./output/backend-test-results
           dotnet test code/TDC/TDC-Backend.Test/TDC.Backend.Test.csproj \
-            --configuration Release \
-            --logger "junit;LogFilePath=./output/backend-test-results/backend-unit-tests.xml"
+          --configuration Release \
+          --logger "trx;LogFileName=backend-unit-tests.trx" \
+          --results-directory ./output/backend-test-results
       - name: Upload Backend Unit Test Results
         uses: actions/upload-artifact@v4
         with:
