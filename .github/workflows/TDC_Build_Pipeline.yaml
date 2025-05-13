@@ -200,7 +200,7 @@ jobs:
       # Datenbank 'TDC.Test' erstellen
       - name: Create TDC.Test database
         run: |
-          /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P ${{ secrets.SQL_SERVER_PASSWORD }} -Q "IF DB_ID('TDC.Test') IS NULL CREATE DATABASE [TDC.Test];"
+          /opt/mssql-tools/bin/sqlcmd -S sqlserver,1433 -U sa -P ${{ secrets.SQL_SERVER_PASSWORD }} -Q "IF DB_ID('TDC.Test') IS NULL CREATE DATABASE [TDC.Test];"
 
       # Backend bauen
       - name: Build backend project
