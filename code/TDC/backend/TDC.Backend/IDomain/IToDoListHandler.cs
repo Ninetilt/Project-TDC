@@ -11,7 +11,8 @@ namespace TDC.Backend.IDomain
         public Task AddUserToList(long listId, string username);
         public Task RemoveUserFromList(long listId, string username);
         public Task SendListInvitation(long listId, string fromUser, string ForUser);
-        public Task DeclineListInvitation(long listId, string decliningUser);
+        public Task CancelListInvitation(long listId, string fromUser, string forUser);
+        public Task DenyListInvitation(long listId, string decliningUser);
         public Task AcceptListInvitation(long listId, string newUser);
         public List<ListInvitationDto> LoadListInvitationsForUser(string username);
         public List<ToDoListLoadingDto> GetListsForUser(string username);

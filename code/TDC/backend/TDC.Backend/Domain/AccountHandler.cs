@@ -1,27 +1,43 @@
-﻿using TDC.Backend.IDataRepository;
+﻿using System.Reflection;
+using TDC.Backend.IDataRepository;
 using TDC.Backend.IDataRepository.Models;
 using TDC.Backend.IDomain;
 using TDC.Backend.IDomain.Models;
 
 namespace TDC.Backend.Domain
 {
-    public class AccountHandler(IAccountRepository accountRepository) : IAccountHandler
+    public class AccountHandler(IAccountRepository accountRepository, IFriendRepository friendRepository, IFriendRequestRepository friendRequestRepository) : IAccountHandler
     {
         public readonly IAccountRepository _accountRepository = accountRepository;
+        public readonly IFriendRepository friendRepository = friendRepository;
+        public readonly IFriendRequestRepository friendRequestRepository = friendRequestRepository;
 
         public Task AcceptFriendRequest(string username, string requestName)
         {
-            throw new NotImplementedException();
+            var friends = friendRepository.GetFriendsForUser(username);
+
+            if (friends.Contains(requestName)) {
+                return Task.CompletedTask;
+            }
+            this.friendRepository.AddFriend(username, requestName);
+            this.friendRepository.AddFriend(requestName, username);
+
+            this.friendRequestRepository.DeleteFriendRequest(username, requestName);
+            this.friendRequestRepository.DeleteFriendRequest(requestName, username);
+            
+            return Task.CompletedTask;
         }
 
         public Task CancelFriendRequest(string sender, string receiver)
         {
-            throw new NotImplementedException();
+            this.friendRequestRepository.DeleteFriendRequest(sender, receiver);
+            return Task.CompletedTask;
         }
 
         public Task DenyFriendRequest(string username, string requestName)
         {
-            throw new NotImplementedException();
+            this.friendRequestRepository.DeleteFriendRequest(username, requestName);
+            return Task.CompletedTask;
         }
 
         public AccountLoadingDto GetAccountByUsername(string username)
@@ -32,12 +48,12 @@ namespace TDC.Backend.Domain
 
         public List<string> GetFriendsForUser(string username)
         {
-            throw new NotImplementedException();
+            return friendRepository.GetFriendsForUser(username);
         }
 
         public List<string> GetRequestsForUser(string username)
         {
-            throw new NotImplementedException();
+            return friendRequestRepository.GetRequestsForUser(username);
         }
 
         public bool LoginWithMail(string email, string password)
@@ -64,7 +80,13 @@ namespace TDC.Backend.Domain
 
         public Task SendFriendRequest(string sender, string receiver)
         {
-            throw new NotImplementedException();
+            var requests = friendRequestRepository.GetRequestsForUser(receiver);
+            var friends = friendRepository.GetFriendsForUser(receiver);
+            if (requests.Contains(sender)) { return Task.CompletedTask; }
+            if (friends.Contains(sender)) { return Task.CompletedTask; }
+
+            this.friendRequestRepository.AddFriendRequest(receiver, sender);
+            return Task.CompletedTask;
         }
 
         public bool UpdateEmail(string username, string email)

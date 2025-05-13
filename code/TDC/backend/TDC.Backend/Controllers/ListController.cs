@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 using TDC.Backend.Helpers;
 using TDC.Backend.IDomain;
 using TDC.Backend.IDomain.Models;
@@ -36,12 +35,6 @@ namespace TDC.Backend.Controllers
         public async Task FinishToDoList([FromRoute] long listId, [FromBody] UsernameHelper sender)
         {
             await _listHandler.FinishList(listId, sender.Username);
-        }
-
-        [HttpPut("addUserToList/{listId}/{username}")]
-        public async Task AddUserToList([FromRoute] long listId, [FromRoute] string username)
-        {
-            await _listHandler.AddUserToList(listId, username);
         }
 
         [HttpPut("removeUserFromList/{listId}/{username}")]
@@ -86,6 +79,35 @@ namespace TDC.Backend.Controllers
         public async Task SetItemStatusDone([FromRoute] long itemId, [FromBody] ItemStatusHelper itemStatus)
         {
             await _listHandler.SetItemStatus(itemId, itemStatus.UpdateForUser, itemStatus.IsDone);
+        }
+
+        [HttpPut("sendListInvitaion/{listId}/{forUser}/{fromUser}")]
+        public async Task SendListInvitation([FromRoute] long listId, [FromRoute] string forUser, [FromRoute] string fromUser)
+        {
+            await _listHandler.SendListInvitation(listId, forUser, fromUser);
+        }
+
+        [HttpDelete("cancelListInvitaion/{listId}/{forUser}/{fromUser}")]
+        public async Task CancelListInvitation([FromRoute] long listId, [FromRoute] string forUser, [FromRoute] string fromUser)
+        {
+            await _listHandler.CancelListInvitation(listId, forUser, fromUser);
+        }
+
+        [HttpPost("acceptListInvitaion/{listId}/{forUser}")]
+        public async Task AcceptListInvitation([FromRoute] long listId, [FromRoute] string forUser)
+        {
+            await _listHandler.AcceptListInvitation(listId, forUser);
+        }
+
+        [HttpPost("denyListInvitaion/{listId}/{forUser}")]
+        public async Task DenyListInvitation([FromRoute] long listId, [FromRoute] string forUser)
+        {
+            await _listHandler.DenyListInvitation(listId, forUser);
+        }
+
+        [HttpGet("getListInvitationsForUser/{username}")]
+        public List<ListInvitationDto> GetListInvitationsForUser([FromRoute] string username) {
+            return _listHandler.LoadListInvitationsForUser(username);
         }
         #endregion
     }

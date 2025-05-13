@@ -11,6 +11,7 @@ namespace TDC.Backend.Test.DomainTests.ListHandlerTests
         private IListRepository _listRepository;
         private IListItemRepository _listItemRepository;
         private IListMemberRepository _listMemberRepository;
+        private IListInvitationRepository _listInvitationRepository;
 
         [SetUp]
         public void SetUp()
@@ -18,7 +19,8 @@ namespace TDC.Backend.Test.DomainTests.ListHandlerTests
             _listRepository = Substitute.For<IListRepository>();
             _listItemRepository = Substitute.For<IListItemRepository>();
             _listMemberRepository = Substitute.For<IListMemberRepository>();
-            _target = new ToDoListHandler(_listRepository, _listItemRepository, _listMemberRepository);
+            _listInvitationRepository = Substitute.For<IListInvitationRepository>();
+            _target = new ToDoListHandler(_listRepository, _listItemRepository, _listMemberRepository, _listInvitationRepository);
 
             _target._listMemberRepository.GetListMembers(1).Returns([]);
             _target._listRepository.GetById(1).Returns(new ToDoListDbo(1, "", true, false));

@@ -18,6 +18,9 @@ namespace TDC
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                     fonts.AddFont("FluentSystemIcons-Regular.ttf", "FluentUISystemIcons");
+                    fonts.AddFont("NicoMoji-Regular.ttf", "Title");
+                    fonts.AddFont("Montserrat-Regular.ttf", "Text");
+                    fonts.AddFont("Montserrat-Bold.ttf", "Text-Bold");
                 });
 
 #if DEBUG

@@ -8,12 +8,14 @@ namespace TDC.Backend.Domain
     public class ToDoListHandler(
         IListRepository listRepository,
         IListItemRepository listItemRepository,
-        IListMemberRepository listMemberRepository)
+        IListMemberRepository listMemberRepository,
+        IListInvitationRepository listInvitationRepository)
         : IToDoListHandler
     {
         public readonly IListRepository _listRepository = listRepository;
         public readonly IListItemRepository _listItemRepository = listItemRepository;
         public readonly IListMemberRepository _listMemberRepository = listMemberRepository;
+        public readonly IListInvitationRepository _listInvitationRepository = listInvitationRepository;
 
         public Task CreateList(string creator, ToDoListSavingDto newList)
         {
@@ -40,24 +42,56 @@ namespace TDC.Backend.Domain
             return Task.CompletedTask;
         }
 
-        public Task SendListInvitation(long listId, string fromUser, string ForUser)
+        public Task CancelListInvitation(long listId, string fromUser, string forUser)
         {
-            throw new NotImplementedException();
+            _listInvitationRepository.DeleteListInvitation(forUser, fromUser, listId);
+            return Task.CompletedTask;
         }
 
-        public Task DeclineListInvitation(long listId, string decliningUser)
+        public Task SendListInvitation(long listId, string fromUser, string forUser)
         {
-            throw new NotImplementedException();
+            var invitations = _listInvitationRepository.GetInvitationsForUser(forUser);
+            if (invitations.Any(invitation => invitation.FromUser.Equals(fromUser) && invitation.ListId == listId))
+            {
+                return Task.CompletedTask;
+            }
+            _listInvitationRepository.AddListInvitation(forUser, fromUser, listId);
+            return Task.CompletedTask;
+        }
+
+        public Task DenyListInvitation(long listId, string decliningUser)
+        {
+            var invitations = _listInvitationRepository.GetInvitationsForUser(decliningUser);
+
+            foreach (var invitation in invitations) {
+                if (invitation.ListId == listId) { 
+                    _listInvitationRepository.DeleteListInvitation(decliningUser, invitation.FromUser, invitation.ListId);
+                }
+            }
+            return Task.CompletedTask;
         }
 
         public Task AcceptListInvitation(long listId, string newUser)
         {
-            throw new NotImplementedException();
+            AddUserToList(listId, newUser);
+            var invitations = _listInvitationRepository.GetInvitationsForUser(newUser);
+
+            foreach (var invitation in invitations)
+            {
+                if (invitation.ListId == listId)
+                {
+                    _listInvitationRepository.DeleteListInvitation(newUser, invitation.FromUser, invitation.ListId);
+                }
+            }
+            return Task.CompletedTask;
         }
 
         public List<ListInvitationDto> LoadListInvitationsForUser(string username)
         {
-            throw new NotImplementedException();
+            return _listInvitationRepository
+                .GetInvitationsForUser(username)
+                .Select(dbo => new ListInvitationDto(dbo.FromUser, dbo.ListId))
+                .ToList();
         }
 
         public Task DeleteList(long listId, string sender)
