@@ -197,4 +197,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: backend-unit-test-results
-          path: ./output/backend-test-results/backend-unit-tests.xml
+          path: ./output/backend-test-results/backend-unit-tests.trx
