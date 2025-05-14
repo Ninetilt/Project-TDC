@@ -1,32 +1,43 @@
-﻿using TDC.Backend.IDataRepository;
+﻿using System.Reflection;
+using TDC.Backend.IDataRepository;
 using TDC.Backend.IDataRepository.Models;
 using TDC.Backend.IDomain;
 using TDC.Backend.IDomain.Models;
 
 namespace TDC.Backend.Domain
 {
-    public class AccountHandler : IAccountHandler
+    public class AccountHandler(IAccountRepository accountRepository, IFriendRepository friendRepository, IFriendRequestRepository friendRequestRepository) : IAccountHandler
     {
-        internal readonly IAccountRepository _accountRepository;
-
-        public AccountHandler(IAccountRepository accountRepository)
-        {
-            _accountRepository = accountRepository;
-        }
+        public readonly IAccountRepository _accountRepository = accountRepository;
+        public readonly IFriendRepository friendRepository = friendRepository;
+        public readonly IFriendRequestRepository friendRequestRepository = friendRequestRepository;
 
         public Task AcceptFriendRequest(string username, string requestName)
         {
-            throw new NotImplementedException();
+            var friends = friendRepository.GetFriendsForUser(username);
+
+            if (friends.Contains(requestName)) {
+                return Task.CompletedTask;
+            }
+            this.friendRepository.AddFriend(username, requestName);
+            this.friendRepository.AddFriend(requestName, username);
+
+            this.friendRequestRepository.DeleteFriendRequest(username, requestName);
+            this.friendRequestRepository.DeleteFriendRequest(requestName, username);
+            
+            return Task.CompletedTask;
         }
 
         public Task CancelFriendRequest(string sender, string receiver)
         {
-            throw new NotImplementedException();
+            this.friendRequestRepository.DeleteFriendRequest(sender, receiver);
+            return Task.CompletedTask;
         }
 
         public Task DenyFriendRequest(string username, string requestName)
         {
-            throw new NotImplementedException();
+            this.friendRequestRepository.DeleteFriendRequest(username, requestName);
+            return Task.CompletedTask;
         }
 
         public AccountLoadingDto GetAccountByUsername(string username)
@@ -37,88 +48,90 @@ namespace TDC.Backend.Domain
 
         public List<string> GetFriendsForUser(string username)
         {
-            throw new NotImplementedException();
+            return friendRepository.GetFriendsForUser(username);
         }
 
         public List<string> GetRequestsForUser(string username)
         {
-            throw new NotImplementedException();
+            return friendRequestRepository.GetRequestsForUser(username);
         }
 
         public bool LoginWithMail(string email, string password)
         {
-            if (!_accountRepository.AccountWithEmailExists(email)) { return false; }
-
+            if (!AccountWithEmailExists(email)) { return false;}
             var accountDbo = _accountRepository.GetAccountByEmail(email)!;
-            if (accountDbo.Password.Equals(password)) {
-                return true;
-            }
-            return false;
+            return accountDbo.Password.Equals(password);
         }
 
         public bool LoginWithUsername(string username, string password)
         {
-            if (!_accountRepository.AccountExists(username)) { return false; }
-
+            if (!AccountWithUsernameExists(username)) { return false;}
             var accountDbo = _accountRepository.GetAccountByUsername(username)!;
-            if (accountDbo.Password.Equals(password))
-            {
-                return true;
-            }
-            return false;
+            return accountDbo.Password.Equals(password);
         }
 
         public bool RegisterUser(AccountSavingDto accountData)
         {
-            if(UsernameAlreadyExists(accountData.Username)) { return false; }
-            if(EmailAlreadyExists(accountData.Email)) { return false; }
+            if (AccountWithUsernameExists(accountData.Username)) { return false; }
+            if (AccountWithEmailExists(accountData.Email)) { return false; }
             _accountRepository.CreateAccount(new AccountDbo(accountData.Username, accountData.Email, accountData.Password, accountData.Description));
             return true;
         }
 
         public Task SendFriendRequest(string sender, string receiver)
         {
-            throw new NotImplementedException();
+            var requests = friendRequestRepository.GetRequestsForUser(receiver);
+            var friends = friendRepository.GetFriendsForUser(receiver);
+            if (requests.Contains(sender)) { return Task.CompletedTask; }
+            if (friends.Contains(sender)) { return Task.CompletedTask; }
+
+            this.friendRequestRepository.AddFriendRequest(receiver, sender);
+            return Task.CompletedTask;
         }
 
         public bool UpdateEmail(string username, string email)
         {
-            if(EmailAlreadyExists(email)) { return false; }
+            if (AccountWithEmailExists(email)) { return false; }
             _accountRepository.UpdateEmail(username, email);
             return true;
         }
 
         public bool UpdatePassword(string username, string password)
         {
+            if (!AccountWithUsernameExists(username)) { return false;}
+
+            var oldPassword = _accountRepository.GetAccountByUsername(username).Password;
+            if(oldPassword!.Equals(password)) { return false; }
+            
             _accountRepository.UpdatePassword(username, password);
-            //TO-DO: catch possible errors and return false if update failed -> check error case of existing password and sql exception
-            // existing password could also be checked in FE -> discuss
             return true;
         }
 
-        public Task UpdateUserDescription(string username, string description)
+        public bool UpdateUserDescription(string username, string description)
         {
+            if (!AccountWithUsernameExists(username)) { return false; }
+
             _accountRepository.UpdateDescription(username, description);
-            return Task.CompletedTask;
+            return true;
         }
 
         public bool UpdateUsername(string oldUsername, string newUsername)
         {
-            if (UsernameAlreadyExists(newUsername)) { return false; }
+            if (!AccountWithUsernameExists(oldUsername)) { return false; }
+            if (AccountWithUsernameExists(newUsername)) { return false; }
             _accountRepository.UpdateUsername(oldUsername, newUsername);
             return true;
         }
 
         #region privates
-        private bool UsernameAlreadyExists(string username)
+        private bool AccountWithUsernameExists(string username)
         {
-            return _accountRepository.AccountExists(username);
+            return _accountRepository.GetAccountByUsername(username) != null;
         }
 
-        private bool EmailAlreadyExists(string email)
+        private bool AccountWithEmailExists(string email)
         {
-            var account = _accountRepository.GetAccountByEmail(email);
-            return account != null;
+            return _accountRepository.GetAccountByEmail(email) != null;
         }
         #endregion
     }

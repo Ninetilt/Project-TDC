@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using TDC.Backend.Helpers;
 using TDC.Backend.IDomain;
 using TDC.Backend.IDomain.Models;
@@ -8,12 +9,9 @@ namespace TDC.Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountController: ControllerBase
+    public class AccountController(IAccountHandler accountHandler) : ControllerBase
     {
-        internal readonly IAccountHandler _accountHandler;
-        public AccountController(IAccountHandler accountHandler) {
-            _accountHandler = accountHandler;
-        }
+        internal readonly IAccountHandler _accountHandler = accountHandler;
 
         [HttpPut("registerUser")]
         public bool RegisterUser([FromBody] AccountSavingDto accountData)
@@ -28,9 +26,9 @@ namespace TDC.Backend.Controllers
         }
 
         [HttpPost("updateUserDescription/{username}")]
-        public async Task UpdateUserDescription([FromRoute] string username, [FromBody] DescriptionHelper description)
+        public bool UpdateUserDescription([FromRoute] string username, [FromBody] DescriptionHelper description)
         {
-            await _accountHandler.UpdateUserDescription(username, description.Description);
+            return _accountHandler.UpdateUserDescription(username, description.Description);
         }
 
         [HttpPost("updateEmail/{username}")]
@@ -66,39 +64,39 @@ namespace TDC.Backend.Controllers
         #region Friend Management
 
         [HttpGet("getFriendsForUser/{username}")]
-        public Task<List<string>> GetFriendsForUser([FromRoute] string username)
+        public List<string> GetFriendsForUser([FromRoute] string username)
         {
-            throw new NotImplementedException();
+            return this._accountHandler.GetFriendsForUser(username);
         }
 
         [HttpGet("getFriendRequestsForUser/{username}")]
-        public Task<List<string>> GetFriendRequestsForUser([FromRoute] string username)
+        public List<string> GetFriendRequestsForUser([FromRoute] string username)
         {
-            throw new NotImplementedException();
+            return this._accountHandler.GetRequestsForUser(username);
         }
 
         [HttpPost("acceptFriendRequest/{username}/{requestName}")]
-        public Task<bool> AcceptFriendRequest([FromRoute] string username, [FromRoute] string requestName)
+        public async Task AcceptFriendRequest([FromRoute] string username, [FromRoute] string requestName)
         {
-            throw new NotImplementedException();
+            await this._accountHandler.AcceptFriendRequest(username, requestName);
         }
 
         [HttpPost("denyFriendRequest/{username}/{requestName}")]
-        public Task<bool> DenyFriendRequest([FromRoute] string senderName, [FromRoute] string requestName)
+        public async Task DenyFriendRequest([FromRoute] string senderName, [FromRoute] string requestName)
         {
-            throw new NotImplementedException();
+            await this._accountHandler.DenyFriendRequest(senderName, requestName);   
         }
 
         [HttpPut("sendFriendRequest/{senderName}/{receiverName}")]
-        public Task<bool> SendFriendRequest([FromRoute] string senderName, [FromRoute] long receiverName)
+        public async Task SendFriendRequest([FromRoute] string senderName, [FromRoute] string receiverName)
         {
-            throw new NotImplementedException();
+            await this._accountHandler.SendFriendRequest(senderName, receiverName);
         }
 
         [HttpPut("cancelFriendRequest/{senderName}/{receiverName}")]
-        public Task<bool> CancelFriendRequest([FromRoute] string senderName, [FromRoute] long receiverName)
+        public async Task CancelFriendRequest([FromRoute] string senderName, [FromRoute] string receiverName)
         {
-            throw new NotImplementedException();
+            await this._accountHandler.CancelFriendRequest(senderName, receiverName);
         }
         #endregion
     }

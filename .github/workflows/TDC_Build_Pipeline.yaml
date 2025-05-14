@@ -5,17 +5,17 @@ on:
     branches:
       - "*"
     paths-ignore:
-      - '**/*.md' # Optional: Ignoriere Änderungen an README-Dateien
+      - '**/*.md' # Ignoriere Änderungen an README-Dateien
   pull_request:
     branches:
       - main
       - dev
     paths-ignore:
-      - '**/*.md' # Optional: Ignoriere Änderungen an README-Dateien
+      - '**/*.md'
   workflow_dispatch:
 
 env:
-  DOTNETVERSION: 8.0.x
+  DOTNETVERSION: 9.0.x
 
 jobs:
   buildWindows:
@@ -66,7 +66,14 @@ jobs:
 
       # Windows-Version erstellen
       - name: Build and Publish Windows App
-        run: dotnet publish code/TDC/mobile/TDC/TDC.csproj -c Release -f net8.0-windows10.0.19041.0 -o ./output/windows
+        run: dotnet publish code/TDC/mobile/TDC/TDC.csproj -c Release -f net9.0-windows10.0.19041.0 -o ./output/windows
+
+              # Artefakte hochladen
+      - name: Upload Windows Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-artifact
+          path: ./output/windows
 
   buildAndroid:
     runs-on: windows-2022
@@ -113,8 +120,96 @@ jobs:
       #Android publishen
       - name : Build Android App
         shell: bash
-        run: dotnet publish code/TDC/mobile/TDC/TDC.csproj -c:Release -f:net8.0-android -o:output/android --no-restore
+        run: dotnet publish code/TDC/mobile/TDC/TDC.csproj -c:Release -f:net9.0-android -o:output/android --no-restore
 
       #Tests ausführen
       - name: Run tests
         run: dotnet test --no-build --configuration Release ./code/TDC/mobile/TDC/TDC.csproj
+
+              # Build-Artefakte hochladen
+      - name: Upload Android Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-artifact
+          path: ./output/android
+
+  buildBackend:
+    runs-on: ubuntu-latest
+    env:
+      ASPNETCORE_ENVIRONMENT: Production
+    services:
+      sqlserver:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          SA_PASSWORD: ${{ secrets.SQL_SERVER_PASSWORD }}
+          ACCEPT_EULA: 'Y'
+        ports:
+          - 1433:1433
+        options: >-
+          --health-cmd "exit 0"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Cache NuGet packages for Backend
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('code/TDC/backend/TDC.Backend/TDC.Backend.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+      - name: Setup .NET SDK ${{ env.DOTNETVERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '${{ env.DOTNETVERSION }}'
+
+      - name: List installed .NET info
+        shell: pwsh
+        run: dotnet --info
+
+      - name: Restore Backend dependencies
+        run: dotnet restore code/TDC/backend/TDC.Backend/TDC.Backend.csproj
+
+      - name: Wait for SQL Server to be ready
+        run: |
+          for i in {1..30}; do
+            nc -z localhost 1433 && echo "SQL Server is up!" && break
+            echo "Waiting for SQL Server..."
+            sleep 2
+          done
+      - name: Install sqlcmd
+        run: |
+          curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+          curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list | sudo tee /etc/apt/sources.list.d/msprod.list
+          sudo apt-get update
+          sudo ACCEPT_EULA=Y apt-get install -y mssql-tools unixodbc-dev
+          echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> $GITHUB_ENV
+      - name: Create TDC.Test database
+        env:
+          SA_PASSWORD: ${{ secrets.SQL_SERVER_PASSWORD }}
+        run: |
+          /opt/mssql-tools/bin/sqlcmd -S localhost,1433 -U sa -P "$SA_PASSWORD" -Q "IF DB_ID('TDC.Test') IS NULL CREATE DATABASE [TDC.Test];"
+      - name: Build backend project
+        run: dotnet publish code/TDC/backend/TDC.Backend/TDC.Backend.csproj -c Release -o ./output/backend --no-restore
+
+      - name: Upload Backend Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-artifact
+          path: ./output/backend
+
+      - name: Run backend tests
+        run: |
+          mkdir -p ./output/backend-test-results
+          dotnet test code/TDC/TDC-Backend.Test/TDC.Backend.Test.csproj \
+          --configuration Release \
+          --logger "trx;LogFileName=backend-unit-tests.trx" \
+          --results-directory ./output/backend-test-results
+      - name: Upload Backend Unit Test Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-unit-test-results
+          path: ./output/backend-test-results/backend-unit-tests.trx

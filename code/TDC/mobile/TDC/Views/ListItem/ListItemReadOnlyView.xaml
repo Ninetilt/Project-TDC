@@ -11,8 +11,9 @@
             <!-- Description text field -->
             <Frame Grid.Column="1"
                    VerticalOptions="FillAndExpand"
-                   BorderColor="LightGray"
-                   CornerRadius="3"
+                   BackgroundColor="#068186"
+                   BorderColor="Transparent"
+                   CornerRadius="5"
                    Padding="0"
                    HasShadow="True">
                 <Label x:Name="TaskLabel"
@@ -24,11 +25,11 @@
             <Frame VerticalOptions="FillAndExpand"
                    Grid.Column="2"
                    HorizontalOptions="End"
-                   CornerRadius="3"
+                   CornerRadius="5"
                    Padding="0"
                    WidthRequest="50"
-                   BackgroundColor="#6200EE"
-                   BorderColor="#6200EE">
+                   BackgroundColor="#068186"
+                   BorderColor="Transparent">
                 <Label x:Name="PointsLabel"
                        HorizontalOptions="Center"
                        VerticalOptions="CenterAndExpand" />

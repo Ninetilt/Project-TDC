@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 using TDC.Backend.Helpers;
 using TDC.Backend.IDomain;
 using TDC.Backend.IDomain.Models;
@@ -9,18 +8,15 @@ namespace TDC.Backend.Controllers
     [Route("api/[controller]")]
     [ApiController]
 
-    public class ListController : ControllerBase
+    public class ListController(IToDoListHandler listHandler) : ControllerBase
     {
-        internal readonly IToDoListHandler _listHandler;
-        public ListController(IToDoListHandler listHandler) {
-            _listHandler = listHandler;
-        }
+        internal readonly IToDoListHandler _listHandler = listHandler;
 
-        #region To-Do-List
+    #region To-Do-List
         [HttpPut("createList/{sender}")]
-        public async Task CreateToDoList([FromRoute] string sender, [FromBody] ToDoListDto listDto)
+        public async Task CreateToDoList([FromRoute] string sender, [FromBody] ToDoListSavingDto listLoadingDto)
         {
-           await _listHandler.CreateList(sender, listDto);
+           await _listHandler.CreateList(sender, listLoadingDto);
         }
 
         [HttpPost("updateListTitle/{listId}")]
@@ -41,12 +37,6 @@ namespace TDC.Backend.Controllers
             await _listHandler.FinishList(listId, sender.Username);
         }
 
-        [HttpPut("addUserToList/{listId}/{username}")]
-        public async Task AddUserToList([FromRoute] long listId, [FromRoute] string username)
-        {
-            await _listHandler.AddUserToList(listId, username);
-        }
-
         [HttpPut("removeUserFromList/{listId}/{username}")]
         public async Task RemoveUserFromList([FromRoute] long listId, [FromRoute] string username)
         {
@@ -54,7 +44,7 @@ namespace TDC.Backend.Controllers
         }
 
         [HttpGet("getListsForUser/{username}")]
-        public List<ToDoListDto> GetListsForUser([FromRoute] string username)
+        public List<ToDoListLoadingDto> GetListsForUser([FromRoute] string username)
         {
             return _listHandler.GetListsForUser(username);
         }
@@ -80,7 +70,7 @@ namespace TDC.Backend.Controllers
         }
 
         [HttpPost("updateItemEffort/{itemId}/{newEffort}")]
-        public async Task UpdateItemEffort([FromRoute] long itemId, [FromRoute] uint newEffort)
+        public async Task UpdateItemEffort([FromRoute] long itemId, [FromRoute] int newEffort)
         {
             await _listHandler.UpdateItemEffort(itemId, newEffort);
         }
@@ -89,6 +79,35 @@ namespace TDC.Backend.Controllers
         public async Task SetItemStatusDone([FromRoute] long itemId, [FromBody] ItemStatusHelper itemStatus)
         {
             await _listHandler.SetItemStatus(itemId, itemStatus.UpdateForUser, itemStatus.IsDone);
+        }
+
+        [HttpPut("sendListInvitaion/{listId}/{forUser}/{fromUser}")]
+        public async Task SendListInvitation([FromRoute] long listId, [FromRoute] string forUser, [FromRoute] string fromUser)
+        {
+            await _listHandler.SendListInvitation(listId, forUser, fromUser);
+        }
+
+        [HttpDelete("cancelListInvitaion/{listId}/{forUser}/{fromUser}")]
+        public async Task CancelListInvitation([FromRoute] long listId, [FromRoute] string forUser, [FromRoute] string fromUser)
+        {
+            await _listHandler.CancelListInvitation(listId, forUser, fromUser);
+        }
+
+        [HttpPost("acceptListInvitaion/{listId}/{forUser}")]
+        public async Task AcceptListInvitation([FromRoute] long listId, [FromRoute] string forUser)
+        {
+            await _listHandler.AcceptListInvitation(listId, forUser);
+        }
+
+        [HttpPost("denyListInvitaion/{listId}/{forUser}")]
+        public async Task DenyListInvitation([FromRoute] long listId, [FromRoute] string forUser)
+        {
+            await _listHandler.DenyListInvitation(listId, forUser);
+        }
+
+        [HttpGet("getListInvitationsForUser/{username}")]
+        public List<ListInvitationDto> GetListInvitationsForUser([FromRoute] string username) {
+            return _listHandler.LoadListInvitationsForUser(username);
         }
         #endregion
     }
