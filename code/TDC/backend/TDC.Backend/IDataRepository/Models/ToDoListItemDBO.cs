@@ -1,19 +1,8 @@
 ﻿namespace TDC.Backend.IDataRepository.Models;
 
-public class ToDoListItemDbo
+public class ToDoListItemDbo(long itemId, string description, uint effort)
 {
-    public long Id { get; set; }
-    public long ListId { get; set; }
-    public string Description { get; set; }
-    public int Effort { get; set; }
-
-    public ToDoListItemDbo() {}
-
-    public ToDoListItemDbo(long id, long listId, string description, int effort)
-    {
-        Id = id;
-        ListId = listId;
-        Description = description;
-        Effort = effort;
-    }
+    public long ItemId { get; set; } = itemId;
+    public string Description { get; set; } = description;
+    public uint Effort { get; set; } = effort;
 }

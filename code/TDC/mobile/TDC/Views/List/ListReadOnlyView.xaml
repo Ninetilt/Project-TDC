@@ -7,30 +7,16 @@
 
             <!-- Title (read-only) -->
             <Grid VerticalOptions="Center" HorizontalOptions="FillAndExpand">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />                    
-                    <RowDefinition Height="1" />                    
-                </Grid.RowDefinitions>
-                
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
                 <Label x:Name="TitleLabel"
-                       FontFamily="Text-Bold"
-                       FontSize="Medium"
+                       FontSize="Large"
                        HorizontalOptions="FillAndExpand"
                        HorizontalTextAlignment="Center"
                        Grid.Column="0" />
-
-                <BoxView
-                    HeightRequest="1.5"
-                    Color="#068186"
-                    HorizontalOptions="FillAndExpand"
-                    Grid.Row="1"
-                    Grid.Column="0"
-                    Grid.ColumnSpan="2" />
             </Grid>
 
             <!-- Dynamically generated ListItemViews -->
@@ -48,10 +34,10 @@
 
             <!-- Points -->
             <Label Text="Points: "
-                   FontSize="Medium"
+                   FontSize="Large"
                    HorizontalOptions="Center"/>
 
-            <Label x:Name="PointsLabel"                   
+            <Label x:Name="PointsLabel"
                    FontSize="Medium"
                    HorizontalOptions="Center"/>
 

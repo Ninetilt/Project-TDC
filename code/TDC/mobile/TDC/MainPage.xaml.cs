@@ -16,9 +16,6 @@ namespace TDC
         public MainPage()
         {
             InitializeComponent();
-
-            Application.Current.UserAppTheme = AppTheme.Dark;
-
             _userService = App.Services.GetService<UserService>();
 
 

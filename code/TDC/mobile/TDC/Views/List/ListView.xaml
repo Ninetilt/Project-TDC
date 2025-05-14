@@ -15,7 +15,7 @@
                 </Grid.RowDefinitions>
 
                 <Entry x:Name="TitleEntry"
-                       Placeholder="Enter list title..."                       
+                       Placeholder="Enter list title..."
                        FontSize="Large"
                        HorizontalOptions="FillAndExpand"
                        HorizontalTextAlignment="Center"
@@ -43,7 +43,6 @@
 
                 <Button x:Name="NewListItemBtn"
                         Text="Add new item" 
-                        TextColor="#EEEEEE"
                         SemanticProperties.Hint="Add Item"
                         Clicked="OnNewItemClicked"
                         HorizontalOptions="Fill"/>
@@ -51,7 +50,6 @@
 
             <Button x:Name="SaveListBtn"
                         Text="Save List" 
-                        TextColor="#EEEEEE"
                         SemanticProperties.Hint="Save List"
                         Clicked="OnSaveListClicked"
                         HorizontalOptions="Fill">
@@ -61,7 +59,7 @@
                         Text="Delete List" 
                         SemanticProperties.Hint="Delete List"
                         Clicked="OnDeleteListClicked"
-                        BackgroundColor="#EEEEEE"
+                        BackgroundColor="LightGray"
                         HorizontalOptions="Fill">
             </Button>
 

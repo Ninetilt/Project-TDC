@@ -6,7 +6,7 @@ namespace TDC.Backend.IDomain
     {
         public bool RegisterUser(AccountSavingDto accountData);
         public bool UpdateUsername(string oldUsername, string newUsername);
-        public bool UpdateUserDescription(string username, string description);
+        public Task UpdateUserDescription(string username, string description);
         public bool UpdateEmail(string username, string email);
         public bool UpdatePassword(string username, string password);
         public bool LoginWithMail(string email, string password);

@@ -1,13 +1,7 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using TDC.Backend.Database;
 using TDC.Backend.DataRepository;
-using TDC.Backend.DataRepository.Config;
-using TDC.Backend.DataRepository.Helper;
 using TDC.Backend.Domain;
 using TDC.Backend.IDataRepository;
 using TDC.Backend.IDomain;
-namespace TDC.Backend;
 
 public class Program
 {
@@ -19,16 +13,6 @@ public class Program
     private static void StartUp(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-
-        builder.Services.Configure<ConnectionStrings>(
-                                                      builder.Configuration.GetSection("ConnectionStrings"));
-
-        builder.Services.AddSingleton(sp =>
-                                          sp.GetRequiredService<IOptions<ConnectionStrings>>().Value);
-
-
-        builder.Services.AddDbContext<TdcDbContext>(options =>
-                                                        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
         RunServiceSetup(builder.Services);
         BuildApp(builder);
     }
@@ -44,10 +28,6 @@ public class Program
 
         app.UseHttpsRedirection();
         app.MapControllers();
-
-        var connectionString = builder.Configuration.GetConnectionString("Sql")!;
-        MigrationService.UseEvolveMigration(connectionString);
-
         app.Run();
     }
 
@@ -62,11 +42,7 @@ public class Program
 
     private static void AddDatabaseInjections(IServiceCollection services)
     {
-        services.AddTransient<ConnectionFactory>();
-        services.AddTransient<IListInvitationRepository, ListInvitationRepository>();
         services.AddTransient<IAccountRepository, AccountRepository>();
-        services.AddTransient<IFriendRepository, FriendRepository>();
-        services.AddTransient<IFriendRequestRepository, FriendRequestRepository>();
         services.AddTransient<IListItemRepository, ListItemRepository>();
         services.AddTransient<IListMemberRepository, ListMemberRepository>();
         services.AddTransient<IListRepository, ListRepository>();
@@ -78,3 +54,4 @@ public class Program
         services.AddTransient<IAccountHandler, AccountHandler>();
     }
 }
+

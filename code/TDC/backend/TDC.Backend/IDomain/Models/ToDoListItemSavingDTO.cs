@@ -1,8 +1,8 @@
 ﻿namespace TDC.Backend.IDomain.Models
 {
-    public class ToDoListItemSavingDto(string description, int effort)
+    public class ToDoListItemSavingDto(string description, uint effort)
     {
         public string Description { get; set; } = description;
-        public int Effort { get; set; } = effort;
+        public uint Effort { get; set; } = effort;
     }
 }

@@ -17,17 +17,13 @@
                     HorizontalOptions="Start"
                     FontSize="Medium"
                     FontAttributes="Bold" 
-                    Margin="0,0,0,0"/>
+                    Margin="10,0,0,0"/>
                 <Button
-                    Text="Login"                   
-                    Clicked="LoginButton_Clicked"
-                    Grid.Column="1"
+                    Text="Login"
+                    Clicked="LoginButton_Clicked"  Grid.Column="1"
                     VerticalOptions="Center"
                     HorizontalOptions="End"
-                    Margin="5,0,10,0"
-                    WidthRequest="70"
-                    HeightRequest="40"/>
-
+                    Margin="0,0,10,0" />
             </Grid>
         </Shell.TitleView>
 
