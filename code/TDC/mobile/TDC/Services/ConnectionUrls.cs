@@ -8,6 +8,6 @@ namespace TDC.Services
 {
     public static class ConnectionUrls
     {
-        public static readonly string development = "https://localhost:7049";
+        public static readonly string development = "http://192.168.0.98:5091";
     }
 }
