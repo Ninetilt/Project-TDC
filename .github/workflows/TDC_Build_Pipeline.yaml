@@ -75,22 +75,6 @@ jobs:
           name: windows-artifact
           path: ./output/windows
 
-      # Code-Metriken-Tool installieren
-      - name: Install Code Metrics Tool
-        run: dotnet tool install --global dotnet-code-metrics || echo "Tool already installed"
-
-      # Code-Metriken analysieren 
-      - name: Analyze Code Metrics
-        run: dotnet code-metrics analyze ./code/TDC/mobile/TDC/TDC.csproj --output-format json --output-file metrics-windows.json
-
-      # Code-Metriken-Datei als Artefakt hochladen
-      - name: Upload Code Metrics artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: code-metrics-windows
-          path: metrics-windows.json
-
-
   buildAndroid:
     runs-on: windows-2022
 
@@ -149,27 +133,10 @@ jobs:
           name: android-artifact
           path: ./output/android
 
-    # Code-Metriken-Tool installieren
-      - name: Install Code Metrics Tool
-        run: dotnet tool install --global dotnet-code-metrics || echo "Tool already installed"
-
-      # Code-Metriken analysieren
-      - name: Analyze Code Metrics
-        run: dotnet code-metrics analyze ./code/TDC/mobile/TDC/TDC.csproj --output-format json --output-file metrics-android.json
-
-      # Code-Metriken als Artefakt hochladen
-      - name: Upload Code Metrics artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: code-metrics-android
-          path: metrics-android.json
-
   buildBackend:
     runs-on: ubuntu-latest
-
     env:
       ASPNETCORE_ENVIRONMENT: Production
-
     services:
       sqlserver:
         image: mcr.microsoft.com/mssql/server:2022-latest
@@ -183,7 +150,6 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -229,7 +195,7 @@ jobs:
           SA_PASSWORD: ${{ secrets.SQL_SERVER_PASSWORD }}
         run: |
           /opt/mssql-tools/bin/sqlcmd -S localhost,1433 -U sa -P "$SA_PASSWORD" -Q "IF DB_ID('TDC.Test') IS NULL CREATE DATABASE [TDC.Test];"
-      
+
       - name: Build backend project
         run: dotnet publish code/TDC/backend/TDC.Backend/TDC.Backend.csproj -c Release -o ./output/backend --no-restore
 
@@ -239,20 +205,24 @@ jobs:
           name: backend-artifact
           path: ./output/backend
 
-      # Code-Metriken-Tool installieren
-      - name: Install Code Metrics Tool
-        run: dotnet tool install --global dotnet-code-metrics || echo "Tool already installed"
-
-      # Code-Metriken analysieren
-      - name: Analyze Code Metrics
-        run: dotnet code-metrics analyze ./code/TDC/backend/TDCBackend.csproj --output-format json --output-file metrics-backend.json
-
-      # Code-Metriken als Artefakt hochladen
-      - name: Upload Code Metrics artifact
-        uses: actions/upload-artifact@v4
+      # SonarCloud vorbereiten 
+      - name: SonarCloud Scan - Begin Analysis
+        uses: SonarSource/sonarcloud-github-action@v1.9
         with:
-          name: code-metrics-backend
-          path: metrics-backend.json
+          organization: 'Rudic_Test'          
+          projectKey: 'rudic-test'  
+          projectName: 'Rudic_Test'        # Optional, Projektnamen
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      # SonarCloud Abschluss
+      - name: SonarCloud Scan - End Analysis
+        uses: SonarSource/sonarcloud-github-action@v1.9
+        with:
+          organization: 'Rudic_Test'
+          projectKey: 'rudic-test'
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Run backend tests
         run: |
