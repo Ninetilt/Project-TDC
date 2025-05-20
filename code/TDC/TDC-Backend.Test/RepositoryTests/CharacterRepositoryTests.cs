@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TDC.Backend.DataRepository.Test;
+﻿using TDC.Backend.DataRepository.Test;
 using TDC.Backend.DataRepository;
 
 namespace TDC.Backend.Test.RepositoryTests
