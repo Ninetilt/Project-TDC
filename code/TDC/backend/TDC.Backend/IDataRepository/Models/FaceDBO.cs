@@ -2,12 +2,12 @@
 {
     public class FaceDbo
     {
-        public long Id { get; set; }
+        public string Id { get; set; }
         public string Image { get; set; }
 
         public FaceDbo() { }
 
-        public FaceDbo(long id, string image)
+        public FaceDbo(string id, string image)
         {
             Id = id;
             Image = image;

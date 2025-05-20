@@ -2,6 +2,6 @@
 {
     public interface IFaceRepository
     {
-        public string? GetImageForFaceId(long faceId);
+        public string? GetImageForFaceId(string faceId);
     }
 }

@@ -7,7 +7,7 @@ namespace TDC.Backend.DataRepository
 {
     public class FaceRepository(ConnectionFactory connectionFactory) : BaseRepository(connectionFactory, "[Face]"), IFaceRepository
     {
-        public string? GetImageForFaceId(long faceId)
+        public string? GetImageForFaceId(string faceId)
         {
             var sql = $"SELECT * FROM {this.TableName} "
                       + $"WHERE Id = @faceId";
