@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Runtime.CompilerServices;
+using Microsoft.AspNetCore.Mvc;
 using TDC.Backend.IDomain;
 
 namespace TDC.Backend.Controllers
@@ -25,6 +26,18 @@ namespace TDC.Backend.Controllers
         public string GetDefaultCharacterImage()
         {
             return _characterHandler.GetDefaultCharacterImage();
+        }
+
+        [HttpPost("updateCharacterFace/{username}/{faceId}")]
+        public async Task UpdateCharacterFace([FromRoute] string username, [FromRoute] long faceId)
+        {
+            await _characterHandler.UpdateCharacterFace(username, faceId);
+        }
+
+        [HttpPost("updateCharacterColor/{username}/{color}")]
+        public async Task UpdateCharacterColor([FromRoute] string username, [FromRoute] string color)
+        {
+            await _characterHandler.UpdateCharacterColor(username, color);
         }
     }
 }

@@ -16,5 +16,15 @@ namespace TDC.Backend.Domain
         {
             throw new NotImplementedException();
         }
+
+        public Task UpdateCharacterFace(string username, long faceId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateCharacterColor(string username, string color)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
