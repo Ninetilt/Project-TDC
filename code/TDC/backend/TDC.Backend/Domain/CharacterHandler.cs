@@ -1,30 +1,48 @@
-﻿using TDC.Backend.IDomain;
+﻿using TDC.Backend.IDataRepository;
+using TDC.Backend.IDomain;
 
 namespace TDC.Backend.Domain
 {
-    public class CharacterHandler: ICharacterHandler
+    public class CharacterHandler(
+        ICharacterRepository characterRepository, 
+        ICharacterBodyRepository characterBodyRepository,
+        IFaceRepository faceRepository,
+        IDefaultCharacterRepository defaultCharacterRepository): ICharacterHandler
     {
+        private ICharacterRepository _characterRepository = characterRepository;
+        private ICharacterBodyRepository _characterBodyRepository = characterBodyRepository;
+        private IFaceRepository _faceRepository = faceRepository;
+        private IDefaultCharacterRepository _defaultCharacterRepository = defaultCharacterRepository;
+
         public string GetDefaultCharacterImage()
         {
-            throw new NotImplementedException();
-        }
-        public string GetCharacterFaceForUser(string username)
-        {
-            throw new NotImplementedException();
-        }
-        public string GetCharacterBodyForUser(string username)
-        {
-            throw new NotImplementedException();
+            return _defaultCharacterRepository.GetDefaultCharacterImage();
         }
 
-        public Task UpdateCharacterFace(string username, long faceId)
+        public string? GetCharacterFaceForUser(string username)
         {
-            throw new NotImplementedException();
+            var character = _characterRepository.GetCharacterForUser(username);
+            return character == null ? null : _faceRepository.GetImageForFaceId(character.FaceId);
+        }
+
+        public string? GetCharacterBodyForUser(string username)
+        {
+            var character = _characterRepository.GetCharacterForUser(username);
+            return character == null ? null : _characterBodyRepository.GetCharacterBodyImage(character.FaceId);
+        }
+
+        public Task UpdateCharacterFace(string username, string faceId)
+        {
+            if (_faceRepository.GetImageForFaceId(faceId) == null) { return Task.CompletedTask; }
+            _characterRepository.UpdateFace(username, faceId);
+            return Task.CompletedTask;
         }
 
         public Task UpdateCharacterColor(string username, string color)
         {
-            throw new NotImplementedException();
+            if (_characterBodyRepository.GetCharacterBodyImage(color) == null) { return Task.CompletedTask; }
+            _characterRepository.UpdateColor(username, color);
+            return Task.CompletedTask;
         }
     }
 }

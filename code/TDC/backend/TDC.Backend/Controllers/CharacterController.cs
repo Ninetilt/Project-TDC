@@ -10,13 +10,13 @@ namespace TDC.Backend.Controllers
         private ICharacterHandler _characterHandler = characterHandler;
 
         [HttpGet("getCharacterBody/{username}")]
-        public string GetCharacterBodyForUser([FromRoute] string username)
+        public string? GetCharacterBodyForUser([FromRoute] string username)
         {
             return _characterHandler.GetCharacterBodyForUser(username);
         }
 
         [HttpGet("getCharacterFace/{username}")]
-        public string GetCharacterFaceForUser([FromRoute] string username)
+        public string? GetCharacterFaceForUser([FromRoute] string username)
         {
             return _characterHandler.GetCharacterFaceForUser(username);
         }
@@ -28,7 +28,7 @@ namespace TDC.Backend.Controllers
         }
 
         [HttpPost("updateCharacterFace/{username}/{faceId}")]
-        public async Task UpdateCharacterFace([FromRoute] string username, [FromRoute] long faceId)
+        public async Task UpdateCharacterFace([FromRoute] string username, [FromRoute] string faceId)
         {
             await _characterHandler.UpdateCharacterFace(username, faceId);
         }

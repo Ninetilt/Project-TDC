@@ -73,6 +73,7 @@ public class Program
         services.AddTransient<ICharacterBodyRepository, CharacterBodyRepository>();
         services.AddTransient<IFaceRepository, FaceRepository>();
         services.AddTransient<ICharacterRepository, CharacterRepository>();
+        services.AddTransient<IDefaultCharacterRepository, DefaultCharacterRepository>();
     }
 
     private static void AddDomainInjections(IServiceCollection services)
