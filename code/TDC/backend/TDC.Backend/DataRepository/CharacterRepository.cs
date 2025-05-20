@@ -1,4 +1,5 @@
 ﻿using DataRepository;
+using System.Drawing;
 using TDC.Backend.DataRepository.Helper;
 using TDC.Backend.IDataRepository;
 using TDC.Backend.IDataRepository.Models;
@@ -9,19 +10,64 @@ namespace TDC.Backend.DataRepository
     {
         public void AddCharacter(CharacterDbo character)
         {
-            throw new NotImplementedException();
+            var sql = $"INSERT INTO dbo.{this.TableName} "
+                      + $"  (Username, FaceId, Color, XP)"
+                      + $"VALUES("
+                      + $"  @username, @faceId, @color, @xp);";
+            var parameter = new
+            {
+                username = character.Username,
+                faceId = character.FaceId,
+                color = character.Color,
+                xp = character.XP,
+            };
+
+            this.Insert<CharacterDbo>(sql, parameter);
         }
-        public CharacterDbo GetCharacterForUser(string username)
+
+        public CharacterDbo? GetCharacterForUser(string username)
         {
-            throw new NotImplementedException();
+            var sql = $"SELECT * FROM {this.TableName} "
+                      + $"WHERE Username = @username";
+            var parameters = new
+            {
+                username,
+            };
+
+            var result = this.Query<CharacterDbo>(sql, parameters).FirstOrDefault();
+            return result;
         }
+
         public void UpdateFace(string username, long faceId)
         {
-            throw new NotImplementedException();
+            var sql = $"UPDATE dbo.{this.TableName} "
+                      + $" SET FaceId = @faceId"
+                      + $" WHERE Username = @username; ";
+
+            var parameter = new
+            {
+                faceId = faceId,
+                username = username,
+            };
+
+            this.Execute<CharacterDbo>(sql,
+                              parameter);
         }
+
         public void UpdateColor(string username, string color)
         {
-            throw new NotImplementedException();
+            var sql = $"UPDATE dbo.{this.TableName} "
+                      + $" SET Color = @color"
+                      + $" WHERE Username = @username; ";
+
+            var parameter = new
+            {
+                color = color,
+                username = username,
+            };
+
+            this.Execute<CharacterDbo>(sql,
+                                       parameter);
         }
     }
 }
