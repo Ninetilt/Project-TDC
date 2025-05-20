@@ -28,7 +28,7 @@ namespace TDC.Backend.Domain
         public string? GetCharacterBodyForUser(string username)
         {
             var character = _characterRepository.GetCharacterForUser(username);
-            return character == null ? null : _characterBodyRepository.GetCharacterBodyImage(character.FaceId);
+            return character == null ? null : _characterBodyRepository.GetCharacterBodyImage(character.Color);
         }
 
         public Task UpdateCharacterFace(string username, string faceId)
