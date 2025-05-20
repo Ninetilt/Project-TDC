@@ -38,7 +38,7 @@ namespace TDC.Backend.DataRepository
             return result;
         }
 
-        public void UpdateFace(string username, long faceId)
+        public void UpdateFace(string username, string faceId)
         {
             var sql = $"UPDATE dbo.{this.TableName} "
                       + $" SET FaceId = @faceId"
