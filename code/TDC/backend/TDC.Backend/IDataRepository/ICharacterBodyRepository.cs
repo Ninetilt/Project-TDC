@@ -2,6 +2,6 @@
 {
     public interface ICharacterBodyRepository
     {
-        public string GetCharacterBodyImage(string color);
+        public string? GetCharacterBodyImage(string color);
     }
 }
