@@ -70,6 +70,7 @@ public class Program
         services.AddTransient<IListItemRepository, ListItemRepository>();
         services.AddTransient<IListMemberRepository, ListMemberRepository>();
         services.AddTransient<IListRepository, ListRepository>();
+        services.AddTransient<ICharacterHandler, CharacterHandler>();
     }
 
     private static void AddDomainInjections(IServiceCollection services)
