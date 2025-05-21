@@ -196,7 +196,17 @@ namespace TDC.Backend.Domain
         #region list rewarding
         public List<RewardingMessageDto> GetOpenRewardsForUser(string username)
         {
-            throw new NotImplementedException();
+            var ids = _openRewardsRepository.GetOpenRewardsForUser(username);
+            var dtos = new List<RewardingMessageDto>();
+            foreach (var id in ids) {
+                var dtoMessage = _listRewardingRepository.GetRewardingById(id);
+
+                if (dtoMessage != null)
+                {
+                    dtos.Add(new RewardingMessageDto(dtoMessage));
+                }
+            }
+            return dtos;
         }
 
         public void RemoveSeenRewardingForUser(string username, long listId)
