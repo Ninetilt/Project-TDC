@@ -3,6 +3,6 @@
     public interface IListRewardingRepository
     {
         public void AddNewRewarding(long listId, string message);
-        public string GetRewardingById(long listId);
+        public string? GetRewardingById(long listId);
     }
 }
