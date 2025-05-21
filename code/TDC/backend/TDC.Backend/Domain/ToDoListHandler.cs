@@ -1,4 +1,6 @@
-﻿using TDC.Backend.DataRepository;
+﻿using Microsoft.IdentityModel.Tokens;
+using System.Collections.Generic;
+using TDC.Backend.DataRepository;
 using TDC.Backend.IDataRepository;
 using TDC.Backend.IDataRepository.Models;
 using TDC.Backend.IDomain;
@@ -111,10 +113,12 @@ namespace TDC.Backend.Domain
 
         public Task FinishList(long listId, string sender)
         {
-            if(!_listMemberRepository.GetListMembers(listId).Contains(sender)) { return Task.CompletedTask; }
+            var members = _listMemberRepository.GetListMembers(listId);
+            if (!members.Contains(sender)) { return Task.CompletedTask; }
             if (!ListCanBeFinished(listId)) { return Task.CompletedTask; }
 
-            // TO-DO: add logic to grant every member rewards
+            GrantListRewards(listId, members);
+            
             _listRepository.FinishList(listId);
             return Task.CompletedTask;
         }
@@ -203,7 +207,7 @@ namespace TDC.Backend.Domain
 
                 if (dtoMessage != null)
                 {
-                    dtos.Add(new RewardingMessageDto(dtoMessage));
+                    dtos.Add(new RewardingMessageDto(dtoMessage, id));
                 }
             }
             return dtos;
@@ -216,6 +220,83 @@ namespace TDC.Backend.Domain
         #endregion
 
         #region privates
+        private void GrantListRewards(long listId, List<string> listMembers)
+        {
+            var memberPoints = GetMemberPointValues(listMembers, listId);
+            var memberPlacements = GetMemberPlacement(memberPoints);
+
+            var message = GetRewardingMessage(listMembers, memberPoints, memberPlacements);
+
+            _listRewardingRepository.AddNewRewarding(listId, message);
+
+            foreach (var member in listMembers) {
+                _openRewardsRepository.AddOpenRewardForUser(member, listId);
+            }
+        }
+
+        private string GetRewardingMessage(List<string> members, Dictionary<string, int> memberPoints, Dictionary<string, uint> memberPlacements)
+        {
+            var message = string.Empty;
+            foreach (var member in members)
+            {
+                message += member + ";";
+                message += memberPoints.GetValueOrDefault(member) + ";";
+                message += memberPlacements.GetValueOrDefault(member) + System.Environment.NewLine;
+            }
+
+            if(!message.IsNullOrEmpty()) {
+                message = message.Remove(message.Length - 1, 1);
+            }
+            
+            return message;
+        }
+
+        private Dictionary<string, int> GetMemberPointValues(List<string> listMembers, long listId)
+        {
+            var memberPoints = new Dictionary<string, int>();
+            foreach (var member in listMembers)
+            {
+                memberPoints.Add(member, GetPointsForMember(member, listId));
+            }
+            return memberPoints;
+        }
+
+        private Dictionary<string, uint> GetMemberPlacement(Dictionary<string, int> memberPoints)
+        {
+            var memberPlacement = new Dictionary<string, uint>();
+            var sorted = memberPoints.OrderByDescending(kvp => kvp.Value).ThenBy(kvp => kvp.Key).ToList();
+
+            uint currentPlace = 0;
+            uint actualPlace = 0;
+            int? previousPoints = null;
+
+            foreach (var kvp in sorted)
+            {
+                actualPlace++;
+
+                if (previousPoints == null || kvp.Value != previousPoints) { currentPlace = actualPlace; }
+
+                memberPlacement[kvp.Key] = currentPlace;
+                previousPoints = (int?)kvp.Value;
+            }
+
+            return memberPlacement;
+        }
+
+        private int GetPointsForMember(string username, long listId)
+        {
+            var points = 0;
+            var items = _listItemRepository.GetItemsForList(listId);
+            foreach (var item in items) {
+                var isDone = _listItemRepository.GetItemStatus(item.Id, username);
+                if(isDone)
+                {
+                    points += item.Effort * 5;
+                }
+            }
+            return points;
+        }
+
         private ToDoListItemLoadingDto ParseItemDboToDto(ToDoListItemDbo dbo, string currentUser, List<string> listMembers)
         {
             var isDone = _listItemRepository.GetItemStatus(dbo.Id, currentUser);
