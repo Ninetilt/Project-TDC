@@ -54,6 +54,17 @@ namespace TDC.Backend.Test.RepositoryTests
         }
 
         [Test]
+        public void AddNewRewarding_DuplicatePrimaryKey_ThrowsSqlException()
+        {
+            var listId = _listRepository.CreateList(new ToDoListDbo(0, "test-list", false, true));
+
+            _target.AddNewRewarding(listId, "test-message");
+
+            var act = () => _target.AddNewRewarding(listId, "test-message");
+            act.Should().Throw<SqlException>();
+        }
+
+        [Test]
         public void AddNewRewarding_NoValidList_ThrowsSqlException()
         {
             var act = () => _target.AddNewRewarding(1, "test-message");
