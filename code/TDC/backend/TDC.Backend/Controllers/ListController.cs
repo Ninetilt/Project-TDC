@@ -126,5 +126,25 @@ namespace TDC.Backend.Controllers
             return _listHandler.LoadListInvitationsForUser(username);
         }
         #endregion
+
+        #region rewarding
+        [HttpGet("getRewardingById/{username}/{listId}")]
+        public void GetRewardingById([FromRoute] string username, long listId)
+        {
+            throw new NotImplementedException();
+        }
+
+        [HttpGet("getOpenRewardsForUser/{username}")]
+        public void GetOpenRewardsForUser([FromRoute] string username)
+        {
+            throw new NotImplementedException();
+        }
+
+        [HttpPut("addRewardingForUser/{username}/{listId}")]
+        public void AddRewardingForUser([FromRoute] string username, [FromRoute] long listId)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
     }
 }
