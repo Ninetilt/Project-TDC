@@ -51,7 +51,7 @@ namespace TDC.Backend.Controllers
         }
 
         [HttpGet("getListById/{listId}")]
-        public ToDoListLoadingDto GetListById([FromRoute] long listId)
+        public ToDoListLoadingDto? GetListById([FromRoute] long listId)
         {
             return _listHandler.GetListById(listId);
         }
@@ -128,12 +128,6 @@ namespace TDC.Backend.Controllers
         #endregion
 
         #region rewarding
-        [HttpGet("getRewardingById/{username}/{listId}")]
-        public RewardingMessageDto GetRewardingById([FromRoute] string username, long listId)
-        {
-            return _listHandler.GetRewardingById(username, listId);
-        }
-
         [HttpGet("getOpenRewardsForUser/{username}")]
         public List<RewardingMessageDto> GetOpenRewardsForUser([FromRoute] string username)
         {

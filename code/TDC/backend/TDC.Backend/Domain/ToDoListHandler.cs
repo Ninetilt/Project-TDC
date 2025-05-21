@@ -194,11 +194,6 @@ namespace TDC.Backend.Domain
         #endregion
 
         #region list rewarding
-        public RewardingMessageDto GetRewardingById(string username, long listId)
-        {
-            throw new NotImplementedException();
-        }
-
         public List<RewardingMessageDto> GetOpenRewardsForUser(string username)
         {
             throw new NotImplementedException();

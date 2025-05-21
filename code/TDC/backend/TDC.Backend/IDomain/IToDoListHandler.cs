@@ -23,7 +23,6 @@ namespace TDC.Backend.IDomain
         public Task SetItemStatus(long itemId, string updateForUser, bool isDone);
         public List<ToDoListItemLoadingDto> GetItemsForList(long listId, string username);
         public ToDoListLoadingDto? GetListById(long listId);
-        public RewardingMessageDto GetRewardingById(string username, long listId);
         public List<RewardingMessageDto> GetOpenRewardsForUser(string username);
         public void RemoveSeenRewardingForUser(string username, long listId);
         
