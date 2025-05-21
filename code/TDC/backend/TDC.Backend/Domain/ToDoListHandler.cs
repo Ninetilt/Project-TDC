@@ -245,7 +245,7 @@ namespace TDC.Backend.Domain
             }
 
             if(!message.IsNullOrEmpty()) {
-                message = message.Remove(message.Length - 1, 1);
+                message = message[..^2];
             }
             
             return message;
