@@ -10,13 +10,17 @@ namespace TDC.Backend.Domain
         IListRepository listRepository,
         IListItemRepository listItemRepository,
         IListMemberRepository listMemberRepository,
-        IListInvitationRepository listInvitationRepository)
+        IListInvitationRepository listInvitationRepository,
+        IListRewardingRepository listRewardingRepository,
+        IOpenRewardsRepository openRewardsRepository)
         : IToDoListHandler
     {
         public readonly IListRepository _listRepository = listRepository;
         public readonly IListItemRepository _listItemRepository = listItemRepository;
         public readonly IListMemberRepository _listMemberRepository = listMemberRepository;
         public readonly IListInvitationRepository _listInvitationRepository = listInvitationRepository;
+        public readonly IListRewardingRepository _listRewardingRepository = listRewardingRepository;
+        public readonly IOpenRewardsRepository _openRewardsRepository = openRewardsRepository;
 
         public long CreateList(string creator, ToDoListSavingDto newList)
         {
@@ -130,6 +134,14 @@ namespace TDC.Backend.Domain
             return listDtoList;
         }
 
+        public ToDoListLoadingDto? GetListById(long listId)
+        {
+            var dbo = _listRepository.GetById(listId);
+            return dbo == null ? null : new ToDoListLoadingDto(dbo.Id, dbo.Name, dbo.IsCollaborative);
+        }
+
+        #region list items
+
         public long AddItemToList(long listId, string itemDescription, int itemEffort)
         {
             if(!ListExists(listId)) { return -1;}
@@ -179,11 +191,24 @@ namespace TDC.Backend.Domain
             return dtos;
         }
 
-        public ToDoListLoadingDto? GetListById(long listId)
+        #endregion
+
+        #region list rewarding
+        public RewardingMessageDto GetRewardingById(string username, long listId)
         {
-            var dbo = _listRepository.GetById(listId);
-            return dbo == null ? null : new ToDoListLoadingDto(dbo.Id, dbo.Name, dbo.IsCollaborative);
+            throw new NotImplementedException();
         }
+
+        public List<RewardingMessageDto> GetOpenRewardsForUser(string username)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RemoveSeenRewardingForUser(string username, long listId)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
 
         #region privates
         private ToDoListItemLoadingDto ParseItemDboToDto(ToDoListItemDbo dbo, string currentUser, List<string> listMembers)

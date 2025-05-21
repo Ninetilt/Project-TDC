@@ -74,6 +74,8 @@ public class Program
         services.AddTransient<IFaceRepository, FaceRepository>();
         services.AddTransient<ICharacterRepository, CharacterRepository>();
         services.AddTransient<IDefaultCharacterRepository, DefaultCharacterRepository>();
+        services.AddTransient<IListRewardingRepository, ListRewardingRepository>();
+        services.AddTransient<IOpenRewardsRepository, OpenRewardsRepository>();
     }
 
     private static void AddDomainInjections(IServiceCollection services)

@@ -131,25 +131,19 @@ namespace TDC.Backend.Controllers
         [HttpGet("getRewardingById/{username}/{listId}")]
         public RewardingMessageDto GetRewardingById([FromRoute] string username, long listId)
         {
-            throw new NotImplementedException();
+            return _listHandler.GetRewardingById(username, listId);
         }
 
         [HttpGet("getOpenRewardsForUser/{username}")]
-        public List<long> GetOpenRewardsForUser([FromRoute] string username)
+        public List<RewardingMessageDto> GetOpenRewardsForUser([FromRoute] string username)
         {
-            throw new NotImplementedException();
-        }
-
-        [HttpPut("addRewardingForUser/{username}/{listId}")]
-        public void AddRewardingForUser([FromRoute] string username, [FromRoute] long listId)
-        {
-            throw new NotImplementedException();
+            return _listHandler.GetOpenRewardsForUser(username);
         }
 
         [HttpPost("removeSeenRewarding/{username}/{listId}")]
-        public void RemoveSeenRewardingForUser()
+        public void RemoveSeenRewardingForUser([FromRoute] string username, [FromRoute] long listId)
         {
-            throw new NotSupportedException();
+            _listHandler.RemoveSeenRewardingForUser(username, listId);
         }
         #endregion
     }
