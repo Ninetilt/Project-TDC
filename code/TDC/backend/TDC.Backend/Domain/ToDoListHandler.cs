@@ -237,14 +237,17 @@ namespace TDC.Backend.Domain
         private string GetRewardingMessage(List<string> members, Dictionary<string, int> memberPoints, Dictionary<string, uint> memberPlacements)
         {
             var message = string.Empty;
-            foreach (var member in members)
+            for(var i = 0; i < members.Count; i++)
             {
-                message += member + ";";
-                message += memberPoints.GetValueOrDefault(member) + ";";
-                message += memberPlacements.GetValueOrDefault(member) + System.Environment.NewLine;
-            }
+                message += members[i] + ";";
+                message += memberPoints.GetValueOrDefault(members[i]) + ";";
+                message += memberPlacements.GetValueOrDefault(members[i]);
 
-            if(!message.IsNullOrEmpty()) { message = message[..^2]; }
+                if(i < members.Count - 1)
+                {
+                    message += System.Environment.NewLine;
+                }
+            }
             
             return message;
         }
