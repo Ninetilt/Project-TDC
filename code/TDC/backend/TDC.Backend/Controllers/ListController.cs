@@ -129,13 +129,13 @@ namespace TDC.Backend.Controllers
 
         #region rewarding
         [HttpGet("getRewardingById/{username}/{listId}")]
-        public void GetRewardingById([FromRoute] string username, long listId)
+        public RewardingMessageDto GetRewardingById([FromRoute] string username, long listId)
         {
             throw new NotImplementedException();
         }
 
         [HttpGet("getOpenRewardsForUser/{username}")]
-        public void GetOpenRewardsForUser([FromRoute] string username)
+        public List<long> GetOpenRewardsForUser([FromRoute] string username)
         {
             throw new NotImplementedException();
         }
@@ -144,6 +144,12 @@ namespace TDC.Backend.Controllers
         public void AddRewardingForUser([FromRoute] string username, [FromRoute] long listId)
         {
             throw new NotImplementedException();
+        }
+
+        [HttpPost("removeSeenRewarding/{username}/{listId}")]
+        public void RemoveSeenRewardingForUser()
+        {
+            throw new NotSupportedException();
         }
         #endregion
     }
