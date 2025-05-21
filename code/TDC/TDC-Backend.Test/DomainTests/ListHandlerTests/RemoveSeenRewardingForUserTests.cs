@@ -4,7 +4,7 @@ using TDC.Backend.IDataRepository;
 
 namespace TDC.Backend.Test.DomainTests.ListHandlerTests
 {
-    public class SetItemStatusTests
+    public class RemoveSeenRewardingForUserTests
     {
         private ToDoListHandler _target;
         private IListRepository _listRepository;
@@ -24,13 +24,6 @@ namespace TDC.Backend.Test.DomainTests.ListHandlerTests
             _listRewardingRepository = Substitute.For<IListRewardingRepository>();
             _openRewardsRepository = Substitute.For<IOpenRewardsRepository>();
             _target = new ToDoListHandler(_listRepository, _listItemRepository, _listMemberRepository, _listInvitationRepository, _listRewardingRepository, _openRewardsRepository);
-        }
-
-        [Test]
-        public void SetItemStatus_CallsRepository()
-        {
-            _target.SetItemStatus(1, "test-user", true);
-            _target._listItemRepository.Received().SetItemStatus(1, "test-user", true);
         }
     }
 }

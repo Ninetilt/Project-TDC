@@ -201,7 +201,7 @@ namespace TDC.Backend.Domain
 
         public void RemoveSeenRewardingForUser(string username, long listId)
         {
-            throw new NotImplementedException();
+            _openRewardsRepository.RemoveSeenReward(username, listId);
         }
         #endregion
 
