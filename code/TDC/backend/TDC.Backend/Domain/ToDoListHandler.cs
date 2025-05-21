@@ -244,9 +244,7 @@ namespace TDC.Backend.Domain
                 message += memberPlacements.GetValueOrDefault(member) + System.Environment.NewLine;
             }
 
-            if(!message.IsNullOrEmpty()) {
-                message = message[..^2];
-            }
+            if(!message.IsNullOrEmpty()) { message = message[..^2]; }
             
             return message;
         }
