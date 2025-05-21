@@ -43,6 +43,9 @@
     <None Update="Database\migrations\V1_3_2__AddDefaultCharacterTable.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Database\migrations\V1_4_0__AddListRewardingTables.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
