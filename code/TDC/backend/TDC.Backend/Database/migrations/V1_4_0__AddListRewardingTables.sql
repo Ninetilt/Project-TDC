@@ -10,7 +10,7 @@ CREATE TABLE[dbo].[OpenRewards] (
     [ListId] [bigint] NOT NULL,
     [Username] [nvarchar](16) NOT NULL,
     CONSTRAINT[PK_OpenRewards] PRIMARY KEY CLUSTERED([ListId] ASC, [Username]),
-    CONSTRAINT[FK_ListId_OpenRewards] FOREIGN KEY([ListId]) REFERENCES[dbo].[ToDoList]([Id]) ON DELETE CASCADE,
+    CONSTRAINT[FK_ListId_OpenRewards] FOREIGN KEY([ListId]) REFERENCES[dbo].[Rewarding]([ListId]) ON DELETE CASCADE,
     CONSTRAINT[FK_Username_OpenRewards] FOREIGN KEY([Username]) REFERENCES[dbo].[Account]([Username]) ON DELETE CASCADE
     );
 GO
