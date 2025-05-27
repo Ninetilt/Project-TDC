@@ -76,10 +76,10 @@ public partial class ListView : IOnPageKeyDown
 
     private async void OnSaveListClicked(object sender, EventArgs e)
     {
-        SaveList(true);
+        await SaveList(true);
     }
 
-    private async void SaveList(bool redirect)
+    private async Task SaveList(bool redirect)
     {
         var listName = TitleEntry.Text?.Trim();
         if (string.IsNullOrWhiteSpace(listName) || HasInvalidTitleCharacters(listName))
@@ -101,7 +101,7 @@ public partial class ListView : IOnPageKeyDown
 
     private async void OnFinishListClicked(object sender, EventArgs e)
     {
-        SaveList(false);
+        await SaveList(false);
         var currentUser = _userService.CurrentUser!.Username;
         await _listService.FinishList(List.ListID, currentUser);
 
