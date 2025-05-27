@@ -57,13 +57,13 @@ namespace TDC.Services
             var url = ConnectionUrls.development + $"/api/List/finishList/{listId}";
             var data = new
             {
-                sender = sender,
+                username = sender,
             };
 
             var json = JsonSerializer.Serialize(data);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var response = await httpClient.PostAsync(url, content);
+            await httpClient.PostAsync(url, content);
         }
 
         public async Task<ToDoList> GetListById(long listId)

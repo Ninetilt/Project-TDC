@@ -57,6 +57,15 @@
                         HorizontalOptions="Fill">
             </Button>
 
+            <Button x:Name="FinishListBtn"
+                    Text="Finish List" 
+                    TextColor="#EEEEEE"
+                    SemanticProperties.Hint="Finish List"
+                    Clicked="OnFinishListClicked"
+                    IsEnabled="False"
+                    HorizontalOptions="Fill">
+            </Button>
+
             <Button x:Name="DeleteListBtn"
                         Text="Delete List" 
                         SemanticProperties.Hint="Delete List"

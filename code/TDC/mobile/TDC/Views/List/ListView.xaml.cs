@@ -57,11 +57,12 @@ public partial class ListView : IOnPageKeyDown
         var item = new ListItem("", 5);
         NewItems.Add(item);
         AddItemToView(item);
+        UpdateFinishListButton();
     }
 
     private void TitleEntryChanged(object sender, EventArgs e)
     {
-        List.Name = this.FindByName<Entry>("TitleEntry").Text;
+        List.Name = this.FindByName<Entry>("TitleEntry")?.Text;
         if (!string.IsNullOrEmpty(this.FindByName<Entry>("TitleEntry").Text))
         {
             this.FindByName<Label>("ErrorLabel").IsVisible = false;
@@ -75,6 +76,11 @@ public partial class ListView : IOnPageKeyDown
 
     private async void OnSaveListClicked(object sender, EventArgs e)
     {
+        SaveList(true);
+    }
+
+    private async void SaveList(bool redirect)
+    {
         var listName = TitleEntry.Text?.Trim();
         if (string.IsNullOrWhiteSpace(listName) || HasInvalidTitleCharacters(listName))
         {
@@ -85,11 +91,20 @@ public partial class ListView : IOnPageKeyDown
         if (HasListId(ListId))
         {
             await UpdateExistingList();
-            await Shell.Current.GoToAsync("///MainPage");
+            if(redirect) { await Shell.Current.GoToAsync("///MainPage");}
             return;
         }
 
         await CreateNewList();
+        if(redirect) { await Shell.Current.GoToAsync("///MainPage");}
+    }
+
+    private async void OnFinishListClicked(object sender, EventArgs e)
+    {
+        SaveList(false);
+        var currentUser = _userService.CurrentUser!.Username;
+        await _listService.FinishList(List.ListID, currentUser);
+
         await Shell.Current.GoToAsync("///MainPage");
     }
 
@@ -133,6 +148,7 @@ public partial class ListView : IOnPageKeyDown
         var allItems = ExistingItems.Union(NewItems).ToList();
         this.FindByName<Label>("AllPointsLabel").Text = GetTotalPoints(allItems).ToString();
         this.FindByName<Label>("PointsLabel").Text = GetCompletedPoints(allItems).ToString();
+        UpdateFinishListButton();
     }
 
     public int GetCompletedPoints(List<ListItem> items)
@@ -223,6 +239,7 @@ public partial class ListView : IOnPageKeyDown
         ExistingItems.Remove(view.GetItem());
         NewItems.Remove(view.GetItem());
         ItemsContainer.Children.Remove(view);
+        UpdateFinishListButton();
     }
 
     private static bool HasListId(long? listId)
@@ -238,6 +255,33 @@ public partial class ListView : IOnPageKeyDown
     private static bool HasInvalidTitleCharacters(string title)
     {
         return InvalidCharacters.InvalidTitle.Any(title.Contains);
+    }
+
+    private void UpdateFinishListButton()
+    {
+        var canBeFinished = CanBeFinished();
+        this.FindByName<Button>("FinishListBtn").IsEnabled = canBeFinished;  
+    }
+
+    private bool CanBeFinished()
+    {
+        foreach (var item in NewItems)
+        {
+            if (!item.IsDone)
+            {
+                return false;
+            }
+        }
+
+        foreach (var item in ExistingItems)
+        {
+            if (!item.IsDone)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
     #endregion
 }
