@@ -104,7 +104,6 @@ namespace TDC.Backend.Domain
         public Task DeleteList(long listId, string sender)
         {
             if (!UserIsCreator(listId, sender)) { 
-                _listMemberRepository.RemoveListMember(listId, sender);
                 return Task.CompletedTask; 
             }
             _listRepository.DeleteList(listId);
