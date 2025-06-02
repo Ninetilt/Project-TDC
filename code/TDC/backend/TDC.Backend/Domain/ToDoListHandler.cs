@@ -144,6 +144,11 @@ namespace TDC.Backend.Domain
             return dbo == null ? null : new ToDoListLoadingDto(dbo.Id, dbo.Name, dbo.IsCollaborative);
         }
 
+        public bool IsUserCreator(string username, long listId)
+        {
+            return _listMemberRepository.UserIsCreator(listId, username);
+        }
+
         #region list items
 
         public long AddItemToList(long listId, string itemDescription, int itemEffort)

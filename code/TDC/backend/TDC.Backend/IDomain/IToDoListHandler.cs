@@ -27,5 +27,6 @@ namespace TDC.Backend.IDomain
         public void RemoveSeenRewardingForUser(string username, long listId);
         public ListMembersDto GetMembersForList(long listId);
         public int GetPointsForMember(string username, long listId);
+        public bool IsUserCreator(string username, long listId);
     }
 }

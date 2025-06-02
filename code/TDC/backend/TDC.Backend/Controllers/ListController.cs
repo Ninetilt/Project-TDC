@@ -160,6 +160,12 @@ namespace TDC.Backend.Controllers
         {
             return _listHandler.GetPointsForMember(username,listId);
         }
+
+        [HttpGet("isUserCreator/{username}/{listId}")]
+        public bool IsUserCreator([FromRoute] string username, [FromRoute] long listId)
+        {
+            return _listHandler.IsUserCreator(username, listId);
+        }
         #endregion
     }
 }
