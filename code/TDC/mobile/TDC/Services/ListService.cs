@@ -159,6 +159,13 @@ namespace TDC.Services
             var responseContent = await response.Content.ReadAsStringAsync();
             return bool.Parse(responseContent);
         }
+
+        public async Task RemoveUserFromList(string username, long listId)
+        {
+            var url = ConnectionUrls.development + $"/api/List/removeUserFromList/{listId}/{username}";
+
+            await httpClient.GetAsync(url);
+        }
         #endregion
     }
 }

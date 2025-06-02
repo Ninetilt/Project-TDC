@@ -27,6 +27,7 @@ public partial class ListView : IOnPageKeyDown
     public List<ListItem> ExistingItems { get; set; }
     public List<long> DeletedItems = [];
     public List<ListItem> NewItems { get; set; } = [];
+    public bool isCreator { get; set; } = true;
     public ObservableCollection<MemberWithPoints> Members { get; set; } = new();
     public ObservableCollection<string> FriendUsernames { get; set; } = new();
 
@@ -121,10 +122,19 @@ public partial class ListView : IOnPageKeyDown
 
     private async void OnDeleteListClicked(object sender, EventArgs e)
     {
-        var answer = await DisplayAlert("Delete list", "Would you like to delete this list?\nThis action can't be undone.", "Yes", "No");
-        if (!answer) return;
-
+        if (ListId == null) { return; }
         var currentUser = _userService.CurrentUser!.Username;
+        if (!isCreator)
+        {
+            var leaveAnswer = await DisplayAlert("Leave list", "Would you like to leave this list?\nThis action can't be undone.", "Yes", "No");
+            if (!leaveAnswer) return;
+
+            await _listService.RemoveUserFromList(currentUser, (long) ListId);
+            await Shell.Current.GoToAsync("///MainPage");
+        }
+        var deleteAnswer = await DisplayAlert("Delete list", "Would you like to delete this list?\nThis action can't be undone.", "Yes", "No");
+        if (!deleteAnswer) return;
+
         await _listService.DeleteList((long)ListId!, currentUser);
         await Shell.Current.GoToAsync("///MainPage");
     }
@@ -230,6 +240,13 @@ public partial class ListView : IOnPageKeyDown
 
             await LoadMembers();
             await LoadFriends();
+
+            isCreator = await _listService.IsUserCreator(currentUser, (long) ListId);
+
+            if (!isCreator)
+            {
+                this.FindByName<Button>("DeleteListBtn").Text = "Leave List";
+            }
 
             return;
         }

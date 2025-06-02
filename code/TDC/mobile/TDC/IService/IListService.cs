@@ -15,5 +15,7 @@ public interface IListService
     public Task<ListMembersDto> GetMembersForList(long listId);
     public Task<int> GetPointsForMember(string username, long listId);
     public Task AddUserToList(string username, long listId);
+    public Task<bool> IsUserCreator(string username, long listId);
+    public Task RemoveUserFromList(string username, long listId);
 }
 
