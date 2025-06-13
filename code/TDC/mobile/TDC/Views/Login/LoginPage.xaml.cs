@@ -45,4 +45,9 @@ public partial class LoginPage : ContentPage
             ErrorMessageLabel.IsVisible = true;
         }
     }
+
+    private void PasswordEntry_Completed(object sender, EventArgs e)
+    {
+        LoginButton_Clicked(sender, e);
+    }
 }
