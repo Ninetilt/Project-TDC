@@ -20,14 +20,14 @@ public partial class ListView : IOnPageKeyDown
     private readonly IListItemService _listItemService;
     private readonly UserService _userService;
     private readonly IFriendService _friendService;
-    
+
     public long? ListId { get; set; }
     public string? IdString { get; set; }
     public ToDoList List { get; set; }
     public List<ListItem> ExistingItems { get; set; }
     public List<long> DeletedItems = [];
     public List<ListItem> NewItems { get; set; } = [];
-    public bool isCreator { get; set; } = true;
+    public bool IsCreator { get; set; }
     public ObservableCollection<MemberWithPoints> Members { get; set; } = new();
     public ObservableCollection<string> FriendUsernames { get; set; } = new();
 
@@ -124,7 +124,7 @@ public partial class ListView : IOnPageKeyDown
     {
         if (ListId == null) { return; }
         var currentUser = _userService.CurrentUser!.Username;
-        if (!isCreator)
+        if (!IsCreator)
         {
             var leaveAnswer = await DisplayAlert("Leave list", "Would you like to leave this list?\nThis action can't be undone.", "Yes", "No");
             if (!leaveAnswer) return;
@@ -241,11 +241,13 @@ public partial class ListView : IOnPageKeyDown
             await LoadMembers();
             await LoadFriends();
 
-            isCreator = await _listService.IsUserCreator(currentUser, (long) ListId);
+            IsCreator = await _listService.IsUserCreator(currentUser, (long) ListId);
 
-            if (!isCreator)
+            if (!IsCreator)
             {
                 this.FindByName<Button>("DeleteListBtn").Text = "Leave List";
+                this.FindByName<Button>("RemoveMemberBtn").IsVisible = false;
+                this.FindByName<CollectionView>("MemberListView").SelectionMode = SelectionMode.None;
             }
 
             return;
@@ -381,19 +383,63 @@ public partial class ListView : IOnPageKeyDown
 
     private async void OnAddFriendClicked(object sender, EventArgs e)
     {
-        var selectedUsername = FriendPicker.SelectedItem as string;
+
+        if (FriendListView.SelectedItems == null || !FriendListView.SelectedItems.Any())
+        {
+            await DisplayAlert("Error", "Please select friends to add", "OK");
+            return;
+        }
+
+        var selectedFriends = FriendListView.SelectedItems.Cast<string>().ToList();
+
         var id = await SaveList(false);
+        if (id == -1)
+            return;
+
+        this.List.ListID = id;
+        this.ListId = id;
+
+        foreach (var friend in selectedFriends)
+        {
+            await _listService.AddUserToList(friend, ListId.Value);
+            FriendUsernames.Remove(friend);
+        }
+
+        await LoadMembers();
+    }
+
+    private async void OnRemoveMemberClicked(object sender, EventArgs e)
+    {
+
+        if (MemberListView.SelectedItems == null || !MemberListView.SelectedItems.Any())
+        {
+            await DisplayAlert("Error", "Please select members to remove", "OK");
+            return;
+        }
+
+        var selectedMembers = MemberListView.SelectedItems.Cast<MemberWithPoints>().ToList();
+
+        var id = await SaveList(redirect: false);
         if (id == -1)
         {
             return;
         }
+
         this.List.ListID = id;
         this.ListId = id;
-        if (!string.IsNullOrEmpty(selectedUsername))
+
+        foreach (var member in selectedMembers)
         {
-            await _listService.AddUserToList(selectedUsername, ListId.Value);
-            await LoadMembers();
+            if (ListId.HasValue)
+            {
+                await _listService.RemoveUserFromList(member.Username, ListId.Value);
+                Members.Remove(member);
+            }
         }
+
+        await LoadMembers();
+        await LoadFriends();
     }
+
     #endregion
 }
