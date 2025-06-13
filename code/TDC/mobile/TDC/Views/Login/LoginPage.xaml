@@ -8,7 +8,8 @@
         <Entry x:Name="UsernameEntry" Placeholder="enter username..." Margin="0,0,0,10"/>
 
         <Label Text="Password:" />
-        <Entry x:Name="PasswordEntry" Placeholder="enter password..." IsPassword="True" Margin="0,0,0,20" />
+        <Entry x:Name="PasswordEntry" Placeholder="enter password..." IsPassword="True" Margin="0,0,0,20" ReturnType="Go"
+               Completed="PasswordEntry_Completed"/>
 
         <Button Text="Login" Clicked="LoginButton_Clicked" />
         <Label x:Name="ErrorMessageLabel" TextColor="Red" IsVisible="False"/>
