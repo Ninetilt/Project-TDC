@@ -23,17 +23,15 @@
                                 <Label Text="{Binding Username}" VerticalOptions="Center" FontSize="16" WidthRequest="100" LineBreakMode="TailTruncation" />
                                 <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
                                     <HorizontalStackLayout Spacing="10">
-                                        <ImageButton Source="check_lg.png"
+                                        <ImageButton Source="check.png"
                                             WidthRequest="28"
                                             HeightRequest="28"
-                                            BackgroundColor="#00ADB5"
-                                            CornerRadius="3"
+                                            BackgroundColor="Transparent"
                                             Clicked="Accept_Clicked" />
                                         <ImageButton Source="x.png"
                                             WidthRequest="28"
                                             HeightRequest="28"
-                                            BackgroundColor="#00ADB5"
-                                            CornerRadius="3"
+                                            BackgroundColor="Transparent"
                                             Clicked="Decline_Clicked" />
                                     </HorizontalStackLayout>
 
