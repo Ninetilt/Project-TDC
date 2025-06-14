@@ -20,7 +20,7 @@
                         <DataTemplate>
                             <HorizontalStackLayout Padding="10" VerticalOptions="Center" Spacing="15">
                                 <Image Source="{Binding ProfileImage}" WidthRequest="40" HeightRequest="40" Aspect="AspectFit" />
-                                <Label Text="{Binding Username}" VerticalOptions="Center" FontSize="16" WidthRequest="150" LineBreakMode="TailTruncation" />
+                                <Label Text="{Binding Username}" VerticalOptions="Center" FontSize="16" WidthRequest="80" LineBreakMode="TailTruncation" />
                                 <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
                                     <Button Text="Accept" Clicked="Accept_Clicked" />
                                     <Button Text="Decline" Clicked="Decline_Clicked" />
