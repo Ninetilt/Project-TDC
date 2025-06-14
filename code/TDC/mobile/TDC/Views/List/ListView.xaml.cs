@@ -395,11 +395,18 @@ public partial class ListView : IOnPageKeyDown
         var selectedFriends = FriendListView.SelectedItems.Cast<string>().ToList();
 
         var id = await SaveList(false);
+        
         if (id == -1)
             return;
 
         this.List.ListID = id;
         this.ListId = id;
+
+        var currentUser = _userService.CurrentUser!.Username;
+
+        RemoveAllItems();
+        ExistingItems = await _listItemService.GetItemsForList(id, currentUser);
+        AddItemsForExistingList();
 
         foreach (var friend in selectedFriends)
         {
@@ -408,6 +415,13 @@ public partial class ListView : IOnPageKeyDown
         }
 
         await LoadMembers();
+    }
+
+    private void RemoveAllItems() {
+        ExistingItems.Clear();
+        NewItems.Clear();
+        DeletedItems.Clear();
+        ItemsContainer.Children.Clear();
     }
 
     private async void OnRemoveMemberClicked(object sender, EventArgs e)
