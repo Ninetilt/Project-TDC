@@ -19,7 +19,7 @@
                    IsReadOnly="False" 
                    Grid.Column="1" 
                    Completed="EnterPressed"
-                   Unfocused="DescriptionChanged"
+                   TextChanged="DescriptionChanged"
                    />
 
             <!--effort picker-->

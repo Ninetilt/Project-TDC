@@ -99,6 +99,8 @@ public partial class ListView : IOnPageKeyDown
 
         List.Name = listName;
 
+        
+
         if (HasListId(ListId))
         {
             await UpdateExistingList();
