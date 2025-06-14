@@ -29,34 +29,32 @@
 
     <ShellContent Route="MainPage">
         <Shell.TitleView>
-            <Grid ColumnDefinitions="Auto,Auto,Auto" VerticalOptions="FillAndExpand">
+            <FlexLayout Direction="Row"
+                    JustifyContent="SpaceBetween"
+                    AlignItems="Center"
+                    HeightRequest="50"
+                    Padding="20,0">
                 <Label
-                    Text="Home"
-                    Grid.Column="0"
-                    VerticalOptions="Center"
-                    HorizontalOptions="Start"
-                    FontSize="Medium"
-                    FontAttributes="Bold"
-                    Margin="10,0"/>
+                Text="Home"
+                VerticalOptions="Center"
+                FontSize="Medium"
+                FontAttributes="Bold"
+               />
                 <ImageButton
-                    Source="to_dewey.png"
-                    Grid.Column="1"
-                    HorizontalOptions="Center"
-                    VerticalOptions="Center"
-                    BackgroundColor="Transparent"
-                    Clicked="ProfileIcon_Clicked"
-                    WidthRequest="40"
-                    HeightRequest="40"/>
+                Source="to_dewey.png"
+                VerticalOptions="Center"
+                BackgroundColor="Transparent"
+                Clicked="ProfileIcon_Clicked"
+                WidthRequest="40"
+                HeightRequest="40"/>
                 <Button
-                    Text="Logout"
-                    Clicked="LoginButton_Clicked"
-                    Grid.Column="2"
-                    VerticalOptions="Center"
-                    HorizontalOptions="End"
-                    Margin="5,0,10,0"
-                    WidthRequest="80"
-                    HeightRequest="40"/>
-            </Grid>
+                Text="Logout"
+                Clicked="LoginButton_Clicked"
+                VerticalOptions="Center"
+                WidthRequest="80"
+                HeightRequest="40"
+                />
+            </FlexLayout>
         </Shell.TitleView>
 
         <local:MainPage />
