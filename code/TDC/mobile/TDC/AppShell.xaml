@@ -38,7 +38,7 @@
                     FontSize="Medium"
                     FontAttributes="Bold"
                     Margin="10,0"/>
-                <ImageButton                    
+                <ImageButton
                     Source="to_dewey.png"
                     Grid.Column="1"
                     HorizontalOptions="Center"
@@ -48,7 +48,7 @@
                     WidthRequest="40"
                     HeightRequest="40"/>
                 <Button
-                    Text="Logout"                   
+                    Text="Logout"
                     Clicked="LoginButton_Clicked"
                     Grid.Column="2"
                     VerticalOptions="Center"
@@ -56,7 +56,6 @@
                     Margin="5,0,10,0"
                     WidthRequest="80"
                     HeightRequest="40"/>
-
             </Grid>
         </Shell.TitleView>
 
