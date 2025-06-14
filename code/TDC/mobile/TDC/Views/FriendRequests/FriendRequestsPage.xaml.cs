@@ -56,7 +56,7 @@ public partial class FriendRequestsPage : ContentPage
 
     private async void Accept_Clicked(object sender, EventArgs e)
     {
-        if (sender is Button button && button.BindingContext is FriendRequestItem friendRequestItem)
+        if (sender is ImageButton button && button.BindingContext is FriendRequestItem friendRequestItem)
         {
             await _friendService.AcceptFriendRequest(_userService.CurrentUser!.Username, friendRequestItem.Username);
             await DisplayAlert("Success", "Friend request accepted.", "OK");
@@ -66,7 +66,7 @@ public partial class FriendRequestsPage : ContentPage
 
     private async void Decline_Clicked(object sender, EventArgs e)
     {
-        if (sender is Button button && button.BindingContext is FriendRequestItem friendRequestItem)
+        if (sender is ImageButton button && button.BindingContext is FriendRequestItem friendRequestItem)
         {
             await _friendService.DenyFriendRequest(_userService.CurrentUser!.Username, friendRequestItem.Username);
             await DisplayAlert("Success", "Friend request declined.", "OK");
@@ -136,7 +136,7 @@ public partial class FriendRequestsPage : ContentPage
 
     private async void CancelSentRequest_Clicked(object sender, EventArgs e)
     {
-        if (sender is Button button && button.BindingContext is FriendRequestItem friendRequestItem)
+        if (sender is ImageButton button && button.BindingContext is FriendRequestItem friendRequestItem)
         {
             try
             {

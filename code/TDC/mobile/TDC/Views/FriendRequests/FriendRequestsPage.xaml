@@ -20,10 +20,21 @@
                         <DataTemplate>
                             <HorizontalStackLayout Padding="10" VerticalOptions="Center" Spacing="15">
                                 <Image Source="{Binding ProfileImage}" WidthRequest="40" HeightRequest="40" Aspect="AspectFit" />
-                                <Label Text="{Binding Username}" VerticalOptions="Center" FontSize="16" WidthRequest="150" LineBreakMode="TailTruncation" />
+                                <Label Text="{Binding Username}" VerticalOptions="Center" FontSize="16" WidthRequest="100" LineBreakMode="TailTruncation" />
                                 <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
-                                    <Button Text="Accept" Clicked="Accept_Clicked" />
-                                    <Button Text="Decline" Clicked="Decline_Clicked" />
+                                    <HorizontalStackLayout Spacing="10">
+                                        <ImageButton Source="check.png"
+                                            WidthRequest="28"
+                                            HeightRequest="28"
+                                            BackgroundColor="Transparent"
+                                            Clicked="Accept_Clicked" />
+                                        <ImageButton Source="x.png"
+                                            WidthRequest="28"
+                                            HeightRequest="28"
+                                            BackgroundColor="Transparent"
+                                            Clicked="Decline_Clicked" />
+                                    </HorizontalStackLayout>
+
                                 </HorizontalStackLayout>
                             </HorizontalStackLayout>
                         </DataTemplate>
@@ -44,9 +55,14 @@
                         <DataTemplate>
                             <HorizontalStackLayout Padding="10" VerticalOptions="Center" Spacing="15">
                                 <Image Source="{Binding ProfileImage}" WidthRequest="40" HeightRequest="40" Aspect="AspectFit" />
-                                <Label Text="{Binding Username}" VerticalOptions="Center" FontSize="16" WidthRequest="150" LineBreakMode="TailTruncation" />
+                                <Label Text="{Binding Username}" VerticalOptions="Center" FontSize="16" WidthRequest="100" LineBreakMode="TailTruncation" />
                                 <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
-                                    <Button Text="Cancel" Clicked="CancelSentRequest_Clicked" />
+                                    <ImageButton Source="x.png"
+                                        WidthRequest="28"
+                                        HeightRequest="28"
+                                        BackgroundColor="#00ADB5"
+                                        CornerRadius="3"
+                                        Clicked="CancelSentRequest_Clicked" />
                                 </HorizontalStackLayout>
                             </HorizontalStackLayout>
                         </DataTemplate>

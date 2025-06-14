@@ -128,7 +128,7 @@ namespace TDC
                 var points = parts[1];
                 var place = int.TryParse(parts[2], out int p) ? p : -1;
 
-                formattedLines.Add($"{username} – {points} Punkte (Platz {place})");
+                formattedLines.Add($"{username} – {points} Points (Place {place})");
             }
 
             return string.Join(Environment.NewLine, formattedLines);
