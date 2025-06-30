@@ -161,6 +161,7 @@ jobs:
           key: ${{ runner.os }}-nuget-${{ hashFiles('code/TDC/backend/TDC.Backend/TDC.Backend.csproj') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
+
       - name: Setup .NET SDK ${{ env.DOTNETVERSION }}
         uses: actions/setup-dotnet@v4
         with:
@@ -170,9 +171,6 @@ jobs:
         shell: pwsh
         run: dotnet --info
 
-      - name: Restore Backend dependencies
-        run: dotnet restore code/TDC/backend/TDC.Backend/TDC.Backend.csproj
-
       - name: Wait for SQL Server to be ready
         run: |
           for i in {1..30}; do
@@ -180,6 +178,7 @@ jobs:
             echo "Waiting for SQL Server..."
             sleep 2
           done
+
       - name: Install sqlcmd
         run: |
           curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
@@ -187,13 +186,59 @@ jobs:
           sudo apt-get update
           sudo ACCEPT_EULA=Y apt-get install -y mssql-tools unixodbc-dev
           echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> $GITHUB_ENV
+
       - name: Create TDC.Test database
         env:
           SA_PASSWORD: ${{ secrets.SQL_SERVER_PASSWORD }}
         run: |
           /opt/mssql-tools/bin/sqlcmd -S localhost,1433 -U sa -P "$SA_PASSWORD" -Q "IF DB_ID('TDC.Test') IS NULL CREATE DATABASE [TDC.Test];"
+      
+      - name: Generate temporary CI solution
+        run: |
+            dotnet new sln -n TDC_TempCI
+            dotnet sln TDC_TempCI.sln add code/TDC/backend/TDC.Backend/TDC.Backend.csproj
+            dotnet sln TDC_TempCI.sln add code/TDC/TDC-Backend.Test/TDC.Backend.Test.csproj
+      
+      # SonarScanner installieren
+      - name: Install SonarScanner for .NET
+        run: dotnet tool install --global dotnet-sonarscanner
+
+      - name: Install dotnet-coverage tool
+        run: dotnet tool install --global dotnet-coverage
+
+      # Analyse starten
+      - name: Begin SonarCloud analysis
+        run: |
+          dotnet-sonarscanner begin \
+            /k:"Ninetilt_Project-TDC" \
+            /o:"ninetilt" \
+            /d:sonar.cs.vscoveragexml.reportsPaths="coverage.xml" \
+            /d:sonar.verbose=true
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
       - name: Build backend project
-        run: dotnet publish code/TDC/backend/TDC.Backend/TDC.Backend.csproj -c Release -o ./output/backend --no-restore
+        run: dotnet build TDC_TempCI.sln -c Release 
+
+      - name: Run backend tests
+        run: |
+          dotnet-coverage collect \
+              "dotnet test TDC_TempCI.sln --no-build --configuration Release --logger \"trx;LogFileName=backend-unit-tests.trx\"" \
+              -f xml -o coverage.xml
+      
+      - name: Check TRX-file
+        run: |
+            echo " Find TRX-Files:"
+            find . -name "*.trx" -exec ls -l {} \; || true
+
+      # Sonar-Analyse abschließen
+      - name: End SonarCloud analysis
+        run: dotnet-sonarscanner end
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      - name: Publish backend project
+        run: dotnet publish code/TDC/backend/TDC.Backend/TDC.Backend.csproj -c Release -o ./output/backend
 
       - name: Upload Backend Artifact
         uses: actions/upload-artifact@v4
@@ -201,15 +246,14 @@ jobs:
           name: backend-artifact
           path: ./output/backend
 
-      - name: Run backend tests
-        run: |
-          mkdir -p ./output/backend-test-results
-          dotnet test code/TDC/TDC-Backend.Test/TDC.Backend.Test.csproj \
-          --configuration Release \
-          --logger "trx;LogFileName=backend-unit-tests.trx" \
-          --results-directory ./output/backend-test-results
       - name: Upload Backend Unit Test Results
         uses: actions/upload-artifact@v4
         with:
           name: backend-unit-test-results
-          path: ./output/backend-test-results/backend-unit-tests.trx
+          path: code/TDC/TDC-Backend.Test/TestResults/backend-unit-tests.trx
+
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-coverage-report
+          path: coverage.xml
