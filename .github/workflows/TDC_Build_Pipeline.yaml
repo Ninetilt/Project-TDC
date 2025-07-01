@@ -212,6 +212,8 @@ jobs:
           dotnet-sonarscanner begin \
             /k:"Ninetilt_Project-TDC" \
             /o:"ninetilt" \
+            /d:sonar.pullrequest.enable=false \
+            /d:sonar.branch.name=${GITHUB_REF##*/} \
             /d:sonar.cs.vscoveragexml.reportsPaths="coverage.xml" \
             /d:sonar.verbose=true
         env:
