@@ -1,4 +1,4 @@
-# Übersicht eines Pipeline-Durchlaufs (3 parallele Jobs)
+## Übersicht der Pipeline (3 parallele Build-Jobs)
 
 ![Pipeline Übersicht](https://github.com/user-attachments/assets/f7e4b161-e9b8-41bf-a72c-8b5d129133a4)
 
@@ -15,7 +15,7 @@
 ![Artefakte](https://github.com/user-attachments/assets/10a18363-2a55-403b-9cfa-f742eccbfd54)
 
 
-# Technische Einblicke
+## Technische Einblicke
 
 ## Mehrplattform-Builds mit .NET MAUI Workloads  
 Für das Frontend werden parallel Windows- und Android-Builds erstellt. Dabei werden spezifische .NET MAUI Workloads (u.a. maui, android, wasm-tools) dynamisch installiert, um plattformübergreifende Builds sicherzustellen.
