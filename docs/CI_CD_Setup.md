@@ -1,4 +1,4 @@
- Übersicht eines Pipeline-Durchlaufs (3 parallele Jobs)
+# Übersicht eines Pipeline-Durchlaufs (3 parallele Jobs)
 
 ![Pipeline Übersicht](https://github.com/user-attachments/assets/f7e4b161-e9b8-41bf-a72c-8b5d129133a4)
 
@@ -14,7 +14,6 @@
 
 ![Artefakte](https://github.com/user-attachments/assets/10a18363-2a55-403b-9cfa-f742eccbfd54)
 
----
 
 # Technische Einblicke
 
