@@ -1,4 +1,4 @@
-# Projektabschlussbericht – Metrikenübersicht
+# Metriken
 
 Zur Messung der Metriken haben wir v.a. **SonarQube Cloud** genutzt. Dieses Tool liefert einen breiten Überblick zu Aspekten wie Security, Maintainability, Reliability oder Test-Coverage. Die Einbindung in die aktive CI/CD-Pipeline gestaltete sich aufgrund der sehr limitierten Free-Version als Hindernis. Aus Sicherheitsgründen wurde die Sonar-Analyse daher auf einem codegleichen Fork des Repositorys eingerichtet und dort manuell ausgeführt. Als ergänzendes Tool wurde **NDepend** verwendet.
 
