@@ -26,7 +26,7 @@ Zur Messung der Metriken haben wir v.a. **SonarQube Cloud** genutzt. Dieses Tool
 
 ### 1. Cyclomatic & Cognitive Complexity
 
-Die **Cyclomatic Complexity** misst die Anzahl der unabhängigen Pfade in unserem Code, also wie viele verschiedene Abläufe durch Bedingungen und Schleifen möglich sind. Insgesamt liegt der Wert bei **423** (SonarQube), was bei etwa 100 Methoden einem Durchschnitt von ca. **4,2 pro Methode** entspricht. Da der Richtwert für gut wartbaren Code unter 10 liegt und die maximale Komplexität einzelner Methoden mit **7** (NDepend) ebenfalls im optimalen Bereich ist, zeigt dies, dass der Code übersichtlich und gut testbar ist.
+Die **Cyclomatic Complexity** misst die Anzahl der unabhängigen Pfade in unserem Code, also wie viele verschiedene Abläufe durch Bedingungen und Schleifen möglich sind. Insgesamt liegt der Wert bei **423** (SonarQube), was bei etwa 100 Methoden einem Durchschnitt von ca. **4,2 pro Methode** entspricht. NDepend misst hier sogar einen durchschnittlichen Wert von 1.24. Da der Richtwert für gut wartbaren Code unter 10 liegt und die maximale Komplexität einzelner Methoden mit **7** (NDepend) ebenfalls im optimalen Bereich ist, zeigt dies, dass der Code übersichtlich und gut testbar ist.
 
 Die **Cognitive Complexity** bewertet, wie schwer der Code für Entwickler zu verstehen ist, insbesondere durch Verschachtelungstiefe und Kontrollfluss. Mit einem Gesamtwert von **77** (SonarQube) liegt der Code im moderat-komplexen Bereich, verteilt auf alle Methoden. Dies spricht für eine klar strukturierte Codebasis, die Wartung und Weiterentwicklung erleichtert.
 
@@ -61,10 +61,4 @@ Dennoch sind keine kritischen Sicherheitsprobleme offen.
 SonarCloud meldet eine Testabdeckung von **71,9 %**, was einen soliden Wert für funktionale Sicherheit und Fehlerprävention darstellt.
 
 Die Qualitätssicherung ist weitgehend erfolgreich mit einem bestandenen Qualitätsgate.
-
----
-
-## Fazit
-
-Die Analyse der Metriken zeigt eine gut strukturierte und wartbare Codebasis mit kontrollierter Komplexität, überschaubarer technischer Schuld und nahezu keiner Code-Duplikation. Die solide Testabdeckung und das erfolgreiche Qualitätsgate bestätigen die hohe Qualität des Projekts. Offene Issues mit mittlerer Priorität bieten Möglichkeiten zur weiteren Verbesserung der Wartbarkeit.
 
