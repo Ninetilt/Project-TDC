@@ -6,6 +6,10 @@
 
 ![Build Windows](https://github.com/user-attachments/assets/9a9d82c6-ee7c-493f-9925-26628b8aef2d)
 
+## BuildAndroid
+
+![Build Android](https://github.com/user-attachments/assets/5e0db21a-e5f9-4ce3-8245-1ac40cd8b95e)
+
 ## BuildBackend
 
 ![Build Backend](https://github.com/user-attachments/assets/aa0d9e1e-fded-4ac8-b99b-30fd2baa4a99)
