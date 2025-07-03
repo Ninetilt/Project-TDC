@@ -95,12 +95,69 @@ Project TDC ist eine To-Do-App mit spielerischem Wettbewerbselement. Nutzer samm
 ---
 
 ## 7. Verteilungssicht
-*(tbd)*
+
+### 7.1 Übersicht der Verteilung
+![arc42_7](https://github.com/user-attachments/assets/4cef49a9-fcda-4712-bfb7-90ba842d7921)
+
+### 7.2 Verteilungskomponenten
+
+- **Client (Frontend / .NET MAUI)**  
+  - Plattform: Android, iOS, Windows  
+  - Features: Aufgabenverwaltung, UI, lokale Persistenz (z. B. SQLite), Authentifizierung, Netzwerkkommunikation  
+  - Architektur: MVVM  
+  - Offline-Modus durch lokal gespeicherte Aufgaben
+
+- **Backend (ASP.NET Core)**  
+  - Hoster: Cloud oder lokaler Server  
+  - Verantwortlich für: Nutzerverwaltung, Synchronisation, Freundeslogik, XP-Berechnung, Push-Updates  
+  - Bereitstellung als RESTful API
+
+- **Datenbank (SQL)**  
+  - Persistiert alle serverseitigen Daten wie Nutzerprofile, Freundeslisten, XP-Punkte, Kämpfe, Aufgabenstände  
+  - Transaktionssicherheit und Datenkonsisten
 
 ---
 
 ## 8. Querschnittliche Konzepte
-*(tbd)*
+
+### 8.1 Fehler- & Ausnahmebehandlung
+
+- **Retry-Strategie** bei Netzwerkfehlern
+- **User Feedback** bei Fehlern via UI-Komponenten (Toasts, Dialoge)
+
+### 8.2 Offline-Fähigkeit
+
+- **Clientseitiges Caching** (z. B. Aufgaben, XP, Profil)
+- Synchronisation mit Backend bei Reconnect
+- Benutzerfreundliche Konfliktlösung bei Offline-Änderungen
+
+### 8.3 Gamification
+
+- **Punkte-/Levelsystem (XP)** als Kernmechanik
+- **Kämpfe gegen Freunde** basierend auf Aufgaben-Erledigung
+- **Tägliche Belohnungen**, z. B. Bonuspunkte bei täglicher Nutzung
+
+### 8.4 UI-/UX-Konzepte
+
+- **Responsive UI** via .NET MAUI
+- **Color Themes**
+- **Barrierefreiheit** (z. B. lesbare Schriftgrößen, Kontrast)
+- **Klares Navigationskonzept**
+
+### 8.5 Teststrategie
+
+- **Unit Tests** für Services und ViewModels
+- **UI-Tests** mit Testgeräten/Emulatoren
+- Integration in **CI-Pipeline** auf GitHub (z. B. mit GitHub Actions)
+
+### 8.6 Modularisierung
+
+- Trennung nach **Domänenlogik**:
+  - Authentifizierung
+  - Aufgabenverwaltung
+  - Freunde & Kampfmodul
+  - Belohnungssystem
+- Ermöglicht **leichte Erweiterbarkeit** und klare Zuständigkeiten
 
 ---
 
